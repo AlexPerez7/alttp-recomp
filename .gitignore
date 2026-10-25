@@ -1,0 +1,9 @@
+# ROMs, partidas guardadas y todo lo derivado de ellas: nunca
+*.sfc
+*.smc
+*.srm
+*.fig
+*.swc
+/roms/
+/out/
+*.log
