@@ -743,3 +743,9 @@ bias = 1
 addr = "0E:CA6C"
 kind = "before"
 call = "alttp_dialog_speed"
+
+# Pantalla ancha: franjas negras donde no hay mapa cargado (widefill.c); se ejecuta una vez por fotograma.
+[[hook]]
+addr = "00:80B5"
+kind = "after"
+call = "alttp_wide_fill"

@@ -9,7 +9,8 @@ Licencia: [MIT](LICENSE), solo para el código de este repositorio; no da derech
 ## Qué contiene
 
 - `games/alttp_usa.toml`: identifica la ROM (CRC32 `777AAC2F`) y da al recompilador las entradas de código, las tablas de saltos (comprobadas a mano contra la ROM real) y los ganchos. Solo lleva direcciones, nombres y tamaños de tabla; ningún byte del juego.
-- `games/alttp_usa/dialog.c`: C original que se compila junto al código generado. Hoy acelera los mensajes.
+- `games/alttp_usa/dialog.c`: C original que se compila junto al código generado. Acelera los mensajes.
+- `games/alttp_usa/widefill.c`: con la pantalla ancha (`wide` en `config.ini` o `--opt wide=N`), tapa en negro las columnas extra donde no hay mapa cargado: pasado el borde del área en el exterior, y en las salas y cuevas, siempre.
 - `scripts/check.ps1`: prueba que lo anterior funciona (necesita tu ROM).
 - `scripts/release.ps1`: arma el paquete para repartir.
 
@@ -17,6 +18,7 @@ Licencia: [MIT](LICENSE), solo para el código de este repositorio; no da derech
 
 | Mejora | Cómo se usa |
 |---|---|
+| Pantalla ancha sin basura | Con `wide` mayor que 0 el borde del mapa y el interior de salas y cuevas se ven en negro en lugar de repetir el lado contrario del mapa. |
 | Mensajes más rápidos | Mantén **R** (en el teclado, `W`) durante un mensaje y el texto sale un carácter por fotograma. Se desactiva con `--game-opt dialog_skip=0`. |
 
 ## Jugar
