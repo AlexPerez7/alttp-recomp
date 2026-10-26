@@ -137,8 +137,7 @@ algo a las otras chicas{73}
 desaparecidas.  Solo quedo yo{43}{7E}{73}
 Agahnim ha tomado el control{73}
 del castillo e intenta abrir{73}
-el sello de los siete sabios.{7E}{73}
-{43}   {43}{73}
+el sello de los siete sabios{43} {43}{7E}{73}
 Estoy en la mazmorra del{73}
 castillo.{7E}{73}
 Ayúdame{43}
