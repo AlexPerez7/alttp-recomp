@@ -2,7 +2,9 @@
 # genera el C con el motor, lo compila con el runtime sin vídeo y ejecuta el juego tres veces hasta el primer mensaje.
 # El contador de caracteres ($1CD9 de la WRAM) a los 2040 fotogramas debe ser 5 sin R, al menos el doble (10) con R y 5 con R y
 # --game-opt dialog_skip=0. Después comprueba la pantalla ancha (games/alttp_usa/widefill.c): con --wide 32, en la casa de Link
-# (interior) la captura mide 320 de ancho y las 32 columnas extra de cada lado son negras.
+# (interior) la captura mide 320 de ancho y las 32 columnas extra de cada lado son negras. Por último comprueba el texto de los
+# mensajes (games/alttp_usa/text.c): el volcado tiene 397 mensajes, lang\es.txt igual al volcado da el mismo texto, cambiar una
+# línea cambia solo ese mensaje y el primer cuadro de texto es idéntico con language=en y language=es.
 #
 #   powershell -File scripts\check.ps1 [-Rom roms\alttp_usa.sfc] [-Engine ruta\a\snes-recomp.exe]   (por defecto: el de play.bat)
 #
@@ -96,7 +98,52 @@ if ($wideOk) {
 $bmp.Dispose()
 Write-Host "pantalla ancha (interior, --wide 32): franjas negras = $wideOk"
 
+# texto de los mensajes (games/alttp_usa/text.c): el volcado se escribe junto a la ROM, así que se trabaja con una copia en out\
+$textRom = Join-Path $out "rom.sfc"
+Copy-Item $Rom $textRom
+$textDir = Join-Path $out "text"
+New-Item -ItemType Directory -Force "$textDir\lang" | Out-Null
+function DumpText($extra) {
+    & "$out\headless.exe" $textRom --frames 2040 --frame-blocks 20000 --game-opt dump_text=1 @extra *>$null
+    if ($LASTEXITCODE -ne 0) { throw "headless.exe termino con codigo $LASTEXITCODE (volcado de mensajes)" }
+}
+DumpText @()
+$en = "$out\alttp_messages_en.txt"
+$messages = (Select-String -Path $en -Pattern '^@\d+$').Count
+$enHash = (Get-FileHash $en -Algorithm SHA256).Hash
+$textOk = ($messages -eq 397 -and $enHash -eq "2FFE64AD46E947F441C34B7B7E970640B979C742A2EDFE4F0B05A38C2831C7AE")
+Write-Host "volcado de mensajes: $messages mensajes, huella correcta = $textOk"
+# ida y vuelta: con lang\es.txt igual al volcado, el juego produce exactamente el mismo texto
+Copy-Item $en "$textDir\lang\es.txt"
+DumpText @("--game-opt", "language=es", "--game-dir", $textDir)
+$roundTrip = ((Get-FileHash "$out\alttp_messages_es.txt" -Algorithm SHA256).Hash -eq $enHash)
+Write-Host "ida y vuelta de es.txt = volcado: idéntica = $roundTrip"
+# cambiar una línea cambia solo ese mensaje
+$edited = (Get-Content $en -Raw).Replace("Save And Continue{75}", "Guardar y continuar{75}")
+[System.IO.File]::WriteAllText("$textDir\lang\es.txt", $edited)
+DumpText @("--game-opt", "language=es", "--game-dir", $textDir)
+$diff = Compare-Object (Get-Content $en) (Get-Content "$out\alttp_messages_es.txt")
+$editOk = ($diff.Count -eq 2 -and ($diff | Where-Object { $_.SideIndicator -eq "=>" }).InputObject -like "*Guardar y continuar*")
+Write-Host "un mensaje cambiado cambia solo ese mensaje = $editOk"
+# el primer cuadro de texto es idéntico con language=en y con language=es (es.txt = volcado): la pantalla y la WRAM
+Copy-Item $en "$textDir\lang\es.txt"
+function FirstBox($name, $extra) {
+    $d = Join-Path $out "text_$name"
+    New-Item -ItemType Directory -Force $d | Out-Null
+    & "$out\headless.exe" $textRom --frames 2040 --frame-blocks 20000 --dump $d --screenshot "$d\shot.png" @toMessage @extra *>$null
+    if ($LASTEXITCODE -ne 0) { throw "headless.exe termino con codigo $LASTEXITCODE ($name)" }
+    return @((Get-FileHash "$d\shot.png").Hash, (Get-FileHash "$d\wram.bin").Hash)
+}
+$boxEn = FirstBox "en" @()
+$boxEs = FirstBox "es" @("--game-opt", "language=es", "--game-dir", $textDir)
+$boxOk = (($boxEn -join ",") -eq ($boxEs -join ","))
+Write-Host "primer cuadro de texto idéntico con language=en y language=es = $boxOk"
+
 $ok = $true
+if (-not $textOk) { Write-Error "el volcado debe tener 397 mensajes y la huella de siempre" -ErrorAction Continue; $ok = $false }
+if (-not $roundTrip) { Write-Error "con es.txt igual al volcado, el texto debe salir idéntico" -ErrorAction Continue; $ok = $false }
+if (-not $editOk) { Write-Error "cambiar una línea de es.txt debe cambiar solo ese mensaje" -ErrorAction Continue; $ok = $false }
+if (-not $boxOk) { Write-Error "el primer cuadro de texto debe ser idéntico con language=en y language=es" -ErrorAction Continue; $ok = $false }
 if (-not $wideOk) { Write-Error "con --wide 32 en un interior las columnas extra deben ser negras (320 de ancho)" -ErrorAction Continue; $ok = $false }
 if ($plain -ne 5) { Write-Error "sin R deberian ser 5" -ErrorAction Continue; $ok = $false }
 if ($fast -lt 2 * $plain) { Write-Error "con R deberian ser al menos el doble" -ErrorAction Continue; $ok = $false }

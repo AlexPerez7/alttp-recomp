@@ -9,3 +9,5 @@
 *.log
 /engine/
 /engine.tmp/
+# volcado del texto de la ROM (derivado de ella)
+alttp_messages_*.txt

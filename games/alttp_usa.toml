@@ -749,3 +749,21 @@ call = "alttp_dialog_speed"
 addr = "00:80B5"
 kind = "after"
 call = "alttp_wide_fill"
+
+# Texto de los mensajes (text.c): volcado con --game-opt dump_text=1 (tras construir la tabla de punteros)
+# y traduccion desde lang/es.txt (tras el cargador de mensajes).
+[[hook]]
+addr = "0E:D3EB"
+kind = "after"
+call = "alttp_text_dump"
+
+[[hook]]
+addr = "0E:C4E2"
+kind = "after"
+call = "alttp_text_translate"
+
+[[option]]
+key = "language"
+label = "Language"
+names = ["en", "es"]
+default = "en"
