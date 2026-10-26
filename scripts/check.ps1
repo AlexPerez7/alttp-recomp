@@ -147,8 +147,8 @@ function DumpMenu($extra) {
 DumpMenu @()
 $menuEn = "$out\alttp_menu_en.txt"
 $menuKeys = (Select-String -Path $menuEn -Pattern '^[a-z_.0-9]+ = ').Count
-$menuOk = ($menuKeys -eq 15)
-Write-Host "claves del volcado de menús: $menuKeys (15) = $menuOk"
+$menuOk = ($menuKeys -eq 23)
+Write-Host "claves del volcado de menús: $menuKeys (23) = $menuOk"
 $menuTxt = (Get-Content $menuEn -Raw)
 [System.IO.File]::WriteAllText("$textDir\lang\es_menu.txt", $menuTxt)
 DumpMenu @("--game-opt", "language=es", "--game-dir", $textDir)

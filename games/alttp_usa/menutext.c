@@ -1,4 +1,5 @@
-/* A Link to the Past (USA): the fixed text of the player select and name entry screens, as a file the player can read and edit.
+/* A Link to the Past (USA): the fixed text of the player select and name entry screens and of the actions in the pause menu, as a file the
+ * player can read and edit.
  *
  * These screens do not use the message system. Their text is lists of records in bank 0C: VRAM address (2 bytes, big endian), length minus
  * one (2 bytes, big endian) and the tilemap words (tile, $18) of one row; every string is two records, the upper half of its letters and the
@@ -14,7 +15,12 @@
  * Format of the file: `key = TEXT`, one per line; lines that start with `#` are comments. The text goes after `= ` (one space), it is turned
  * into capitals, and what is left of the gap is filled with spaces. The font has A-Z, the space and ?; anything longer than the gap or
  * with another character is reported with its line and that string stays English. The letters and the name grid are not touched: the name
- * is saved in the SRAM as those tile codes. */
+ * is saved in the SRAM as those tile codes.
+ *
+ * The pause menu names what the A button does (lift, read, talk, pull, run, swim) in boxes of five tiles side by side, in the letters of the message font
+ * (tile $50 is A, $F5 a space, attribute $2D). Each is one row of five words in bank 0D that the menu copies to the tilemap, so they go
+ * through the same file, with their own table (`actions` below): the text is centred in its tiles (four letters, the first tile of a box stays blank) and the lift boxes
+ * keep their last tile (the glove level). */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -129,6 +135,96 @@ static void put_rows(Slot *sl, const char *text) { /* text == NULL: the original
     }
 }
 
+/* ---- the actions of the pause menu ---- */
+
+#define MAX_ACTION 5
+
+typedef struct {
+    const char *key;
+    uint16_t at;           /* where the row of tiles starts in bank 0D */
+    int n;                 /* tiles that are text */
+    const char *orig;      /* what the ROM has there (n letters; a space is a blank tile) */
+    int ok;
+    uint8_t keep[MAX_ACTION * 2];
+} Action;
+
+static Action actions[] = {
+    /* the boxes sit side by side and the game leaves the first tile of each blank (the lift ones are full: their last tile is the glove level), so
+     * four letters is what a word can have; "run" has a blank at both ends in the ROM and takes five */
+    { "pause.lift1", 0xF93B, 4, "LIFT", 0, { 0 } },
+    { "pause.lift2", 0xF94F, 4, "LIFT", 0, { 0 } },
+    { "pause.lift3", 0xF963, 4, "LIFT", 0, { 0 } },
+    { "pause.read",  0xF979, 4, "READ", 0, { 0 } },
+    { "pause.talk",  0xF98D, 4, "TALK", 0, { 0 } },
+    { "pause.pull",  0xF9B3, 4, "PULL", 0, { 0 } },
+    { "pause.run",   0xF9C7, 5, " RUN ", 0, { 0 } },
+    { "pause.swim",  0xF9DD, 4, "SWIM", 0, { 0 } },
+};
+#define N_ACTIONS ((int)(sizeof actions / sizeof actions[0]))
+
+static uint32_t rom24d(uint16_t a) { return 0x0D0000u | a; }
+
+static int a_tile(char ch) {
+    if (ch >= 'A' && ch <= 'Z') return 0x50 + (ch - 'A');
+    if (ch == ' ') return 0xF5;
+    return -1;
+}
+
+static char a_char(int tile) { return tile >= 0x50 && tile <= 0x69 ? (char)('A' + tile - 0x50) : ' '; }
+
+static void check_actions(void) {
+    int a, i;
+    for (a = 0; a < N_ACTIONS; a++) {
+        Action *ac = &actions[a];
+        ac->ok = 1;
+        for (i = 0; i < ac->n; i++) {
+            uint8_t tile = bus_read8(rom24d(ac->at) + (uint32_t)i * 2), attr = bus_read8(rom24d(ac->at) + (uint32_t)i * 2 + 1);
+            if (tile != (uint8_t)a_tile(ac->orig[i]) || attr != (ac->orig[i] == ' ' ? 0x2C : 0x2D)) ac->ok = 0;
+        }
+        if (!ac->ok) {
+            fprintf(stderr, "menu text: %s is not where this ROM has it: left alone\n", ac->key);
+            continue;
+        }
+        for (i = 0; i < ac->n * 2; i++) ac->keep[i] = bus_read8(rom24d(ac->at) + (uint32_t)i);
+    }
+}
+
+static void put_action(Action *ac, const char *text) { /* text == NULL: the original bytes */
+    uint8_t row[MAX_ACTION * 2];
+    int i;
+    if (text) {
+        int len = (int)strlen(text), left = (ac->n - len + 1) / 2;
+        for (i = 0; i < ac->n; i++) {
+            int k = i - left;
+            char ch = k >= 0 && k < len ? text[k] : ' ';
+            row[2 * i] = (uint8_t)a_tile(ch);
+            row[2 * i + 1] = ch == ' ' ? 0x2C : 0x2D;
+        }
+    } else memcpy(row, ac->keep, (size_t)ac->n * 2);
+    rom_overlay(rom24d(ac->at), row, (size_t)ac->n * 2);
+}
+
+/* A line `key = text` of the file when the key is an action: 1 if it was (whatever came of the text), 0 if the key is not an action. */
+static int action_line(const char *path, int line, const char *key, char *val) {
+    int a, k;
+    for (a = 0; a < N_ACTIONS && strcmp(actions[a].key, key); a++) {}
+    if (a == N_ACTIONS) return 0;
+    if (!actions[a].ok) return 1;
+    for (k = 0; val[k]; k++) {
+        if (val[k] >= 'a' && val[k] <= 'z') val[k] = (char)(val[k] - 'a' + 'A');
+        if (a_tile(val[k]) < 0) {
+            fprintf(stderr, "%s:%d: %s: the font has no \"%c\" (A-Z and space): left in English\n", path, line, key, (unsigned char)val[k] < 0x80 ? val[k] : '?');
+            return 1;
+        }
+    }
+    if (k > actions[a].n) {
+        fprintf(stderr, "%s:%d: %s is too long (%d letters, at most %d): left in English\n", path, line, key, k, actions[a].n);
+        return 1;
+    }
+    put_action(&actions[a], val);
+    return 1;
+}
+
 /* ---- the dump ---- */
 
 static void dump_menu(void) {
@@ -141,13 +237,20 @@ static void dump_menu(void) {
         fprintf(stderr, "error: cannot write %s\n", path);
         exit(2);
     }
-    fprintf(f, "# Fixed text of the player select and name entry screens as the game keeps it. It comes from your copy of the game: do not share it.\n");
+    fprintf(f, "# Fixed text of the player select, name entry and pause menu action boxes as the game keeps it. It comes from your copy of the game: do not share it.\n");
     fprintf(f, "# A text can have as many letters as its gap (A-Z, space and ?); a shorter one is filled with spaces.\n");
     for (s = 0; s < N_SLOTS; s++) {
         const Slot *sl = &slots[s];
         if (!sl->ok) continue;
         fprintf(f, "# %s: up to %d letters\n%s = ", sl->key, sl->n, sl->key);
         for (i = 0; i < sl->n; i++) fputc(char_of(bus_read8(rom24(sl->at[0].top) + 4 + (uint32_t)(sl->at[0].first + i) * 2)), f);
+        fputc('\n', f);
+    }
+    for (s = 0; s < N_ACTIONS; s++) {
+        const Action *ac = &actions[s];
+        if (!ac->ok) continue;
+        fprintf(f, "# %s: up to %d letters (A-Z and space), centred\n%s = ", ac->key, ac->n, ac->key);
+        for (i = 0; i < ac->n; i++) fputc(a_char(bus_read8(rom24d(ac->at) + (uint32_t)i * 2)), f);
         fputc('\n', f);
     }
     fclose(f);
@@ -170,6 +273,7 @@ static void parse_file(const char *path, char *text, size_t n) {
     size_t pos = 0;
     int line = 0, s;
     for (s = 0; s < N_SLOTS; s++) if (slots[s].ok) put_rows(&slots[s], NULL);
+    for (s = 0; s < N_ACTIONS; s++) if (actions[s].ok) put_action(&actions[s], NULL);
     text[n] = 0;
     while (pos < n) {
         char *ln = text + pos, *eq, *val;
@@ -187,7 +291,10 @@ static void parse_file(const char *path, char *text, size_t n) {
         val = eq + 1;
         if (*val == ' ') val++;
         for (s = 0; s < N_SLOTS && strcmp(slots[s].key, ln); s++) {}
-        if (s == N_SLOTS) { fprintf(stderr, "%s:%d: no string called %s\n", path, line, ln); continue; }
+        if (s == N_SLOTS) {
+            if (!action_line(path, line, ln, val)) fprintf(stderr, "%s:%d: no string called %s\n", path, line, ln);
+            continue;
+        }
         if (!slots[s].ok) continue;
         for (k = 0; val[k]; k++) {
             if (val[k] >= 'a' && val[k] <= 'z') val[k] = (char)(val[k] - 'a' + 'A');
@@ -239,6 +346,7 @@ void alttp_menu_poll(Cpu *c) {
     (void)c;
     if (!started) {
         check_slots();
+        check_actions();
         started = 1;
     }
     if (game_opt("language", 0) == 1 && frames++ % 30 == 0) reload_if_changed();

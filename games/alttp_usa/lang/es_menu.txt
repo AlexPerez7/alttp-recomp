@@ -1,4 +1,4 @@
-# Traduccion al espanol del texto fijo de la seleccion de partida y del registro de nombre.
+# Traduccion al espanol del texto fijo de la seleccion de partida, del registro de nombre y de las acciones del menu de pausa.
 # Texto propio: no contiene nada de la ROM. Formato: `clave = TEXTO` (ver el README); solo A-Z, espacio y ?; sin tildes ni enie.
 # select.title: hasta 14 letras
 select.title = ELIGE JUGADOR
@@ -30,3 +30,19 @@ copy.to_which = A CUAL?
 name.title =  REGISTRA  TU  NOMBRE
 # name.end: hasta 3 letras
 name.end = FIN
+# pause.lift1: hasta 4 letras (el quinto mosaico, el nivel del guante, no se toca)
+pause.lift1 = ALZA
+# pause.lift2: hasta 4 letras
+pause.lift2 = ALZA
+# pause.lift3: hasta 4 letras
+pause.lift3 = ALZA
+# pause.read: hasta 4 letras
+pause.read = LEER
+# pause.talk: hasta 4 letras
+pause.talk = DI
+# pause.pull: hasta 4 letras
+pause.pull = TIRA
+# pause.run: hasta 5 letras
+pause.run = CORRE
+# pause.swim: hasta 4 letras
+pause.swim = NADA
