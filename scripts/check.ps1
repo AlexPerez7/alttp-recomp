@@ -46,7 +46,7 @@ New-Item -ItemType Directory -Force $gen | Out-Null
 
 & $Engine codegen $Rom --all -o $gen --game games\alttp_usa.toml 2>$null
 if ($LASTEXITCODE -ne 0) { throw "codegen fallo" }
-foreach ($f in "dialog.c", "widefill.c") {
+foreach ($f in "dialog.c", "widefill.c", "text.c", "menutext.c") {
     if (-not (Test-Path "$gen\game\$f")) { throw "el motor no copio $f a out\rom\game" }
 }
 
@@ -139,11 +139,66 @@ $boxEs = FirstBox "es" @("--game-opt", "language=es", "--game-dir", $textDir)
 $boxOk = (($boxEn -join ",") -eq ($boxEs -join ","))
 Write-Host "primer cuadro de texto idéntico con language=en y language=es = $boxOk"
 
+# texto de la selección de partida y del registro de nombre (games/alttp_usa/menutext.c)
+function DumpMenu($extra) {
+    & "$out\headless.exe" $textRom --frames 300 --frame-blocks 20000 --game-opt dump_menu=1 @extra *>$null
+    if ($LASTEXITCODE -ne 0) { throw "headless.exe termino con codigo $LASTEXITCODE (volcado de menus)" }
+}
+DumpMenu @()
+$menuEn = "$out\alttp_menu_en.txt"
+$menuKeys = (Select-String -Path $menuEn -Pattern '^[a-z_.0-9]+ = ').Count
+$menuOk = ($menuKeys -eq 15)
+Write-Host "claves del volcado de menús: $menuKeys (15) = $menuOk"
+$menuTxt = (Get-Content $menuEn -Raw)
+[System.IO.File]::WriteAllText("$textDir\lang\es_menu.txt", $menuTxt)
+DumpMenu @("--game-opt", "language=es", "--game-dir", $textDir)
+$menuRound = ((Get-FileHash "$out\alttp_menu_es.txt" -Algorithm SHA256).Hash -eq (Get-FileHash $menuEn -Algorithm SHA256).Hash)
+Write-Host "ida y vuelta de es_menu.txt = volcado: idéntica = $menuRound"
+# capturas de las dos pantallas (selección de partida en el fotograma 1300, registro de nombre en el 1530)
+$toMenus = @("--press", "START@1100-1110", "--press", "A@1300-1305", "--press", "A@1500-1504")
+function MenuShot($name, $frames, $extra) {
+    $d = Join-Path $out "menu_$name"
+    New-Item -ItemType Directory -Force $d | Out-Null
+    & "$out\headless.exe" $textRom --frames $frames --frame-blocks 20000 --dump $d --screenshot "$d\shot.png" @toMenus @extra *>$null
+    if ($LASTEXITCODE -ne 0) { throw "headless.exe termino con codigo $LASTEXITCODE (menu $name)" }
+    return $d
+}
+$es = @("--game-opt", "language=es", "--game-dir", $textDir)
+$menuSame = $true
+foreach ($s in @(@("sel", 1300), @("name", 1530))) {
+    $a = MenuShot "$($s[0])_en" $s[1] @()
+    $b = MenuShot "$($s[0])_es" $s[1] $es
+    if ((Get-FileHash "$a\shot.png").Hash -ne (Get-FileHash "$b\shot.png").Hash) { $menuSame = $false }
+}
+Write-Host "pantallas de menú idénticas con language=en y language=es (es_menu.txt = volcado) = $menuSame"
+# cambiar una cadena cambia solo su sitio: unos pocos bytes del mapa de BG3 (VRAM $C000-$CFFF)
+[System.IO.File]::WriteAllText("$textDir\lang\es_menu.txt", $menuTxt.Replace("select.copy = COPY  PLAYER", "select.copy = COPIAR"))
+$a = MenuShot "sel_en" 1300 @()
+$b = MenuShot "sel_edit" 1300 $es
+$va = [System.IO.File]::ReadAllBytes("$a\vram.bin"); $vb = [System.IO.File]::ReadAllBytes("$b\vram.bin")
+$changed = @(0..($va.Length - 1) | Where-Object { $va[$_] -ne $vb[$_] })
+$menuEdit = ($changed.Count -gt 0 -and $changed.Count -le 48 -and @($changed | Where-Object { $_ -lt 0xC000 -or $_ -ge 0xD000 }).Count -eq 0)
+Write-Host "cambiar select.copy cambia $($changed.Count) bytes del mapa de BG3 (1 a 48) = $menuEdit"
+# traducido todo, la partida es la misma: la WRAM (que lleva el nombre) a los 2040 fotogramas no cambia
+$tr = $menuTxt.Replace("select.title = PLAYER  SELECT", "select.title = ELEGIR PARTIDA").Replace("name.title =  REGISTER  YOUR  NAME", "name.title = REGISTRA TU NOMBRE").Replace("name.end = END", "name.end = FIN")
+[System.IO.File]::WriteAllText("$textDir\lang\es_menu.txt", $tr)
+$a = Join-Path $out "menu_game_en"; $b = Join-Path $out "menu_game_es"
+New-Item -ItemType Directory -Force $a, $b | Out-Null
+& "$out\headless.exe" $textRom --frames 2040 --frame-blocks 20000 --dump $a @toMessage *>$null
+& "$out\headless.exe" $textRom --frames 2040 --frame-blocks 20000 --dump $b @toMessage @es *>$null
+$menuGame = ((Get-FileHash "$a\wram.bin").Hash -eq (Get-FileHash "$b\wram.bin").Hash)
+Write-Host "la WRAM del juego no cambia con los menús traducidos = $menuGame"
+
 $ok = $true
 if (-not $textOk) { Write-Error "el volcado debe tener 397 mensajes y la huella de siempre" -ErrorAction Continue; $ok = $false }
 if (-not $roundTrip) { Write-Error "con es.txt igual al volcado, el texto debe salir idéntico" -ErrorAction Continue; $ok = $false }
 if (-not $editOk) { Write-Error "cambiar una línea de es.txt debe cambiar solo ese mensaje" -ErrorAction Continue; $ok = $false }
 if (-not $boxOk) { Write-Error "el primer cuadro de texto debe ser idéntico con language=en y language=es" -ErrorAction Continue; $ok = $false }
+if (-not $menuOk) { Write-Error "el volcado de menús debe tener 15 claves" -ErrorAction Continue; $ok = $false }
+if (-not $menuRound) { Write-Error "con es_menu.txt igual al volcado, el texto de los menús debe salir idéntico" -ErrorAction Continue; $ok = $false }
+if (-not $menuSame) { Write-Error "las pantallas de menú deben ser idénticas con language=en y language=es (es_menu.txt = volcado)" -ErrorAction Continue; $ok = $false }
+if (-not $menuEdit) { Write-Error "cambiar una cadena de menú debe cambiar solo su sitio en el mapa de BG3" -ErrorAction Continue; $ok = $false }
+if (-not $menuGame) { Write-Error "traducir los menús no debe cambiar el estado de la partida" -ErrorAction Continue; $ok = $false }
 if (-not $wideOk) { Write-Error "con --wide 32 en un interior las columnas extra deben ser negras (320 de ancho)" -ErrorAction Continue; $ok = $false }
 if ($plain -ne 5) { Write-Error "sin R deberian ser 5" -ErrorAction Continue; $ok = $false }
 if ($fast -lt 2 * $plain) { Write-Error "con R deberian ser al menos el doble" -ErrorAction Continue; $ok = $false }

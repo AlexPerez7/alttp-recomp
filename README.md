@@ -12,6 +12,7 @@ Licencia: [MIT](LICENSE), solo para el código de este repositorio; no da derech
 - `games/alttp_usa/dialog.c`: C original que se compila junto al código generado. Acelera los mensajes.
 - `games/alttp_usa/widefill.c`: con la pantalla ancha (`wide` en `config.ini` o `--opt wide=N`), tapa en negro las columnas extra donde no hay mapa cargado: pasado el borde del área en el exterior, y en las salas y cuevas, siempre.
 - `games/alttp_usa/text.c`: vuelca los mensajes del juego a un fichero de texto y, con la opción `language`, los sustituye por los de `lang/es.txt`.
+- `games/alttp_usa/menutext.c`: lo mismo para el texto fijo de la selección de partida y del registro de nombre, con `lang/es_menu.txt`.
 - `scripts/check.ps1`: prueba que lo anterior funciona (necesita tu ROM).
 - `scripts/release.ps1`: arma el paquete para repartir.
 
@@ -33,6 +34,16 @@ play.bat -- --game-opt dump_text=1   # escribe romslttp_messages_en.txt junto a
 El volcado sale de **tu** copia del juego (es texto de Nintendo): se queda junto a tu ROM, está ignorado por git y no se comparte. Formato: una línea `@NNN` abre el mensaje NNN; las líneas con `#` son comentarios; los saltos de línea no cuentan; una letra, cifra, espacio o uno de `! ? . , '` es ese carácter, y cualquier otro byte va en hexadecimal entre llaves, `{73}` un byte o `{6B01}` un comando con su parámetro. El `$7F` final no se escribe.
 
 Con la opción `language` en `es` (pestaña **Game** del menú F1, o `--game-opt language=es`) cada cuadro de texto busca su mensaje en `games/alttp_usa/lang/es.txt`, con el mismo formato; el que no esté queda en inglés. El fichero se vuelve a leer cuando cambia, así que se puede editar con el juego en marcha. Aún no hay letras con tilde ni control de anchura: eso va en cambios siguientes.
+
+## Texto de los menús
+
+La selección de partida («PLAYER SELECT», «COPY PLAYER», «ERASE PLAYER», los avisos de borrar y copiar) y el registro de nombre («REGISTER YOUR NAME», «END») no usan los mensajes de arriba: su texto son tiles de la ROM. También se pueden sustituir sin tocar la ROM:
+
+```
+play.bat -- --game-opt dump_menu=1   # escribe romslttp_menu_en.txt junto a tu ROM y sale
+```
+
+Una línea `clave = TEXTO` por cadena, con su máximo de letras en un comentario; las líneas con `#` son comentarios. Con `language` en `es`, el juego lee `games/alttp_usa/lang/es_menu.txt` con el mismo formato (solo hace falta las claves que traduzcas) y se vuelve a leer cuando cambia: el texto nuevo se ve la siguiente vez que se abre la pantalla. Reglas: el texto va tras `= ` (un espacio), se pasa a mayúsculas, y lo que sobra del hueco se rellena con espacios; solo hay A–Z, espacio y `?`; un texto más largo que su hueco, o con otro carácter (acentos, `ñ`), se avisa por `stderr` con su línea y esa cadena queda en inglés. Las letras de la rejilla del nombre no se tocan: el nombre se guarda en la partida como esos códigos y se ve igual en cualquier idioma. Como el volcado, es texto de tu ROM: no se sube. El menú de pausa, el mapa y los objetos aún no se pueden traducir.
 
 ## Jugar
 

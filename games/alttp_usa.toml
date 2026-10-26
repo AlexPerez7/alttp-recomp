@@ -762,6 +762,13 @@ addr = "0E:C4E2"
 kind = "after"
 call = "alttp_text_translate"
 
+# Texto fijo de la seleccion de partida y del registro de nombre (menutext.c): volcado con --game-opt dump_menu=1 y
+# traduccion desde lang/es_menu.txt; se ejecuta una vez por fotograma, antes del trabajo del NMI (widefill.c va despues).
+[[hook]]
+addr = "00:80B5"
+kind = "before"
+call = "alttp_menu_poll"
+
 [[option]]
 key = "language"
 label = "Language"
