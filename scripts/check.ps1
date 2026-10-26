@@ -4,13 +4,13 @@
 # --game-opt dialog_skip=0. Después comprueba la pantalla ancha (games/alttp_usa/widefill.c): con --wide 32, en la casa de Link
 # (interior) la captura mide 320 de ancho y las 32 columnas extra de cada lado son negras.
 #
-#   powershell -File scripts\check.ps1 [-Rom roms\alttp_usa.sfc] [-Engine ..\snes-recomp\target\release\snes-recomp.exe]
+#   powershell -File scripts\check.ps1 [-Rom roms\alttp_usa.sfc] [-Engine ruta\a\snes-recomp.exe]   (por defecto: el de play.bat)
 #
 # Se omite con un aviso (código 0) si falta la ROM, el motor o un compilador de Visual Studio. Todo lo que genera va a
 # out\ (ignorado por git): deriva de la ROM y no se sube.
 param(
     [string]$Rom = "roms\alttp_usa.sfc",
-    [string]$Engine = "..\snes-recomp\target\release\snes-recomp.exe",
+    [string]$Engine = "",
     [string]$Vcvars = ""
 )
 $ErrorActionPreference = "Continue"   # los programas nativos escriben en stderr; se comprueba $LASTEXITCODE
@@ -20,7 +20,14 @@ Set-Location $root
 function Skip($why) { Write-Warning "omitido: $why"; exit 0 }
 
 if (-not (Test-Path $Rom)) { Skip "no hay ROM en $Rom" }
-if (-not (Test-Path $Engine)) { Skip "no hay motor en $Engine (cargo build --release en snes-recomp)" }
+if ($Engine -eq "") {
+    # el mismo motor que usa play.bat: SNES_ENGINE, engine\ de este repositorio o, en su defecto, el compilado en ..\snes-recomp
+    $cands = @()
+    if ($env:SNES_ENGINE) { $cands += "$env:SNES_ENGINE\snes-recomp.exe" }
+    $cands += "engine\snes-recomp.exe", "..\snes-recomp\target\release\snes-recomp.exe"
+    $Engine = $cands | Where-Object { Test-Path $_ } | Select-Object -First 1
+}
+if (-not $Engine -or -not (Test-Path $Engine)) { Skip "no hay motor (ejecuta play.bat una vez para extraerlo a engine\, o define SNES_ENGINE)" }
 if ($Vcvars -eq "") {
     $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
     if (Test-Path $vswhere) {

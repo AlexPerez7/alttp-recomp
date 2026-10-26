@@ -31,6 +31,17 @@ Licencia: [MIT](LICENSE), solo para el código de este repositorio; no da derech
 
 Controles, menú F1, opciones, partidas guardadas (`.srm` junto a la ROM) y demás: ver el [README del motor](https://github.com/AlexPerez7/snes-recomp#readme).
 
+### Desde este repositorio (para desarrollar)
+
+```
+play.bat                 # construye si hace falta y abre el juego (ROM en roms\alttp_usa.sfc)
+play.bat -Rebuild        # borra la caché y lo construye de nuevo
+play.bat -NoLaunch       # solo construye
+play.bat -- --game-opt dialog_skip=0   # opciones del juego
+```
+
+`scripts\play.ps1` usa el motor de `engine\` (ignorado por git). Si no existe, lo extrae del zip más reciente de `..\snes-recomp\out\release\` o del que pases con `-EngineZip`; con `SNES_ENGINE` apuntas a otra carpeta. Una vez extraído no hace falta el repositorio del motor. Para actualizar el motor, borra `engine\` y repite.
+
 ### Con el motor
 
 ```

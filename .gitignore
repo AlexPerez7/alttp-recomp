@@ -7,3 +7,5 @@
 /roms/
 /out/
 *.log
+/engine/
+/engine.tmp/
