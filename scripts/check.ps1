@@ -111,7 +111,7 @@ DumpText @()
 $en = "$out\alttp_messages_en.txt"
 $messages = (Select-String -Path $en -Pattern '^@\d+$').Count
 $enHash = (Get-FileHash $en -Algorithm SHA256).Hash
-$textOk = ($messages -eq 397 -and $enHash -eq "2FFE64AD46E947F441C34B7B7E970640B979C742A2EDFE4F0B05A38C2831C7AE")
+$textOk = ($messages -eq 397 -and $enHash -eq "E202ED47B0473CA3CD090A85054EF3F939E03FDD65B1A539FE183306DCA929A1")
 Write-Host "volcado de mensajes: $messages mensajes, huella correcta = $textOk"
 # ida y vuelta: con lang\es.txt igual al volcado, el juego produce exactamente el mismo texto
 Copy-Item $en "$textDir\lang\es.txt"

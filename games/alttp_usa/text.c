@@ -422,14 +422,114 @@ static void use_letters(int on) {
     letters_state = on;
 }
 
+/* ---- the buttons of the text ---- */
+
+/* The text names a button with the icon of one code: $5B A, $5C B, $5D X, $5E Y. They show what the player presses instead (the key or the
+ * button of the controller, as the engine's `input_label` says): a controller's face button takes the glyph of its code (the game's own icon of
+ * that letter, or the cross, the circle, the square or the triangle on a PlayStation controller); anything else is spelled with the letters of
+ * the font in the message. */
+static const struct { uint8_t code; uint16_t mask; } buttons[] = { { 0x5B, 0x0080 }, { 0x5C, 0x8000 }, { 0x5D, 0x0040 }, { 0x5E, 0x4000 } };
+
+/* The four PlayStation symbols (cross, circle, square, triangle) as 6x6 bodies; the outline is drawn around them. */
+static const char *const symbols[4][6] = {
+    { "##..##", ".####.", "..##..", "..##..", ".####.", "##..##" },
+    { ".####.", "##..##", "##..##", "##..##", "##..##", ".####." },
+    { "######", "##..##", "##..##", "##..##", "##..##", "######" },
+    { "..##..", "..##..", ".#..#.", "##..##", "##..##", "######" },
+};
+
+static uint8_t icon_orig[4][32];  /* the glyphs of the four codes as the game has them */
+static int icon_read;
+static int icon_state[4] = { -1, -1, -1, -1 }; /* what each code draws: -1 its own, 0-3 a symbol, 4-7 the own icon of another button */
+
+/* Makes code number `k` of `buttons` draw `want` (as in icon_state). */
+static void set_icon(int k, int want) {
+    uint8_t g[16][2];
+    int r, c, y, x;
+    if (icon_state[k] == want) return;
+    if (want < 0) memcpy(g, icon_orig[k], 32);
+    else if (want >= 4) memcpy(g, icon_orig[want - 4], 32);
+    else {
+        memset(g, 0, sizeof g);
+        for (r = 0; r < 6; r++)
+            for (c = 0; c < 6; c++)
+                if (symbols[want][r][c] == '#') put_pixel(g, 4 + r, 1 + c, 8, 'o');
+        for (r = 0; r < 6; r++)
+            for (c = 0; c < 6; c++)
+                if (symbols[want][r][c] == '#')
+                    for (y = -1; y <= 1; y++)
+                        for (x = -1; x <= 1; x++) put_pixel(g, 4 + r + y, 1 + c + x, 8, '.');
+    }
+    rom_overlay(glyph_at(buttons[k].code), (const uint8_t *)g, 16);
+    rom_overlay(glyph_at(buttons[k].code) + 0x100u, (const uint8_t *)g + 16, 16);
+    icon_state[k] = want;
+}
+
+/* The codes that spell `text` into out (up to max); 0 when it has a character the font cannot write. */
+static int label_codes(const char *text, uint8_t *out, int max) {
+    int n = 0, i = 0;
+    while (text[i]) {
+        int len, code;
+        long cp = utf8_at(text + i, strlen(text + i), &len);
+        if (cp < 0) return 0;
+        code = cp < 0x80 ? code_of((char)cp) : letters_state == 1 ? accent_code((unsigned)cp) : -1;
+        if (code < 0 || n == max) return 0;
+        out[n++] = (uint8_t)code;
+        i += len;
+    }
+    return n;
+}
+
+/* Shows the buttons the player uses in the message of the buffer (it ends in $7F): the icons of the codes are set, and where a label has to be
+ * spelled the buffer is rewritten with it (nothing changes in the buffer when none is). */
+static void spell_buttons(void) {
+    static uint8_t out[BUF_MAX], spelled[4][16];
+    int spelled_n[4], icon_want[4], at = 0, n = 0, changed = 0, i, k;
+    for (k = 0; k < 4; k++) {
+        char text[64];
+        int kind = input_label(buttons[k].mask, text, sizeof text);
+        spelled_n[k] = 0;
+        icon_want[k] = -1;
+        if (kind >= 2 && text[0] && !text[1] && strchr("ABXY", text[0]))
+            icon_want[k] = kind == 3 ? (int)(strchr("ABXY", text[0]) - "ABXY") : 4 + (int)(strchr("ABXY", text[0]) - "ABXY");
+        else if (kind) spelled_n[k] = label_codes(text, spelled[k], 16);
+    }
+    if (!icon_read) { /* once, before any glyph is replaced */
+        for (k = 0; k < 4; k++) read_glyph(buttons[k].code, (uint8_t (*)[2])icon_orig[k]);
+        icon_read = 1;
+    }
+    for (k = 0; k < 4; k++) set_icon(k, icon_want[k]);
+    for (k = 0; k < 4; k++) if (spelled_n[k]) changed = 1;
+    if (!changed) return;
+    for (;;) {
+        uint8_t b = bus_read8(BUF + (uint32_t)at);
+        int len = command_len(b), m;
+        if (at + len >= BUF_MAX - 20 || n + len >= BUF_MAX - 20) return;
+        for (m = 0; m < len; m++) out[n + m] = bus_read8(BUF + (uint32_t)(at + m));
+        if (len == 1)
+            for (k = 0; k < 4; k++)
+                if (buttons[k].code == b && spelled_n[k]) {
+                    memcpy(out + n, spelled[k], (size_t)spelled_n[k]);
+                    n += spelled_n[k] - 1;
+                    break;
+                }
+        n += len;
+        at += len;
+        if (b == 0x7F) break;
+    }
+    for (i = 0; i < n; i++) bus_write8(BUF + (uint32_t)i, out[i]);
+}
+
 /* After the loader (0E:C4E2): puts the translated text in the buffer in place of the English one. */
 void alttp_text_translate(Cpu *c) {
     int id, i;
     (void)c;
-    if (game_opt("language", 0) != 1) return;
-    reload_if_changed();
-    id = wram_read8(0x1CF0) | wram_read8(0x1CF1) << 8;
-    use_letters(id >= 0 && id < MSG_MAX && msg_data[id] != NULL);
-    if (id < 0 || id >= MSG_MAX || !msg_data[id]) return;
-    for (i = 0; i < msg_len[id]; i++) bus_write8(BUF + (uint32_t)i, msg_data[id][i]);
+    if (game_opt("language", 0) == 1) {
+        reload_if_changed();
+        id = wram_read8(0x1CF0) | wram_read8(0x1CF1) << 8;
+        use_letters(id >= 0 && id < MSG_MAX && msg_data[id] != NULL);
+        if (id >= 0 && id < MSG_MAX && msg_data[id])
+            for (i = 0; i < msg_len[id]; i++) bus_write8(BUF + (uint32_t)i, msg_data[id][i]);
+    }
+    if (!game_opt("dump_text", 0)) spell_buttons(); /* the dump keeps the codes of the buttons as the game has them */
 }
