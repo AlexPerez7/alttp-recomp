@@ -1,0 +1,32 @@
+# Traduccion al espanol del texto fijo de la seleccion de partida y del registro de nombre.
+# Texto propio: no contiene nada de la ROM. Formato: `clave = TEXTO` (ver el README); solo A-Z, espacio y ?; sin tildes ni enie.
+# select.title: hasta 14 letras
+select.title = ELIGE JUGADOR
+# select.copy: hasta 12 letras
+select.copy = COPIAR DATOS
+# select.erase: hasta 12 letras
+select.erase = BORRAR DATOS
+# select.copy_ok: hasta 7 letras
+select.copy_ok = COPIADO
+# select.erase_this: hasta 17 letras
+select.erase_this = BORRAR LOS DATOS
+# erase.title: hasta 12 letras
+erase.title = BORRAR DATOS
+# erase.which: hasta 24 letras
+erase.which = QUE DATOS QUIERES
+# erase.to_erase: hasta 10 letras
+erase.to_erase = BORRAR ?
+# erase.quit: hasta 4 letras
+erase.quit = SAL
+# copy.title: hasta 12 letras
+copy.title = COPIAR DATOS
+# copy.quit: hasta 4 letras
+copy.quit = SAL
+# copy.which: hasta 6 letras
+copy.which = CUAL?
+# copy.to_which: hasta 9 letras
+copy.to_which = A CUAL?
+# name.title: hasta 22 letras
+name.title =  REGISTRA  TU  NOMBRE
+# name.end: hasta 3 letras
+name.end = FIN

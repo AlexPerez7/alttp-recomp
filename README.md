@@ -33,7 +33,7 @@ play.bat -- --game-opt dump_text=1   # escribe romslttp_messages_en.txt junto a
 
 El volcado sale de **tu** copia del juego (es texto de Nintendo): se queda junto a tu ROM, está ignorado por git y no se comparte. Formato: una línea `@NNN` abre el mensaje NNN; las líneas con `#` son comentarios; los saltos de línea no cuentan; una letra, cifra, espacio o uno de `! ? . , '` es ese carácter, y cualquier otro byte va en hexadecimal entre llaves, `{73}` un byte o `{6B01}` un comando con su parámetro. El `$7F` final no se escribe.
 
-Con la opción `language` en `es` (pestaña **Game** del menú F1, o `--game-opt language=es`) cada cuadro de texto busca su mensaje en `games/alttp_usa/lang/es.txt`, con el mismo formato; el que no esté queda en inglés. El fichero se vuelve a leer cuando cambia, así que se puede editar con el juego en marcha. Aún no hay letras con tilde ni control de anchura: eso va en cambios siguientes.
+Con la opción `language` en `es` (pestaña **Game** del menú F1, o `--game-opt language=es`) cada cuadro de texto busca su mensaje en `games/alttp_usa/lang/es.txt`, con el mismo formato; el que no esté queda en inglés. El fichero se vuelve a leer cuando cambia, así que se puede editar con el juego en marcha. El repositorio trae esa traducción al español (382 de los 397 mensajes; los demás no tienen texto), escrita para este proyecto: sin tildes ni `ñ` ni signos de apertura, porque la fuente del juego no los tiene, y con líneas de 32 letras como máximo. Un fichero `lang/es.txt` que sea copia del volcado deriva de la ROM y no se debe subir.
 
 ## Texto de los menús
 
@@ -43,7 +43,7 @@ La selección de partida («PLAYER SELECT», «COPY PLAYER», «ERASE PLAYER», 
 play.bat -- --game-opt dump_menu=1   # escribe romslttp_menu_en.txt junto a tu ROM y sale
 ```
 
-Una línea `clave = TEXTO` por cadena, con su máximo de letras en un comentario; las líneas con `#` son comentarios. Con `language` en `es`, el juego lee `games/alttp_usa/lang/es_menu.txt` con el mismo formato (solo hace falta las claves que traduzcas) y se vuelve a leer cuando cambia: el texto nuevo se ve la siguiente vez que se abre la pantalla. Reglas: el texto va tras `= ` (un espacio), se pasa a mayúsculas, y lo que sobra del hueco se rellena con espacios; solo hay A–Z, espacio y `?`; un texto más largo que su hueco, o con otro carácter (acentos, `ñ`), se avisa por `stderr` con su línea y esa cadena queda en inglés. Las letras de la rejilla del nombre no se tocan: el nombre se guarda en la partida como esos códigos y se ve igual en cualquier idioma. Como el volcado, es texto de tu ROM: no se sube. El menú de pausa, el mapa y los objetos aún no se pueden traducir.
+Una línea `clave = TEXTO` por cadena, con su máximo de letras en un comentario; las líneas con `#` son comentarios. Con `language` en `es`, el juego lee `games/alttp_usa/lang/es_menu.txt` con el mismo formato (solo hace falta las claves que traduzcas) y se vuelve a leer cuando cambia: el texto nuevo se ve la siguiente vez que se abre la pantalla. Reglas: el texto va tras `= ` (un espacio), se pasa a mayúsculas, y lo que sobra del hueco se rellena con espacios; solo hay A–Z, espacio y `?`; un texto más largo que su hueco, o con otro carácter (acentos, `ñ`), se avisa por `stderr` con su línea y esa cadena queda en inglés. Las letras de la rejilla del nombre no se tocan: el nombre se guarda en la partida como esos códigos y se ve igual en cualquier idioma. El repositorio trae `es_menu.txt` con la traducción al español. El menú de pausa, el mapa y los objetos aún no se pueden traducir.
 
 ## Jugar
 

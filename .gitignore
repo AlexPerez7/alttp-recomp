@@ -12,5 +12,4 @@
 # volcado del texto de la ROM (derivado de ella)
 alttp_messages_*.txt
 alttp_menu_*.txt
-# es.txt de prueba: copia del volcado, deriva de la ROM (una traduccion propia se anade a mano con git add -f)
-games/*/lang/es*.txt
+# games/*/lang/es.txt y es_menu.txt son la traduccion propia al espanol y SI se suben; nunca una copia del volcado (derivado de la ROM)

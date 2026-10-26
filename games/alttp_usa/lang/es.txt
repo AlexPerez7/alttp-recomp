@@ -1,0 +1,2325 @@
+# Traduccion al espanol de los mensajes. Texto propio: no contiene nada de la ROM.
+# Solo A-Z, a-z, 0-9, espacio y ! ? . , ' ; sin tildes ni enie. Las llaves son comandos del juego.
+# Formato: ver el README.
+@003
+{7A00}Guardar y continuar{75}
+Guardar y salir{76}
+No guardar y continuar
+@005
+No puedes entrar si algo{75}
+te esta siguiendo.
+@013
+LINK, voy a salir un rato.{75}
+Volvere al amanecer.{76}
+No salgas de casa.
+@014
+Unnh{43} LINK, no queria que{75}
+te metieras en esto{43}  Te dije{76}
+que no salieras de casa{43}{7E}{73}
+Toma mi espada y mi escudo y{73}
+escucha.  Concentra poder en la{73}
+hoja {45}manten el boton {5C}{46}.{7E}{73}
+{43}Despues sueltalo con la{73}
+tecnica secreta que nos legaron{73}
+nuestros ancestros{43}{7E}{73}
+LINK, tu puedes!{73}
+Salva a la Princesa{43}{73}
+Zelda es tu{43} {43} {43}
+@015
+Que haces despierto tan tarde,{75}
+chico?  Ya podras trasnochar{76}
+cuando seas mayor!  A casa!
+@016
+Veo que traes un mapa para no{75}
+perderte.  {45}Pulsa el boton{76}
+{5D} para ver tu mapa{46}.
+@017
+Pareces fuerte para un chico.{75}
+Cuanto puedes levantar?  {45}Pulsa{76}
+el boton {5B} junto a un objeto{7E}{73}
+para levantarlo.{46}
+@018
+Seguro que no ves la hora de{75}
+tener edad de usar una espada!{76}
+{45}Pulsa el boton {5C} para usar{7E}{73}
+tu espada cuando la tengas.{46}
+@019
+Esa marca en tu mapa debe ser{75}
+tu destino.
+@020
+Es comun hallar objetos de{75}
+valor en los cofres.  {45}Pulsa el{76}
+boton {5B} frente a un cofre para{7E}{73}
+abrirlo.{46}
+@021
+Los soldados hemos visto mundo,{75}
+chico.  Puedes aprender mucho{76}
+de nosotros.  Eso ya lo sabes!
+@022
+Busca al anciano de la aldea{75}
+y consigue la Espada Maestra.
+@023
+Princesa Zelda, estas a salvo!{75}
+Fuiste tu, LINK?
+@024
+Siento que una poderosa fuerza{75}
+maligna guia al brujo y{76}
+aumenta su poder magico.{7E}{73}
+La unica arma capaz de vencer{73}
+al brujo es la legendaria{73}
+Espada Maestra.{7E}{73}
+Dicen que el anciano de la aldea{73}
+desciende de uno de los{73}
+siete sabios.  Quiza pueda{7E}{73}
+decirte mas{43}  Marcare su casa{73}
+en tu mapa.  Pero ten mucho{73}
+cuidado!  Seguro que los{7E}{73}
+soldados del castillo te{73}
+buscan ya!  {43}    {43}    {43}{792D}{73}
+Escondere aqui a la Princesa{7E}{73}
+Zelda.  Busca al anciano!{7E}{73}
+{43}    {43}    {43}{73}
+Lo entiendes?{73}
+    {44} Si{73}
+       Para nada{68}
+@025
+Si derrotas al brujo, los{75}
+soldados quiza recobren{76}
+la cordura.{7E}{73}
+Ve, busca los Colgantes!
+@026
+Lleva los tres Colgantes al{75}
+Bosque Perdido.  La Espada{76}
+Maestra te espera alli.
+@027
+LINK!  Llegas un segundo tarde.{75}
+He fallado{43} Zelda{43}{76}
+Los soldados la secuestraron.{7E}{73}
+La llevaron al castillo.{73}
+Debes hallarla antes de que{73}
+el brujo use su magia.{7E}{73}
+Por favor{43}Eres nuestra unica{73}
+esperanza{43}
+@028
+Gracias, LINK.  Presentia que{75}
+te estabas acercando.
+@029
+Si, fue LINK quien me ayudo{75}
+a escapar de la mazmorra!{76}
+Cuando era prisionera, el brujo{7E}{73}
+dijo, {4C}Cuando termine contigo,{73}
+la ultima, el sello de los{73}
+sabios se abrira.{4C}{7E}{73}
+{43}    {43}    {43}{73}
+LINK, no dejes que la tierra{73}
+de Hyrule caiga en las{7E}{73}
+garras del brujo.{73}
+Si libera el sello de los{73}
+siete sabios, un poder maligno{7E}{73}
+arrasara esta tierra.{73}
+Antes de que eso ocurra{43}{73}
+antes de que sea tarde{43}{7E}{73}
+destruye al brujo antes de que{73}
+destruya todo Hyrule!  Puedes!{73}
+Tu puedes{43}
+@030
+LINK, ten cuidado ahi fuera!{75}
+Se que puedes salvar Hyrule!
+@031
+{7A03}Ayudame{43}{7801}{76}
+Por favor, ayudame{43}{7E}{73}
+Soy prisionera en la mazmorra{73}
+del castillo.{73}
+Me llamo Zelda.{7E}{73}
+El brujo Agahnim ha hecho{43}{73}
+algo a las otras chicas{73}
+desaparecidas.  Solo quedo yo{43}{7E}{73}
+Agahnim ha tomado el control{73}
+del castillo e intenta abrir{73}
+el sello de los siete sabios.{7E}{73}
+{43}   {43}{73}
+Estoy en la mazmorra del{73}
+castillo.{7E}{73}
+Ayudame{43}
+@032
+{7A03}Ayudame{43}{75}
+Estoy en la mazmorra del{76}
+castillo.{7E}{73}
+Se que hay un pasadizo oculto{73}
+desde fuera del castillo hasta{73}
+el jardin interior.
+@033
+Hay un pasaje secreto en la{75}
+sala del trono que lleva al{76}
+Santuario.  Seguro que el viejo{7E}{73}
+de alli nos ayudara.
+@034
+Esa estanteria decorativa debe{75}
+abrirse.  Tienes una luz?{76}
+Dentro esta oscurisimo y no se{7E}{73}
+ve nada sin ella.{73}
+Si estas listo, vamos!{73}
+Empujala desde la izquierda!
+@035
+Debes tirar de la palanca para{75}
+abrir la puerta.  {45}Pulsa el{76}
+boton {5B} y manten Abajo en{7E}{73}
+la cruceta.{46}
+@036
+Bien, salgamos de aqui antes{75}
+de que el brujo se de cuenta.{76}
+Conozco un camino secreto, pero{7E}{73}
+primero debemos ir al{73}
+primer piso.  Vamos!
+@037
+LINK, escucha con atencion.  El{75}
+brujo controla con magia a todos{76}
+los soldados del castillo.{7E}{73}
+Temo lo peor para{73}
+mi padre{43}{73}
+El brujo es un demonio inhumano{7E}{73}
+con grandes poderes magicos!{73}
+{43}   {43}   {43}{7E}{73}
+Lo entiendes?{73}
+    {44} Si{73}
+       Para nada{68}
+@038
+Sigue las marcas que el{75}
+anciano hizo en tu mapa{76}
+cuando explores.{7E}{73}
+Si no sabes que hacer ahora,{73}
+tambien puedes visitar a una{73}
+adivina.
+@039
+LINK, eres maravilloso!{75}
+Como pensaba, tienes dentro{76}
+el poder del Heroe!{7E}{73}
+Ahora debes conseguir la Espada{73}
+Maestra.  Confio en que puedes{73}
+derrotar al malvado brujo!
+@040
+{7A03}LINK!  Ayuda!  Los soldados{75}
+vienen al Santuario!{76}
+AAAAAAAAH!{7E}{73}
+{43} {43} {43}
+@041
+Despues de estas alcantarillas{75}
+estaremos muy cerca del{76}
+Santuario!{7E}{73}
+Cuidado!
+@042
+El Santuario esta justo tras esa{75}
+puerta.  Tira de la palanca de{76}
+alli.
+@043
+Quien?  Ah, eres tu, LINK!{75}
+En que puedo ayudarte, joven?{76}
+El anciano?  Ah, nadie lo ha{7E}{73}
+visto desde que el brujo empezo{73}
+a reunir victimas{43}{73}
+{43}   {43}   {43}{7E}{73}
+Que?  La Espada Maestra?  Bueno,{73}
+no recuerdo bien los detalles,{73}
+pero{43}
+@044
+Hace mucho, un pueblo prospero{75}
+llamado los Hylia habitaba{76}
+esta tierra{43}{7E}{73}
+Las leyendas hablan de muchos{73}
+tesoros que los Hylia ocultaron{73}
+por toda la tierra{43}{7E}{73}
+La Espada Maestra, una espada{73}
+poderosa forjada contra los de{73}
+corazon malvado, es uno de{7E}{73}
+ellos.  Dicen que ahora duerme{73}
+en lo profundo del bosque{43}{73}
+{43} {43} {43}{7E}{73}
+Entiendes la leyenda?{73}
+    {44} Si{73}
+       Para nada{68}
+@045
+En fin, busca al anciano.{75}
+Alguien en la aldea debe saber{76}
+donde esta.{7E}{73}
+Cuidate, LINK{43}
+@046
+Ohhh, LINK.  Has cambiado!{75}
+Te ves maravilloso{43}  Por favor{76}
+salvanos de Agahnim{7E}{73}
+el brujo!
+@047
+Eh!  Aqui esta LINK, el{75}
+hombre buscado!  Soldados!{76}
+Quien sea!  Vengan rapido!
+@048
+Increible!  Por fin tienes los{75}
+tres Colgantes{43}  Ahora debes ir{76}
+al Bosque Perdido.{7E}{73}
+Si eres el verdadero Heroe, la{73}
+propia espada te elegira.{73}
+{43} {43} {43}
+@049
+Soy demasiado viejo para luchar.{75}
+Solo puedo confiar en ti.
+@050
+En efecto, soy Sahasrahla, el{75}
+anciano y descendiente de los{76}
+siete sabios.{7E}{73}
+{43}   {43}     Ah, si?{73}
+LINK, me sorprende que un joven{73}
+como tu busque la espada que{7E}{73}
+destruye el mal.  No cualquiera{73}
+puede usar esa arma.  Dicen que{73}
+solo el Heroe de los Colgantes{7E}{73}
+puede blandir la espada.{73}
+{43}   {43}   {43}{7E}{73}
+De verdad quieres encontrarla?{73}
+    {44} Si!{73}
+       Claro que si!{68}
+@051
+Bien.  Como prueba, puedes traer{75}
+el Colgante del Valor del{76}
+Palacio del Este?{7E}{73}
+Si lo traes, te contare mas{73}
+de la leyenda y te dare un{73}
+artefacto magico.{792D}{7E}{73}
+Ahora, avanza hacia el palacio.
+@052
+Otros parientes de los sabios se{75}
+ocultan de los seguidores del{76}
+malvado brujo.{7E}{73}
+Debes encontrarlos.
+@053
+{7A03}LINK, soy yo, Sahasrahla.{75}
+Me comunico contigo a traves{76}
+del vacio mediante telepatia{43}{7E}{73}
+El lugar donde estas ahora{73}
+era la Tierra Dorada, pero un{73}
+poder maligno la convirtio{7E}{73}
+en el Mundo Oscuro.  El brujo{73}
+rompio el sello de los sabios{73}
+y abrio una puerta que une{7E}{73}
+los mundos en el Castillo de{73}
+Hyrule.  Para salvar esta mitad{73}
+del mundo, el Mundo de la Luz,{7E}{73}
+debes recuperar el Poder{73}
+Dorado.  Tambien debes rescatar{73}
+a las siete doncellas que{7E}{73}
+Agahnim envio al Mundo Oscuro.{73}
+Como miembros del linaje de{73}
+los siete sabios, tienen un{7E}{73}
+poder que seguro te ayudara.{73}
+Las doncellas estan encerradas{73}
+en mazmorras ocultas llenas de{7E}{73}
+criaturas malvadas y trampas.{73}
+El Palacio de la Oscuridad{73}
+debe ser tu primera meta!{792D}{7E}{73}
+LINK, solo puedo confiar en ti.{73}
+Por favor, cumple el deseo de{73}
+este anciano.{7E}{73}
+Te lo ruego!
+@054
+{7A03}Pero noto tu impotencia{43}{75}
+Antes de seguir, busca la Perla{76}
+Lunar en el Monte de la Muerte.{7E}{73}
+Te protegera de la magia del{73}
+Mundo Oscuro para que conserves{73}
+tu figura heroica.
+@055
+Un objeto util esta oculto en la{75}
+cueva del lado este del Lago{76}
+Hylia.  Consiguelo!
+@056
+Oh!?  Conseguiste el Colgante{75}
+del Valor!  Ahora te contare mas{76}
+de la leyenda{43}{7E}{73}
+Hace tres o cuatro generaciones,{73}
+una orden de caballeros protegia{73}
+a la realeza de los Hylia.{7E}{73}
+Estos Caballeros de Hyrule eran{73}
+tambien guardianes del Colgante{73}
+del Valor.{7E}{73}
+Por desgracia, casi todos{73}
+murieron en la gran guerra{73}
+contra el mal que estallo cuando{7E}{73}
+los siete sabios crearon su{73}
+sello.  Entre los descendientes{73}
+de los Caballeros de Hyrule{7E}{73}
+debe surgir un heroe.{73}
+{43}Ya veo.  LINK, te creo.{73}
+Debes conseguir los Colgantes{7E}{73}
+que faltan.{73}
+Y llevalo contigo.{73}
+Es un tesoro que las familias{7E}{73}
+de los sabios han transmitido.{73}
+Quiero que lo tengas.
+@057
+Tienes razon, joven!{75}
+Soy Sahasrahla, el anciano de{76}
+la aldea y descendiente de los{7E}{73}
+siete sabios.{73}
+{43} {43} {43} Que?{73}
+LINK, me sorprende que un joven{7E}{73}
+como tu busque la espada que{73}
+destruye el mal.  No cualquiera{73}
+puede usar esa espada.{7E}{73}
+Segun los relatos de los Hylia,{73}
+solo el Heroe que haya vencido{73}
+a tres grandes males y ganado{7E}{73}
+los tres Colgantes puede{73}
+blandir la espada{43}{73}
+{43} {43} {43}{7E}{73}
+Veo que has obtenido el{73}
+Colgante del Valor.  Te hablare{73}
+de la leyenda que lo rodea.{7E}{73}
+Hace tres o cuatro generaciones{73}
+una orden de caballeros protegia{73}
+a la realeza de los Hylia.{7E}{73}
+Estos Caballeros de Hyrule eran{73}
+tambien guardianes del Colgante{73}
+del Valor.{7E}{73}
+Por desgracia, casi todos{73}
+murieron en la gran guerra{73}
+contra el mal que estallo{7E}{73}
+cuando los siete sabios crearon{73}
+su sello.  Entre los{73}
+descendientes de los Caballeros{7E}{73}
+de Hyrule debe surgir un heroe.{73}
+{43}Ya veo.  LINK, te creo.{73}
+Debes conseguir los Colgantes{7E}{73}
+que faltan.{73}
+Y llevalo contigo.{73}
+Es un tesoro que las familias{7E}{73}
+de los sabios han transmitido.{73}
+Quiero que lo tengas.
+@058
+Dare 100 Rupias al hombre{75}
+que halle a los descendientes{76}
+de los sabios.   EL REY
+@059
+  {4A}{4B}  SE BUSCA!  Es el{75}
+criminal que secuestro a Zelda.{76}
+Avisa a un soldado si lo ves!
+@060
+     PELIGRO!{75}
+No entres al Monte de la Muerte{76}
+sin permiso del Rey!
+@061
+Por aqui al{75}
+     Bosque Perdido
+@062
+           PELIGRO!{75}
+Cuidado con el agua y los Zora!
+@063
+Bienvenido a la Tienda Magica.{75}
+La Cascada de los Deseos esta{76}
+mas adelante.
+@064
+Esta cueva lleva al camino de{75}
+vuelta a la Aldea Kakariko.
+@065
+Por aqui {4E}{75}
+         Lago Hylia{76}
+         Tienda
+@066
+Por aqui {4F}{75}
+         Aldea Kakariko
+@067
+Por aqui {4F}{75}
+         Desierto del Misterio
+@068
+Por aqui {4D} {50}{75}
+         Tienda Magica{76}
+         Cascada de los Deseos
+@069
+Por aqui {50} Palacio del Este{76}
+Por aqui {4F} Castillo de Hyrule
+@070
+{75}
+        Lago Hylia
+@071
+No hagas caso al hombre{75}
+de mediana{40}edad que esta{76}
+junto a este cartel.{7E}{73}
+Dejalo en paz!
+@072
+{75}
+La Casa de los Madereros{76}
+A. Paleto y B. Paleto
+@073
+Por aqui {4E}{75}
+       Aldea Kakariko
+@074
+Doble, doble, fatiga y tormento,{75}
+fuego arde y caldero hierve{43}{76}
+Hago un brebaje de hongos{43}
+@075
+Je je{43}  Gracias, joven{75}
+{43}  Vuelve a la tienda{76}
+mas tarde, habra algo bueno{43}{7E}{73}
+Je je{43}
+@076
+Mmmmm{43}  Huele a fruta{75}
+podrida{43}  Si me das ese{76}
+Hongo, termino mi brebaje.{7E}{73}
+Je je{43}
+@077
+Si quieres comprar la pocion,{75}
+trae una botella donde{76}
+ponerla{43}  Je je je!
+@078
+La roja es la medicina de vida.{75}
+La verde es la de magia.{76}
+La azul renueva ambas, vida y{7E}{73}
+magia.{73}
+Toma, prueba una muestra de la{73}
+Pocion Roja{43}  Je je!
+@079
+Sin una botella magica no{75}
+puedes comprar pociones.{76}
+Je je je!
+@080
+No,  no,  no{43}  No puedo{75}
+echar nada en una botella llena.{76}
+Je je je!
+@081
+Conseguiste la Lampara!{75}
+Ahora puedes encender antorchas{76}
+y ver tu camino en la oscuridad.
+@082
+Conseguiste el Boomerang!{75}
+Pruebalo!  {45}Para elegir un{76}
+objeto, pulsa el boton Start.{46}
+@083
+Encontraste el Arco!{75}
+Puedes disparar flechas hasta{76}
+que se acaben!
+@084
+Te prestaron una pala!{75}
+Puedes cavar en muchos sitios.{76}
+Nunca sabes que encontraras!
+@085
+Esta es la Capa Magica!{75}
+Eres invisible al llevarla!{76}
+Vigila tu Barra de Magia!
+@086
+Es Polvo Magico!{75}
+Prueba a espolvorearlo sobre{76}
+enemigos y muchas otras cosas!
+@087
+Compraste las Aletas Zora!{75}
+Con ellas podras nadar incluso{76}
+en aguas profundas!
+@088
+Conseguiste el Guante de Poder!{75}
+Sientes fuerza en ambas manos!{76}
+Ahora puedes levantar y llevar{7E}{73}
+piedras!
+@089
+Ganaste el Colgante del{75}
+Valor!  Llevaselo a{76}
+Sahasrahla!{7E}{73}
+Quedan dos Colgantes!
+@090
+Ganaste el Colgante del Poder!{75}
+Tu meta de hallar tres{76}
+Colgantes esta a la vista!{7E}{73}
+Ve por el ultimo!
+@091
+Ganaste el Colgante de la{75}
+Sabiduria!  Ya tienes los tres{76}
+Colgantes!  Ve ahora al Bosque{7E}{73}
+Perdido a por{73}
+la Espada Maestra!
+@092
+Este Hongo huele a fruta dulce{75}
+podrida{43}{76}
+Puedes dar esto a quien lo{7E}{73}
+quiera {45}Seleccionalo y pulsa{73}
+el boton {5E}{46}.
+@093
+Encontraste el Libro de Mudora!{75}
+Puedes usarlo para leer la{76}
+antigua lengua de los Hylia!
+@094
+Encontraste la Perla Lunar!{75}
+Protege al Heroe de los efectos{76}
+cambiantes del Poder Dorado.
+@095
+Encontraste la Brujula!{75}
+Ahora puedes localizar la{76}
+guarida del amo malvado de la{7E}{73}
+mazmorra!
+@096
+Conseguiste el Mapa!{75}
+Sirve para ver tu posicion{76}
+actual y el resto de la{7E}{73}
+mazmorra {45}Pulsa {5D}{46}.
+@097
+Encontraste la Vara de Hielo!{75}
+Su magia helada congela el aire!{76}
+Pero vigila tu Barra de Magia!
+@098
+Encontraste la Vara de Fuego!{75}
+Esta vara domina el fuego rojo!{76}
+Pero vigila tu Barra de Magia!
+@099
+Es el Medallon de Eter!{75}
+Su magia controla la atmosfera{76}
+superior y los vientos polares!{7E}{73}
+Vigila tu Barra de Magia!
+@100
+Es el Medallon Bombos!{75}
+Su magia hace explotar el{76}
+suelo con gran poder!{7E}{73}
+Vigila tu Barra de Magia!
+@101
+Es el Medallon Terremoto!{75}
+Su magia hace temblar el suelo{76}
+y derrota a los enemigos{7E}{73}
+cercanos!{73}
+Vigila tu Barra de Magia!
+@102
+Conseguiste el Martillo Magico!{75}
+Puedes clavar las estacas de{76}
+madera en el suelo!{7E}{73}
+Tambien sirve para golpear{73}
+otras cosas!
+@103
+Oh!  Aqui esta la Flauta!{75}
+Su musica seguro que tiene{76}
+un poder misterioso!
+@104
+Tienes el Baston de Somaria!{75}
+Sera muy util si sabes{76}
+usarlo bien!{7E}{73}
+Que baston tan misterioso!
+@105
+BOING!  Es el Gancho!{75}
+Se extiende y se contrae y{43}{76}
+BOING!  Se agarra a muchas{7E}{73}
+cosas!
+@106
+Conseguiste unas Bombas!{75}
+Puedes recoger y lanzar una{76}
+Bomba que hayas puesto{7E}{73}
+{45}Pulsa el boton {5B}{46}!
+@107
+Es una Botella Magica!{75}
+Puedes guardar un objeto{76}
+dentro y usarlo despues!
+@108
+Conseguiste la Llave Grande!{75}
+Es la llave maestra de la{76}
+mazmorra.  Abre muchas{7E}{73}
+cerraduras que las llaves{73}
+chicas no pueden abrir.
+@109
+Conseguiste el Guante Titan!{75}
+Ahora puedes levantar las{76}
+piedras mas pesadas, antes{7E}{73}
+imposibles de mover.
+@110
+Te dio el Espejo Magico!{75}
+Este espejo es azul, claro y{76}
+hermoso{43}{7E}{73}
+Sientes que va a absorberte{73}
+hacia otro mundo{43}
+@111
+Es esta!  La Espada Maestra!{75}
+{43}  {43}  {43}{76}
+No, no puede ser{43} Que pena.
+@112
+{7A03}De pronto, Sahasrahla te{75}
+contacta por telepatia{43}{76}
+{43}  {43}  {43}{7E}{73}
+LINK, es extraordinario que{73}
+hayas ganado la Espada Maestra{73}
+que hace retroceder al mal{43}{7E}{73}
+Con esta espada resplandeciente{73}
+creo que podras repeler los{73}
+poderes malignos del brujo.{7E}{73}
+{73}
+El destino de esta tierra{73}
+esta en tus manos.{7E}{73}
+Por favor, LINK{43}
+@113
+Je je je{43}  Gracias!{75}
+Es la Medicina de Vida.{76}
+Usala para recuperar tu{7E}{73}
+energia vital.
+@114
+Je je je{43}  Gracias!{75}
+Es la Medicina de Magia.{76}
+Puedes recargar tu energia{7E}{73}
+mistica con ella.
+@115
+Je je je{43}  Gracias!{75}
+Es la Medicina de Vida y{76}
+Magia!  Recuperas ambas!
+@116
+Te prestaron la Red de Insectos!{75}
+Quiza puedas atrapar otras{76}
+cosas con ella.
+@117
+Encontraste la Cota Azul!{75}
+Esta armadura te protege mejor{76}
+de los ataques enemigos!
+@118
+Encontraste la Cota Roja!{75}
+Ofrece aun mejor proteccion{76}
+que la Cota Azul!
+@119
+Excelente!  Tu espada mejora!{75}
+Sientes el puro poder{76}
+fluir por tu cuerpo!
+@120
+Encontraste el Escudo Espejo!{75}
+Ahora puedes reflejar rayos{76}
+que tu viejo escudo no{7E}{73}
+podia bloquear!
+@121
+Conseguiste el Baston de Byrna!{75}
+Si lo agitas una vez, un anillo{76}
+de luz te protegera!
+@122
+Eh?  Esta cerrado!{75}
+Si tuvieras la Llave Grande,{76}
+quiza podrias abrirlo!
+@123
+Te falta Poder Magico!{75}
+No puedes usar esto ahora.{76}
+Vigila tu Barra de Magia!
+@124
+Te da las Botas de Pegaso!{75}
+Ahora puedes hacer un ataque{76}
+de embestida devastador!{7E}{73}
+{45}Manten el boton {5B}{73}
+un momento.{46}
+@125
+Vaya!  No veo a una persona{75}
+normal desde hace siglos!{76}
+Deja que hable contigo un rato.
+@126
+Conoces la estatua de la{75}
+Gargola de la aldea?{76}
+Dicen que se oye a una chica{7E}{73}
+pedir ayuda bajo la estatua.{73}
+No es una historia rara{43}
+@127
+Sorprendentemente, la Trifuerza{75}
+creo este mundo para cumplir{76}
+el deseo de Ganon.{7E}{73}
+Que desea Ganon, preguntas?{73}
+Gobernar todo el cosmos!  No{73}
+crees que seria posible con{7E}{73}
+el poder de la Trifuerza{73}
+detras de ti?
+@128
+Yo vivia en el Bosque Perdido,{75}
+hasta que un dia entre en un{76}
+transportador magico{43}{7E}{73}
+El poder del Mundo Oscuro me{73}
+convirtio pronto en un arbol{73}
+como este{43}{7E}{73}
+Supongo que los dos bosques{73}
+estan conectados entre si{43}
+@129
+Oi que usar Bombas es la mejor{75}
+forma de vencer a los{76}
+gigantes de un solo ojo.{7E}{73}
+Eso es todo lo que se!
+@130
+Deja de molestarme!  Y mira por{75}
+donde vas cuando corres{76}
+de esa manera!
+@131
+Tienes el Colgante del Poder!{75}
+Ya reuniste los tres{76}
+Colgantes!  Ve ahora al Bosque{7E}{73}
+Perdido por la{73}
+Espada Maestra!
+@132
+Tienes el Colgante de Sabiduria!{75}
+Tu poder ha vuelto a crecer!{76}
+Ahora, ve por el ultimo!
+@133
+Hola, amigo del Mundo de Luz!{75}
+Pareces buen tirador{43}  Quieres{76}
+probar tu punteria en mi{7E}{73}
+galeria de tiro?  Te doy cinco{73}
+disparos por 20 Rupias.  Si eres{73}
+tan bueno como creo, ganaras{7E}{73}
+muchas Rupias.{7E}{73}
+Que me dices, forastero?{73}
+    {44} Jugar{73}
+       No, gracias{68}
+@134
+Muy bien!  Apunta con cuidado!{75}
+Listo?  YA!
+@135
+Pues, socio, ya puedes irte por{75}
+donde entraste.{76}
+Hasta luego!  Buen dia!
+@136
+Quieres disparar otra vez?{75}
+    {44} Seguir{76}
+       Salir{68}
+@137
+{40}{40}ESTANQUE DE LA FELICIDAD{40}{40}{75}
+Lanza unas Rupias y tus{76}
+deseos se haran realidad.{7E}{73}
+Quieres lanzar Rupias?{73}
+    {44} Lanzar unas{73}
+       Mejor no{68}
+@138
+Elige un objeto con la cruceta{75}
+y lanzalo con el boton {5E}.{69}
+@139
+Hola.  Se te ha caido esto?{75}
+    {44} Si{76}
+       No, no es mio{68}
+@140
+Me gustan las personas honestas.{75}
+Te dare algo mejor a cambio.
+@141
+Seguro que esto no es tuyo?{75}
+    {44} De verdad que no{76}
+       Pues, en realidad si{68}
+@142
+Vamos, vamos, no me mientas.{75}
+Por favor, quedatelo.
+@143
+Conseguiste el Boomerang Magico!{75}
+Puedes lanzarlo mas rapido y{76}
+mas lejos que el anterior!
+@144
+Tu escudo ha mejorado!{75}
+Ahora puedes defenderte de{76}
+las bolas de fuego!
+@145
+Estas son las Flechas de Plata{75}
+que necesitas contra Ganon!
+@146
+Lleno tu botella con la{75}
+Medicina de Magia.  Conseguir{76}
+una pocion gratis es toda{7E}{73}
+una ganga!
+@147
+Tu espada es mas fuerte!{75}
+Sientes su poder palpitar{76}
+en tu mano!
+@148
+La Felicidad aumento 00 Rupias.{75}
+En total, tu Felicidad es 00.{76}
+Subiste un escalon de felicidad.
+@149
+Cumplire tu deseo.{75}
+  {44}Quiero llevar mas Bombas{76}
+    Quiero llevar mas Flechas{6F}
+@150
+Entonces aumentare tu capacidad{75}
+para que puedas llevar como{76}
+maximo 00 Bombas.{7E}{73}
+Es solo una felicidad modesta{73}
+que puedo darte.
+@151
+Entonces aumentare tu capacidad{75}
+para que puedas llevar como{76}
+maximo 00 Flechas.{7E}{73}
+Es solo una felicidad modesta{73}
+que puedo darte.
+@152
+No puedo concederte mas deseos,{75}
+pero una amiga mia quiza{76}
+pueda{43}{7E}{73}
+Vive en la Cascada de los{73}
+Deseos cerca del lago Zora.{73}
+Te devolvere tus Rupias.{7E}{73}
+Que seas feliz{43}
+@153
+Uhhh{43}  Cuidado donde pisas.{75}
+Hay agujeros en el suelo.{76}
+Podrias girar a la derecha aqui?{7E}{73}
+Joven, tu tambien vas al monte{73}
+a buscar el Poder Dorado?{73}
+Justo delante hay un monte{7E}{73}
+lleno de monstruos.  Mucha gente{73}
+ha desaparecido en el monte{73}
+buscando el Poder Dorado.{7E}{73}
+{73}
+{7E}{73}
+No quiero desorientarte, asi{73}
+que no te metas demasiado en{73}
+una busqueda tan descabellada.
+@154
+Uhh{43}  Debe haber un Corazon en{75}
+la botella.
+@155
+Uhh{43}  Gira a la derecha{43}   {43}{75}
+Sabes, tengo una nieta de tu{76}
+edad{43}  El Rey se la llevo al{7E}{73}
+castillo y nunca volvio.{73}
+Secuestrar a esas doncellas debe{73}
+ser parte del plan del brujo!{7E}{73}
+Seguro que intenta usar de algun{73}
+modo el poder de los{73}
+descendientes de los sabios{43}
+@156
+No se quien eres, pero si vas a{75}
+subir al monte, me llevarias{76}
+contigo?  Perdi mi lampara,{7E}{73}
+asi que{43}
+@157
+Las doncellas desaparecidas{75}
+siguen vivas en algun lugar.{76}
+Creo que un Heroe las rescatara{43}{7E}{73}
+Espero ese dia{43}{73}
+Uhh{43}  Son tiempos peligrosos{43}{73}
+Hable demasiado.{7E}{73}
+En fin{43}  Gracias por tu bondad{73}
+con un viejo como yo.{73}
+Uhh{43}  Queria darte esto.{7E}{73}
+Si entras en un transportador{73}
+magico, mira en este espejo.
+@158
+El brujo ha burlado al Rey y{75}
+ahora intenta abrir el camino{76}
+hacia el Mundo Oscuro.{7E}{73}
+Para completar tu mision{73}
+necesitaras la Perla Lunar, que{73}
+esta en la torre de la cima del{7E}{73}
+monte.  Lo unico que puedo hacer{73}
+ahora es aliviar tu cansancio{43}{73}
+Vuelve aqui cuando quieras.
+@159
+{74}La Perla Lunar protege a su{75}
+portador del aire magico de la{76}
+Tierra Dorada, para que puedas{7E}{73}
+conservar tu forma humana alli.{73}
+Lo unico que puedo hacer ahora{73}
+es aliviar tu cansancio{43} {7E}{73}
+Vuelve aqui cuando quieras.
+@160
+LINK, creo que el brujo unio{75}
+los dos mundos en algun punto{76}
+cerca del castillo.{7E}{73}
+Lo unico que puedo hacer ahora{73}
+es aliviar tu cansancio{43}{73}
+Vuelve aqui cuando quieras.
+@161
+{43}murmullo murmullo{43}  A mi hijo{75}
+le encantaba tocar la flauta,{76}
+pero fue a buscar el Poder{7E}{73}
+Dorado y no ha vuelto{43} {43} {43}{73}
+Me pregunto donde estara y{73}
+que estara haciendo ahora?{43}{7E}{73}
+{43}  Zzzzzz  Zzzzzz
+@162
+{43}murmullo murmullo{43}  Oh?  Esta{75}
+es la flauta de mi hijo{43}!{76}
+Conociste a mi hijo?{7E}{73}
+Donde esta?  Esta bien?{73}
+{43} {43} {43} {43}{73}
+{7E}{73}
+Ah, ya veo{43}  Bueno, puedo saber{73}
+lo que quieres decir por la{73}
+mirada de tus ojos{43}
+@163
+Te quedarias con la flauta?{75}
+Y tocarias su dulce melodia{76}
+para el ave de la plaza de la{7E}{73}
+aldea?{73}
+Te lo ruego, por favor!{73}
+Mi hijo probablemente lo querria{7E}{73}
+asi{43}{73}
+{43}Pero aun asi, ojala pudiera{73}
+verlo una vez mas{43}
+@164
+Zzzzzzz  Zzzzzzzz{75}
+{43}  {43}  {43}{76}
+Ronquido  Zzzzzz  Zzzzzz
+@165
+Ah, LINK.  Los rumores dicen que{75}
+secuestraste a la Princesa,{76}
+pero aun confio en ti.
+@166
+No puedo creer que me atraparas!{75}
+Con tu velocidad seguro que fue{76}
+facil secuestrar a Zelda{43}{7E}{73}
+Pero no pareces tan mala gente{43}{73}
+En fin, como eres tan veloz,{73}
+quiza convenga correr y chocar{7E}{73}
+contra muchas cosas{43}{73}
+Por ejemplo, los arboles de esta{73}
+aldea tienen muchas cosas utiles{7E}{73}
+colgadas de sus ramas{43}{73}
+Bueno, pruebalo, vale?!
+@167
+Si tienes tiempo para leer este{75}
+cartel, deberias ir a la meta{76}
+de inmediato!
+@168
+Dare una Pieza de Corazon a{75}
+quien lleve la Capa.
+@169
+Malditos los que arrojen algo{75}
+en mi circulo de piedras.
+@170
+Por aqui {4D} Bosque Esqueleto{76}
+Por aqui {4E} Aldea de los Parias
+@171
+{75}
+Por aqui {50} Cueva
+@172
+{75}
+Por aqui {50} Palacio Oscuro
+@173
+{75}
+Por aqui {4F} Tienda de Bombas
+@174
+{4F}  Pantano del Mal{75}
+         Sin Entrada{76}
+         Sin Escape
+@175
+Esta es la Aldea de los Parias.{75}
+La gente sin Rupias no es{76}
+bienvenida aqui.
+@176
+La Cascada de los Deseos esta{75}
+ahi mismo, a la vuelta.
+@177
+Por aqui {50}{4D}{75}
+Lago del Mal Presagio
+@178
+Desde que Agahnim tomo el poder,{75}
+todos empezaron a actuar de{76}
+forma rara.{7E}{73}
+Supongo que es cuestion de{73}
+tiempo hasta que a mi tambien{73}
+me afecte.
+@179
+Eh, eh!  No puedes entrar al{75}
+castillo, hijo!{76}
+Vete a casa a dormir un poco!
+@180
+LINK, soy yo, Sahasrahla.  Puedo{75}
+hablarte telepaticamente cuando{76}
+tocas estas baldosas.{7E}{73}
+Aqui tienes una pista.  Puedes{73}
+usar el tesoro oculto en este{73}
+palacio contra los blindados.
+@181
+LINK, soy yo, Sahasrahla el{75}
+anciano.  Un orbe llamado Perla{76}
+Lunar esta en esta torre.{7E}{73}
+Quien posea la Perla Lunar esta{73}
+protegido y su forma no cambiara{73}
+en el Mundo Oscuro.{7E}{73}
+Debes encontrarla y escapar de{73}
+la torre!{73}
+No olvides la Perla Lunar{43}
+@183
+El triunfo del Heroe en la{75}
+vispera del cataclismo{76}
+gana tres simbolos de virtud.{7E}{73}
+Luego recobrara la Espada{73}
+Maestra,{73}
+manteniendo fiel el linaje.
+@184
+LINK, soy yo, Sahasrahla.{75}
+Debes llegar como sea a la{76}
+cima de la Roca Anteojos.{7E}{73}
+Desde alli puedes alcanzar la{73}
+Torre de Hera, en lo alto del{73}
+Monte de la Muerte.
+@185
+LINK, soy yo, Sahasrahla.{75}
+Los objetos existen a la vez en{76}
+ambos mundos, con formas afines.{7E}{73}
+Si la forma de una cosa cambia,{73}
+afectara a la forma de su{73}
+gemela en el otro mundo.
+@186
+LINK{43}  Soy yo, Zelda{43}{75}
+No caigas en la magia de{76}
+Blind el Ladron!  Cuidado!
+@187
+LINK, soy yo, Sahasrahla el{75}
+anciano!  Debes encender cuatro{76}
+antorchas para abrir el{7E}{73}
+camino.
+@189
+Para abrir el camino hacia{75}
+adelante, pide aqui tu deseo{76}
+y se cumplira.
+@190
+Cuando Ganon quede aturdido,{75}
+dale su ultimo instante con una{76}
+Flecha de Plata!{7E}{73}
+Lo entiendes, LINK?
+@191
+LINK, me oyes?{75}
+Soy Zelda.  Estoy encerrada en{76}
+la Roca Tortuga, en lo alto del{7E}{73}
+Monte de la Muerte.  Se que{73}
+haces lo que puedes, pero{73}
+apresurate{43}
+@192
+LINK, soy yo, Sahasrahla.{75}
+No dejes de hallar todos los{76}
+tesoros de cada mazmorra.
+@193
+Escucha bien, LINK.{75}
+Aunque tengas la Espada Maestra,{76}
+no puedes herir fisicamente al{7E}{73}
+brujo.{73}
+Debes hallar la forma de{73}
+devolverle su magia maligna.
+@194
+LINK, no gastes todo tu poder{75}
+magico si no tienes la{76}
+Medicina de Magia.{7E}{73}
+Ahora, preparate para entrar en{73}
+las profundidades de esta{73}
+mazmorra.
+@195
+LINK, tienes la Medicina de{75}
+Magia?  Si no, te aconsejo no{76}
+seguir adelante.
+@196
+LINK, las llamas magicas te{75}
+protegeran dentro de esta{76}
+mazmorra helada.
+@197
+No puedes destruir al Caballero{75}
+Esqueleto solo con la espada.{76}
+Cuando se desploma, es{7E}{73}
+vulnerable a otra arma.
+@198
+LINK, soy yo, Sahasrahla el{75}
+anciano.  Tengo un consejo{43}{76}
+En las mazmorras puedes mirar{7E}{73}
+en el Espejo Magico para volver{73}
+a la entrada en cualquier{73}
+momento.  No lo olvides!
+@199
+Me llamo Chris Houlihan.{75}
+Esta es mi sala ultrasecreta.{76}
+Que quede entre nosotros, vale?
+@200
+Atrapaste una abeja!{7E}{75}
+Que vas a hacer?{76}
+    {44} Guardarla en una botella{73}
+       Soltarla{68}
+@201
+Atrapaste un hada!{7E}{75}
+Que vas a hacer?{76}
+    {44} Guardarla en una botella{73}
+       Soltarla{68}
+@202
+No tienes botellas vacias.{75}
+No hay otra opcion{43}{76}
+Tendras que soltarlo.
+@203
+Este intento tu tiempo fue{75}
+00 minutos 00 segundos.
+@204
+Si llegas a la meta en menos de{75}
+15 segundos, te daremos algo{76}
+bueno.{7E}{73}
+Listos, Preparados{43} {43}  YA!
+@205
+Has calificado!{75}
+Felicidades!{76}
+Te entrego una Pieza de{7E}{73}
+Corazon!
+@206
+No calificaste.{75}
+Que lastima!{76}
+Por que no lo intentas otra vez?
+@207
+No tengo nada mas{75}
+que darte.{76}
+Lo siento!
+@208
+Debes entrar al laberinto por la{75}
+entrada correcta o no puedo{76}
+medir tu tiempo{43}
+@209
+Usted, caballero!  Ha vivido{75}
+sin una de mis botellas{76}
+guarda{40}todo?{7E}{73}
+Pues acerquese y complete{73}
+su vida!  Tengo una en oferta{73}
+al bajisimo precio de{7E}{73}
+100 Rupias!{7E}{73}
+Que le parece?  Le interesa?{73}
+    {44} Me llevo una{73}
+       No la necesito{68}
+@210
+Buena compra!  Muchas gracias!{75}
+Ahora, levantala sobre tu cabeza{76}
+para que todos la vean, vale?{7E}{73}
+Es bueno para el negocio!
+@211
+Estas sin blanca, eh?  Que pena{43}{75}
+Vuelve cuando ganes mas{76}
+Rupias.  Quiza siga aqui.
+@212
+Se me acabaron las botellas.{75}
+Vuelve mas tarde, vale? {76}
+ {43} {43} {43}
+@213
+Vaya!  Nunca vi un bicho tan{75}
+raro!  Te lo compro por{76}
+100 Rupias, vale?  Hecho!
+@214
+Eh!  Dicen que comer pescado{75}
+te hace listo.  Tienes que{76}
+darme este pescado por esto,{7E}{73}
+vale?  Hecho!
+@215
+Eh!  LINK!  Pareces estar en un{75}
+buen lio, pero esto es todo lo{76}
+que puedo darte.
+@216
+Eh, tu!{75}
+Bienvenido!{76}
+{7E}{73}
+Pidenos lo que quieras!{73}
+    {44} Templar mi espada{73}
+       Solo pasaba por aqui{68}
+@217
+Te hago un gran descuento!{75}
+    {44}Templar espada{43} 10 Rupias{76}
+      Espera un momento{68}
+@218
+A templarla, eh?  Seguro?{75}
+    {44} Si{76}
+       Cambie de idea{68}
+@219
+Bueno, no podemos hacerla mas{75}
+fuerte que eso{43} Lo siento!
+@220
+Vuelve cuando quieras.{75}
+Hi ho!  Hi ho!{76}
+A trabajar nos vamos!
+@221
+Muy bien, no hay problema.{75}
+Tendremos que quedarnos tu{76}
+espada un tiempo.
+@222
+Tu espada esta templada!{75}
+Ahora sujetala!
+@223
+Si vuelve mi socio perdido,{75}
+podremos templar tu espada,{76}
+pero ahora no puedo hacer{7E}{73}
+nada por ti.
+@224
+Oh!  Vuelven los dias felices!{75}
+Has encontrado a mi socio!{76}
+{43}  Ahora somos muy felices{43}{7E}{73}
+Vuelve por aqui!{73}
+Entonces templaremos tu espada{73}
+perfectamente!
+@225
+Croac croac{43}  Tu cuerpo no{75}
+cambio!  No eres un tipo{76}
+normal, verdad?{7E}{73}
+Yo vivia en la Aldea Kakariko.{73}
+Me pregunto que hara mi socio{73}
+alli sin mi{43}{7E}{73}
+Croac!  Quiero pedirte algo.{73}
+Por favor, llevame con mi socio!{73}
+Por favor!  Croac!  Por favor!
+@226
+Lo siento, aun no hemos{75}
+terminado.  Vuelve en un rato.
+@227
+Gracias!{75}
+{76}
+Gracias!
+@228
+Eh, eh, los aficionados no{75}
+deberian intentar esto.  Solo{76}
+estorbas!
+@229
+Despues de entrar en este mundo{75}
+me converti en esta forma.{76}
+{43}  {43}  {43}{7E}{73}
+Disfrutaba tocando la flauta en{73}
+el mundo original{43}{73}
+{43}  {43}  {43}{7E}{73}
+Habia un bosquecillo donde se{73}
+reunian muchos animales.  Quiero{73}
+volver a ver ese lugar{43}{7E}{73}
+Alli enterre mi flauta con{73}
+unas semillas de flores.{73}
+{7E}{73}
+Intentaras encontrarla por mi?{73}
+    {44} Si{73}
+       Ni hablar{68}
+@230
+Entonces te prestare mi pala.{75}
+Buena suerte!
+@231
+{43}  {43}  {43}{75}
+Entiendo.  No te lo pedire mas{43}{76}
+Adios.
+@232
+Encontraste mi flauta?{75}
+{43}  {43}  {43}{76}
+Sigue buscandola, por favor{43}
+@233
+Gracias, LINK.  Pero ya no puedo{75}
+tocar mi flauta.  Tomala,{76}
+por favor.{7E}{73}
+Si por casualidad vas a la aldea{73}
+donde vivia, dasela a un viejo{73}
+cansado que encontraras alli.{7E}{73}
+{43}  {43}  {43}{73}
+Bueno, mi mente se nubla{43}{73}
+Deja que oiga el sonido de la{7E}{73}
+flauta una ultima vez{43}
+@234
+Hocus pocus!{75}
+Encontraras al anciano{76}
+Sahasrahla{43}
+@235
+Abracadabra alakazam!{75}
+Abriras un sello del desierto{76}
+con el Libro de Mudora.
+@236
+Hocus pocus!{75}
+Hallaras a un miembro del linaje{76}
+de los sabios en el desierto.
+@237
+Abracadabra alakazam!{75}
+Hallaras a un amante de los{76}
+hongos en la Tienda Magica{43}
+@238
+Hocus pocus!{75}
+Conoceras a un Zora que vive en{76}
+un lago en la fuente del rio{43}
+@239
+Abracadabra alakazam!{75}
+El verdadero Heroe hallara la{76}
+Perla Lunar en la torre del{7E}{73}
+monte.
+@240
+Hocus pocus!{75}
+Ni la poderosa Espada Maestra{76}
+puede herir el cuerpo del brujo.
+@241
+Abracadabra alakazam!{75}
+El verdadero Heroe saltara al{76}
+pozo junto a la herreria.
+@242
+Bueno, hoy no estoy en mi mejor{75}
+momento.  Pero quiero que{76}
+vuelvas otra vez{43}
+@243
+Hmmm{43}  Parece que tu destino{75}
+podria ser interesante{43}{76}
+Puedo leerte la fortuna?{7E}{73}
+Te saldra barato{43}{73}
+    {44} Que me la lea{73}
+       No me interesa{68}
+@244
+Ahora tomare 00 Rupias.{75}
+Espero que tengas salud.{76}
+Jiji ja ja!
+@245
+Pobre es quien no se interesa{75}
+por su futuro{43}{76}
+Te esperare a tu regreso.
+@246
+Hocus pocus!{75}
+Conoceras a un hombre raro{76}
+que esta en el desierto{43}
+@247
+Abracadabra alakazam!{75}
+La tienda de chismes del Mundo{76}
+Oscuro tiene un tesoro para{7E}{73}
+quien lo pida{43}
+@248
+Hocus pocus!{75}
+Hallaras al socio del herrero{76}
+en la Aldea de los Parias.
+@249
+Abracadabra alakazam!{75}
+Hallaras un tesoro que descansa{76}
+en paz en el cementerio.
+@250
+Hocus pocus!{75}
+Compraras un nuevo tipo de bomba{76}
+en la Tienda de Bombas.
+@251
+Abracadabra alakazam!{75}
+Hallaras algo dentro de la{76}
+piramide del Mundo Oscuro.
+@252
+Hocus pocus!{75}
+Te toparas con una barrera si{76}
+intentas entrar en la{7E}{73}
+torre de Ganon.
+@253
+Abracadabra alakazam!{75}
+Necesitaras Flechas de Plata{76}
+para dar a Ganon su final.
+@254
+Eh!  Te contare algo provechoso{75}
+si me pagas 20 Rupias.{7E}{73}
+Que me dices?{73}
+    {44} Pagar Rupias{73}
+       No quiero oirlo{68}
+@255
+Ja!  Gracias.  Dicen que hay un{75}
+diminuto circulo de rocas en el{76}
+lago de la fuente del rio.{7E}{73}
+No se que pasara, pero quiza sea{73}
+divertido arrojarle algo{43}{73}
+Je je.  Hasta luego{43}
+@256
+Je je.  Ya veo.  No me interesa{75}
+hablar con gente que no tiene{76}
+Rupias{43}
+@257
+Je je.  Gracias.  Para ser{75}
+sincero, yo era ladron en el{76}
+Mundo de la Luz{43}{7E}{73}
+algunos colegas se escondieron{73}
+por miedo a que los atraparan.{73}
+Uno de ellos era un maestro{7E}{73}
+cerrajero, pero ahora oculta{73}
+que fue ladron{43}{73}
+{43}haciendose pasar por un{7E}{73}
+tipo raro de mediana{40}edad!{73}
+Ja ja ja{43}
+@258
+Ja!  Gracias.  Para ser sincero,{75}
+vi una belleza increible dentro{76}
+de la piramide, pero alguien{7E}{73}
+sello la puerta.{73}
+Dicen que una bomba normal no{73}
+sirve de nada{43}
+@259
+Je je.  Gracias.  De hecho, la{75}
+magia de los monstruos hace{76}
+llover en el pantano.{7E}{73}
+Si mueves el aire con mas{73}
+fuerza que los monstruos, quiza{73}
+la lluvia pare.
+@260
+Snif{43}  Eh, hermano LINK!{75}
+Tienes una botella para guardar{76}
+un bicho?{7E}{73}
+{43}{73}
+Ya veo.  No tienes una{43}{73}
+Cof cof{43}
+@261
+No puedo salir, estoy enfermo{43}{75}
+Cof cof{43}{76}
+Dicen que me enferme por el{7E}{73}
+aire maligno que baja del monte{43}{73}
+Snif snif{43}{73}
+Esta es mi red de bichos.  La{7E}{73}
+usare cuando me cure, pero por{73}
+ahora te la presto.
+@262
+Snif{43}  Ojala me cure{75}
+pronto{43}{76}
+Cof cof{43}
+@264
+Por que tomaste mi cartel?  Dice{75}
+claramente que me dejes en{76}
+paz!  Pffff!
+@265
+Me han dicho que sabes que fui{75}
+un ladron, verdad?{76}
+{7E}{73}
+Bueno, te abrire un cofre.{73}
+Lo mantendras en secreto ante{73}
+todos los demas?{7E}{73}
+Lo prometes, por favor?{73}
+    {44} Lo prometo{73}
+       Se lo dire a todos{68}
+@266
+Bien, si asi lo quieres, ojala{75}
+lleves ese cofre arrastrando{76}
+para siempre!
+@267
+Recuerda, lo prometiste{43}{75}
+No se lo digas a nadie.
+@268
+Muy bien, trae ese cofre{75}
+aqui{43}  En serio, mantenlo en{76}
+secreto ante todos.
+@270
+Levanta la Espada Maestra y{75}
+obtendras la magia del{76}
+Eter.
+@271
+Levanta la Espada Maestra y{75}
+obtendras la magia de{76}
+Bombos.
+@272
+Eh!  Maldito seas por sacarme{75}
+de mi profundo y oscuro letargo!{76}
+{43}Quiero decir, muchas gracias!{7E}{73}
+Pero ahora me vengare de ti.{73}
+Preparate!{73}
+{43}Esto, esta bien, caballero?
+@273
+Je je je!  Me rio de tu mala{75}
+suerte!  Ahora tu poder magico{76}
+se reducira a la mitad!{7E}{73}
+Felicidades!{73}
+Ahora esfuerzate, aunque seguro{73}
+que no sera suficiente!{7E}{73}
+Que tengas un buen dia!  Adios!
+@274
+{6E00}{7A03}{67}Hace mucho, en el hermoso{75}
+reino de Hyrule, rodeado de{76}
+montes y bosques{43}{7809}{73}
+se hablaba de un Poder Dorado{73}
+omnipotente y omnisciente que{73}
+residia en una tierra oculta.{7809}{67}{67}{73}
+Mucha gente trato con ahinco{73}
+de entrar en la oculta{73}
+Tierra Dorada{43}{7807}{73}
+Pero nadie regreso jamas.{73}
+Un dia, un poder maligno empezo{73}
+a fluir de la Tierra Dorada{43}{7807}{73}
+Entonces el Rey ordeno a siete{73}
+sabios sellar la puerta de la{73}
+Tierra del Poder Dorado.{7809}{67}{67}{73}
+Ese sello debia permanecer{73}
+para siempre{43}{73}
+{7809}{67}{67}{73}
+{43}  {43}Pero, cuando estos hechos{73}
+se difuminaron en la bruma del{73}
+tiempo y se hicieron leyenda{43}
+@275
+{7A03}{74}Un misterioso brujo llamado{75}
+Agahnim llego a Hyrule para{76}
+liberar el sello.  Elimino al{7805}{73}
+buen Rey de Hyrule{43}{7805}
+@276
+{7A03}{74}Con magia maligna, empezo a{75}
+hacer desaparecer a los{76}
+descendientes de los siete{7805}{73}
+sabios, uno tras otro.{7805}
+@277
+{7A03}{74}Y se acerca la hora del{75}
+destino de la Princesa{76}
+Zelda.{7805}
+@278
+Como la llave esta encerrada en{75}
+este cofre, nunca podras{76}
+abrirlo.{7E}{73}
+Llevatelo contigo.
+@279
+100 Rupias por 30 Bombas!  30{75}
+Bombas por solo 100 Rupias!{76}
+Compralas, amigo!
+@280
+100 Rupias por 30 Bombas!  Tengo{75}
+tambien una nueva Super Bomba{76}
+por solo 100 Rupias!  Compra{7E}{73}
+tambien esa, amigo!
+@281
+Muchas gracias.{75}
+Muchas gracias.
+@282
+Muchas gracias.  Puedes soltar{75}
+esta Bomba donde quieras.{76}
+{45}Pulsa el boton {5B}.{46}{7E}{73}
+No lo olvides, por favor.
+@283
+Ki ki ki!  Si me das 100{75}
+Rupias, te abro la entrada.{76}
+Ki ki ki!{7E}{73}
+  Que vas a hacer?{73}
+    {44} Pedirle que la abra{73}
+       Intentar abrirla tu{68}
+@284
+Ki ki ki!  Bah!{75}
+Hazlo tu mismo, entonces!{76}
+Kik ki ki!
+@285
+Ki ki!  Buena eleccion!  Asi me{75}
+quedo 100 de tus Rupias.{76}
+Kik ki ki!
+@286
+Soy Kiki el mono, ki ki!{75}
+Amo las Rupias mas que a nada.{76}
+Puedes darme 10 Rupias?{7E}{73}
+ Que vas a hacer?{73}
+    {44} Darle 10 Rupias{73}
+       No darle nada{68}
+@287
+Ki ki ki ki!  Buena eleccion!{75}
+Te hare compania un rato.{76}
+Kik kiki!
+@288
+Ki ki!  Humph!  Entonces no{75}
+tengo motivo para hablarte.{76}
+Adios!  Kik ki ki!
+@289
+Ki ki?  Que haces?{75}
+No quiero ir alli!
+@290
+Ohh, muchisimas gracias!{75}
+Me salvaste la vida.  Por favor,{76}
+llevame afuera.
+@291
+Guaaah!{75}
+Demasiada luz!
+@292
+Eh{43}  Un momento{43}{75}
+Por favor, no vayas por aqui.
+@293
+Soy Aginah.  Presiento que algo{75}
+ocurre en la Tierra Dorada que{76}
+sellaron los siete sabios{43}{7E}{73}
+Debe ser un presagio del Gran{73}
+Cataclismo, vaticinado por los{73}
+de sangre Hylian{43}{7E}{73}
+{43} {43} {43}{73}
+La profecia dice, {4C}El Heroe{73}
+se alzara en el desierto con{7E}{73}
+el Libro de Mudora.{4C}{73}
+Si tienes el Libro de Mudora{73}
+podras leer la lengua del{7E}{73}
+pueblo Hylia.{73}
+Debe estar en la casa de los{73}
+libros de la aldea{43}{7E}{73}
+Debes conseguirlo!{73}
+Si eres quien sera El Heroe{43}
+@294
+Has reunido los tres Colgantes.{75}
+Si eres de verdad el Heroe que{76}
+posee Sabiduria, Valor y Poder,{7E}{73}
+la Espada Maestra que duerme en{73}
+el bosque sera tuya.
+@295
+Ajaa!  Es el Libro de Mudora.{75}
+Con el puedes leer la lengua{76}
+del pueblo Hylia.
+@296
+Eres el verdadero Heroe{43}{75}
+Creo que devolveras la paz{76}
+a esta tierra.
+@297
+Tu prueba en el desierto te ha{75}
+hecho mas fuerte.  La sangre{76}
+del Heroe debe correr por tus{7E}{73}
+venas{43}
+@298
+Fuiste tu quien turbo mi{75}
+pacifica siesta?  Te dare esto{76}
+si te vas!
+@299
+No me quedan mas buenos{75}
+regalos para ti.  Toma esto{76}
+en su lugar, pesado!
+@300
+Eh LINK!  Una niebla misteriosa{75}
+cayo hace poco sobre el{76}
+bosque.  Hay que tener cuidado!
+@301
+Quiza no sea nada, pero este{75}
+arbol se siente raro mientras{76}
+lo cortamos{43}
+@302
+Eh!  La niebla del bosque se{75}
+despeja.  Gracias!  Podemos{76}
+volver alli!  Eh, hermano!
+@303
+Si LINK, ahora discuto con mi{75}
+hermano menor.  Selle la{76}
+puerta de su cuarto.
+@304
+Asi que la puerta esta abierta{43}{75}
+Vale, vale, quiza deba hacer{76}
+las paces con mi hermano{43}
+@305
+Eh LINK, vienes del cuarto de{75}
+mi hermano mayor?  Sigue{76}
+enfadado?
+@306
+{7A02}LINK, gracias a ti escapo de{75}
+las garras de los monstruos{76}
+malignos.  Gracias!{7E}{73}
+{43}Este mundo era la Tierra{73}
+Dorada, donde estaba oculta la{73}
+Trifuerza.{7E}{73}
+Pero como Ganon, el jefe de los{73}
+ladrones, lo deseo, el mundo se{73}
+transformo{43}{7E}{73}
+Seguro que piensa conquistar{73}
+incluso nuestro Mundo de la Luz{73}
+tras reunir poder aqui.{7E}{73}
+Intenta abrir una puerta mayor{73}
+entre mundos cerca del castillo{73}
+usando nuestros poderes.{7E}{73}
+Pero la puerta aun no esta{73}
+completamente abierta{43}{73}
+Si las siete doncellas nos{7E}{73}
+reunimos, podremos romper la{73}
+barrera que rodea el escondite{73}
+de Ganon.{7E}{73}
+Te dire donde retienen a las{73}
+otras chicas.  Creo que{73}
+destruiras a Ganon.{7E}{73}
+Volvere a mi forma original{73}
+en ese momento.{73}
+ {43} {43} {43} {43} {43}{792D}
+@307
+{7A02}LINK, gracias a ti escapo de{75}
+las garras de los monstruos{76}
+malignos.  Gracias!{7E}{73}
+{43}La Trifuerza concede los{73}
+deseos de quien la toque,{73}
+mientras esa persona viva{43}{7E}{73}
+Por eso estaba oculta en la{73}
+Tierra Dorada.  Solo unos pocos{73}
+conocian su ubicacion,{7E}{73}
+pero en algun momento ese{73}
+saber se perdio{43}{73}
+Quien redescubrio la Tierra{7E}{73}
+Dorada fue{73}
+Ganondorf, el malvado ladron.{73}
+Por suerte, no supo como{7E}{73}
+volver al Mundo de la{73}
+Luz{43}{73}
+{43}Bueno, recuerda que tienes{7E}{73}
+poderes magicos, que solo El{73}
+Heroe aprovecha al maximo!{73}
+Hay otros puntos magicos de{7E}{73}
+teletransporte como el que viste{73}
+en el Monte de la Muerte.{73}
+Usandolos puedes ir entre{7E}{73}
+los dos mundos y hallar{73}
+los males ocultos en el{73}
+Mundo Oscuro.  Eres el unico{7E}{73}
+que puede destruir a{73}
+Ganondorf, el ladron{40}no,{73}
+Ganon, el malvado Rey de las{7E}{73}
+Tinieblas!
+@308
+{7A02}LINK, gracias a ti escapo de{75}
+las garras de los monstruos{76}
+malignos.  Gracias!{7E}{73}
+{43}Conoces la profecia del{73}
+Gran Cataclismo?{73}
+Asi la oi yo{43}{7E}{73}
+Si una persona de corazon{73}
+malvado obtiene la Trifuerza, un{73}
+Heroe esta destinado a aparecer{43}{7E}{73}
+{43}y solo el debe enfrentarse a{73}
+quien inicio el Gran{73}
+Cataclismo.{7E}{73}
+Si el malvado destruye al{73}
+Heroe, nada podra salvar al{73}
+mundo de su perverso reinado.{7E}{73}
+Solo uno de los Caballeros de{73}
+Hyrule, que protegian a la{73}
+realeza de Hylia, puede ser{7E}{73}
+el Heroe{43}  Tu eres de su{73}
+linaje, verdad?  Entonces{73}
+debes rescatar a{7E}{73}
+Zelda sin falta.
+@309
+{7A02}LINK, gracias a ti escapo de{75}
+las garras de los monstruos{76}
+malignos.  Gracias!{7E}{73}
+Cuando los sabios sellaron el{73}
+camino al Mundo Oscuro, los{73}
+Caballeros de Hyrule los{7E}{73}
+defendieron de los ataques de{73}
+los monstruos malignos.{73}
+Oi que los Caballeros de{7E}{73}
+Hyrule casi fueron aniquilados{73}
+en esa batalla{43}{73}
+Quiza seas el ultimo en{7E}{73}
+llevar el linaje de{73}
+los Caballeros{43}{73}
+Es ironico que el ultimo de{7E}{73}
+la estirpe tenga el potencial{73}
+de ser el Heroe de la leyenda.{73}
+Seguro que destruyes a Ganon!
+@310
+{7A02}LINK, gracias a ti escapo de{75}
+las garras de los monstruos{76}
+malignos.  Gracias!{7E}{73}
+Dicen que el pueblo Hylia{73}
+dominaba poderes misteriosos,{73}
+igual que los siete sabios.{7E}{73}
+Pero la sangre de los Hylia se{73}
+ha diluido con el tiempo.  Los{73}
+que llevamos la sangre de los{7E}{73}
+siete sabios ya no tenemos{73}
+tanto poder tampoco.{73}
+Nuestro poder aumentara si{7E}{73}
+unimos el valor de los{73}
+Caballeros con la sabiduria de{73}
+los sabios.  Queda poco tiempo{7E}{73}
+hasta que la puerta del castillo{73}
+que une los mundos se abra{73}
+por completo.  Si derrotas a{7E}{73}
+Ganon, este mundo desaparecera{73}
+y la Trifuerza esperara a{73}
+un nuevo portador.{7E}{73}
+Creo en ti{43}{73}
+Buena suerte!
+@311
+{7A02}LINK, gracias a ti escapo de{75}
+las garras de los monstruos{76}
+malignos.  Gracias!{7E}{73}
+Ganon nos capturo porque no{73}
+pudo romper el sello de los{73}
+sabios solo con su poder.{7E}{73}
+Y entonces, usando al brujo{73}
+Agahnim como peon, nos llevo{73}
+al Mundo Oscuro.{7E}{73}
+Tras agrietar el sello con{73}
+nuestros poderes, nos encerro{73}
+dentro de estos cristales.{7E}{73}
+Luego nos entrego a sus{73}
+monstruos leales.  Pero Ganon no{73}
+esperaba que llegaras tan lejos.{7E}{73}
+Ahora, la Princesa Zelda te{73}
+espera en la Roca Tortuga.{73}
+Date prisa!
+@312
+{7A02}Agradezco que hayas llegado{75}
+tan lejos para rescatarme.  Lo{76}
+sabia, eres el Heroe legendario.{7E}{73}
+Lo senti desde la primera vez{73}
+que nos vimos.{73}
+{43}  {43}  {43}{7E}{73}
+Ganon espera en su torre para{73}
+cruzar la puerta que une los{73}
+dos mundos.{7E}{73}
+Si Ganon entra en el Mundo de{73}
+la Luz, dudo que alguien pueda{73}
+detenerlo.{7E}{73}
+Pero si permanece en el espacio{73}
+cerrado de este mundo, podras{73}
+hallarlo corra donde corra.{7E}{73}
+Ahora, ve a la Torre de{73}
+Ganon!  Usaremos nuestros{73}
+poderes combinados para romper{7E}{73}
+la barrera.  Devolvamos la paz{73}
+al pais sin falta{43}{73}
+{43}  {43}  {43}{792D}
+@313
+{7A02}Que el camino del Heroe te{75}
+lleve a la Trifuerza.
+@314
+{7A02}Lo entiendes?{75}
+    {44}  Si{76}
+        Para nada{68}
+@315
+LINK, vamos a romper la{75}
+barrera de la Torre de Ganon{76}
+con nuestro poder.
+@316
+{7A02}Agradezco que hayas llegado{75}
+tan lejos para rescatarme.  Lo{76}
+sabia, eres el Heroe legendario.{7E}{73}
+Lo senti desde la primera vez{73}
+que nos vimos.{73}
+{43}  {43}  {43}{7E}{73}
+Ganon espera en su torre para{73}
+cruzar la puerta que une los{73}
+dos mundos.{7E}{73}
+Si Ganon entra en el Mundo de{73}
+la Luz, dudo que alguien pueda{73}
+detenerlo.{7E}{73}
+Pero si permanece en el espacio{73}
+cerrado de este mundo, podras{73}
+hallarlo corra donde corra.{7E}{73}
+Pero algunas doncellas aun{73}
+necesitan ayuda.  Al rescatarlas{73}
+a todas, ve a la Torre de Ganon.{7E}{73}
+Los del linaje de los sabios{73}
+usaremos entonces nuestro poder{73}
+para romper{7E}{73}
+la barrera de Ganon!{73}
+LINK{43}  Debes devolver{73}
+la paz a este pais{43}
+@317
+Ajaja{43} LINK!{75}
+Te estaba esperando!{76}
+Je je je{43}{7E}{73}
+Esperaba hacer desaparecer a{73}
+Zelda ante tus ojos.{73}
+Contempla!  El fin de la{7E}{73}
+Princesa Zelda!
+@318
+Jo jo jo{43}  Con esto, el sello{75}
+de los siete sabios se rompe{76}
+por fin.{7E}{73}
+Solo es cuestion de tiempo que{73}
+el poder maligno cubra esta{73}
+tierra{43}{7E}{73}
+Despues de todo, el Heroe{73}
+legendario no puede vencernos{73}
+a nosotros, la estirpe del mal,{7E}{73}
+armados con el Poder del Oro.{73}
+Jo jo jo{43} Ahora debo irme!
+@319
+Ah, si?{43}  Quieres decir que{75}
+te gustaria ser destruido por{76}
+completo?  Pues puedo cumplir{7E}{73}
+tu deseo!
+@320
+Grrrrugh!  Bien hallado!  Digno{75}
+del verdadero Heroe que eres{43}{76}
+Pero aun no admito la derrota.{7E}{73}
+Te arrastrare al Mundo Oscuro!
+@321
+Jo jo jo!  Que bien que hayas{75}
+podido llegar hasta aqui, LINK.{76}
+Me alegra verte de nuevo, pero{7E}{73}
+cree que no habra un tercer{73}
+encuentro!{73}
+Prepara tu perdicion!
+@322
+Gua ja ja!  Que quieres,{75}
+hombrecito?  Tienes algo{76}
+que pedirme?{7E}{73}
+    {44}  Quiero las aletas{73}
+        Solo pasaba por aqui{68}
+@323
+Gua ja ja!  Pero no regalo las{75}
+aletas.  Las vendo por 500{76}
+Rupias el par.{7E}{73}
+Que haces?{73}
+    {44}  Pagar 500 Rupias{73}
+        Mejor no{68}
+@324
+Gua ja ja!  Un par de aletas{75}
+en camino.  Te regalo un extra{76}
+con tu compra.{7E}{73}
+Te dejare usar los canales de{73}
+agua magicos del pueblo marino{73}
+que unen lagos y rios.{7E}{73}
+Cuando veas un remolino, tirate{73}
+dentro.  Nunca sabes donde{73}
+saldras!  Gua ja ja!
+@325
+Vuelve nadando cuando tengas{75}
+mas Rupias{43}{76}
+Gua ja ja!  Nos vemos!
+@326
+Genial!  Cuando quieras ver mi{75}
+cara de pez, eres bienvenido{76}
+aqui.{7E}{73}
+{43}{73}
+Gua ja ja!  Adios{43}!
+@327
+Hola LINK!{75}
+El anciano?  Hablas del abuelo?{76}
+Bueno, pero no se lo digas a{7E}{73}
+ningun malvado.{73}
+Se esconde en el palacio que{73}
+hay tras el castillo.{7E}{73}
+Marcare el lugar en tu mapa.{73}
+Aqui tienes{43}{792D}
+@328
+Conociste al abuelo?  Si todos{75}
+los malvados se van, podra{76}
+volver a la aldea.
+@329
+Eres nuevo por aqui, verdad?{75}
+Viniste buscando el Poder del{76}
+Oro?{7E}{73}
+Pues llegas tarde.  Solo obedece{73}
+a la primera persona que lo{73}
+toca.{7E}{73}
+El hombre que reclamo por ultima{73}
+vez el Poder del Oro deseo{73}
+este mundo.  Refleja su corazon.{7E}{73}
+Si, vine por codicia del Poder{73}
+Dorado, y mira lo que me paso{43}{73}
+Para restaurar la Tierra Dorada,{7E}{73}
+alguien digno del Poder Dorado{73}
+debe derrotar al hombre que{73}
+creo este lugar{43}{7E}{73}
+Hasta entonces, estoy atrapado{73}
+en esta forma tan rara.{73}
+Pero que cosa tan traviesa{7E}{73}
+para dejarla por ahi{43}{73}
+El Poder del Oro{43}{73}
+Trifuerza{43}
+@330
+     {40}Estanque Misterioso{40}{75}
+No arrojas algo dentro?{76}
+{7E}{73}
+Que haras?{73}
+    {44} Arrojar un objeto{73}
+       Mejor no{68}
+@331
+No lo hagas!
+@332
+No lo hagas!
+@333
+Entonces te lo devuelvo.{75}
+No lo vuelvas a tirar.
+@334
+Cuantas Rupias vas a lanzar?{75}
+    {44} 00 Rupias{76}
+       00 Rupias{68}
+@335
+Eres una persona honesta.{75}
+Me caes bien.{76}
+Te dare algo importante{43}{7E}{73}
+Estas son las Flechas de Plata.{73}
+Para dar a Ganon su final,{73}
+las necesitaras sin duda!{7E}{73}
+Se que no tengo exactamente{73}
+figura de hada.{73}
+El cruel poder de Ganon{7E}{73}
+tiene la culpa!{73}
+Debes derrotar a Ganon!
+@336
+{75}
+   Mucha Suerte.
+@337
+{75}
+   Buena Suerte.
+@338
+{75}
+   Un Poco de Suerte.
+@339
+{75}
+   Gran Problema.
+@340
+Para tu informacion, hoy{75}
+tendras
+@341
+Hallaste una Pieza de Corazon!{75}
+                 {52}{53}
+@342
+Hallaste una Pieza de Corazon!{75}
+                 {54}{53}
+@343
+Hallaste una Pieza de Corazon!{75}
+                 {55}{56}
+@344
+Hallaste una Pieza de Corazon!{75}
+                 {57}{58}{76}
+Tu nivel de Corazon aumento!
+@345
+Es un Contenedor de Corazon!{75}
+                 {57}{58}{76}
+Tu nivel de Corazon aumento!
+@346
+Aliviare tus heridas y{75}
+consolare tu cansancio{43}{76}
+Cierra los ojos y relajate{43}
+@347
+Oh?  Quien eres, amigo Conejo?{75}
+Este mundo es como el real, pero{76}
+el mal lo ha retorcido.{7E}{73}
+El Poder Dorado es lo que{73}
+cambio tu forma para reflejar{73}
+lo que hay en tu corazon.{7E}{73}
+Yo siempre cambio de opinion,{73}
+asi que me converti en una bola{43}{73}
+Pero si tienes una bola llamada{7E}{73}
+la Perla Lunar, conservaras tu{73}
+forma original aqui.
+@348
+No cambiaste de forma?{75}
+No eres un tipo normal,{76}
+verdad?
+@349
+Que quieres?!{75}
+Tienes algo que decirme,{76}
+conejo tonto?!{7E}{73}
+Vine a buscar el Poder del Oro{73}
+y ahora soy un fenomeno y no{73}
+puedo volver al mundo real!{7E}{73}
+Si tuviera la Perla Lunar de la{73}
+Torre de Hera, podria recuperar{73}
+mi forma original!{7E}{73}
+Tengo motivos para estar{73}
+estresado!{73}
+Asi que largo!  Fuera, fuera!
+@350
+Guau!  No has cambiado de forma!{75}
+Tienes la Perla Lunar, eh?
+@351
+En un mundo tan peligroso quiza{75}
+necesites muchas cosas.  Elige{76}
+lo que te guste{43}
+@352
+Hola, te ayudo?  Puedes abrir{75}
+dos cofres por 30 Rupias.{76}
+Por que no juegas?{7E}{73}
+Que haras?{73}
+    {44} Jugar aqui{73}
+       Quiza otra vez{68}
+@353
+Bueno, vuelve a jugar un dia.{75}
+Te estare esperando.{76}
+Hasta entonces, adios!
+@354
+Eh, chico!{75}
+Puedes abrir un cofre despues{76}
+de pagar las Rupias!
+@355
+No puedes abrir mas cofres.{75}
+El juego ha terminado.
+@356
+Muy bien, chico.{75}
+Elige bien!  Buena suerte!
+@357
+Te ayudo?  Elige lo que te{75}
+guste {45}Pulsa el boton {5B}{46}.{76}
+Los precios son los marcados!
+@358
+No necesitas ese objeto{43}{75}
+Por que no eliges otra cosa?
+@359
+Muchas gracias.{75}
+Cuando pierdas tu escudo,{76}
+vuelve por aqui.
+@360
+Muchas gracias.{75}
+Es la Medicina de Vida.{76}
+Te ayuda a recuperar tu vida.
+@361
+Muchas gracias.{75}
+Son Flechas.  No puedes usarlas{76}
+sin un Arco.
+@362
+Son Bombas.{75}
+Sabias que puedes recoger una{76}
+Bomba ya puesta?{7E}{73}
+{45}Pulsa el boton {5B}{46}.
+@363
+Muchas gracias.{75}
+Eso es una Abeja.  Tampoco me{76}
+preguntes para que sirve.
+@364
+Muchas gracias.{75}
+Puedes recuperar un Corazon.
+@365
+No no no{43}  No puedo vender la{75}
+mercancia porque no tienes{76}
+una botella vacia.
+@366
+No puedes llevar mas ahora,{75}
+pero quiza lo necesites{76}
+mas tarde!
+@367
+Nunca imagine que un chico como{75}
+tu me causara tantos problemas.{76}
+Es increible que hayas vencido{7E}{73}
+a mi alter ego, Agahnim el{73}
+Brujo Oscuro, dos veces!{73}
+Pero jamas te dare la{7E}{73}
+Trifuerza.  Te destruire y{73}
+cumplire sin demora mi deseo de{73}
+conquistar el Mundo de la Luz{7E}{73}
+y el Oscuro.
+@368
+Lo haces bien, muchacho.  Pero{75}
+podras superar esta tecnica{76}
+secreta de la Oscuridad?{7E}{73}
+En guardia!
+@369
+Eh chico, esto es un escondite{75}
+secreto de unos ladrones!{76}
+No entres sin permiso!{7E}{73}
+Por cierto, oi que un antiguo{73}
+miembro de la banda esta en{73}
+la entrada del Desierto.
+@370
+Eh LINK!  Esta casa era el{75}
+escondite de una banda de{76}
+ladrones.{7E}{73}
+Como se llamaba su lider{43}{73}
+Ah si, se llamaba Blind y{73}
+odiaba mucho la luz intensa.
+@371
+{7A02}Bienvenido, LINK{43}{75}
+Yo  soy  la  Esencia  de  la{76}
+Trifuerza.{7E}{73}
+{43}   {43}   {43}{7A01}{7E}{74}                                          {75}
+                                          {76}
+                                          {7A02}{74}La Trifuerza concede los{75}
+deseos del corazon y la mente{76}
+de quien la toca.{7A01}{7E}{74}                                          {75}
+                                          {76}
+                                          {7A02}{74}Si la toca una persona de buen{75}
+corazon, sus buenos deseos se{76}
+haran realidad{43}  Si la toca un{7E}{73}
+malvado, se cumpliran sus{73}
+deseos malignos.{7A01}{7E}{74}                                          {75}
+                                          {76}
+                                          {7A02}{74}Cuanto mas fuerte el deseo,{75}
+mas poderosa es la expresion{76}
+de la Trifuerza de ese deseo.{7A01}{7E}{74}                                          {75}
+                                          {76}
+                                          {7A02}{74}El deseo de Ganon era conquistar{75}
+el mundo.  Ese deseo convirtio{76}
+la Tierra Dorada en el Mundo{7E}{73}
+Oscuro.{7A01}{7E}{74}                                          {75}
+                                          {76}
+                                          {7A02}{74}Ganon acumulaba aqui su poder{75}
+para conquistar el Mundo de la{76}
+Luz y cumplir por completo{7E}{73}
+su deseo.{7A01}{7E}{74}                                          {75}
+                                          {76}
+                                          {7A02}{74}Pero ahora has destruido por{75}
+completo a Ganon.  Su Mundo{76}
+Oscuro desaparecera.{7A01}{7E}{74}                                          {75}
+                                          {76}
+                                          {7A02}{74}La Trifuerza espera un nuevo{75}
+propietario.  Su Poder Dorado{76}
+esta en tus manos{43}{7A01}{7E}{74}                                          {75}
+                                          {76}
+                                          {7A02}{74}Ahora, tocala con un deseo{75}
+en tu corazon.{76}
+{43}  {43}  {43}  {43}
+@372
+Muy bien!  Toma, ladron!
+@373
+Vaya{43}  La vi.{75}
+Una joven muy agradable en la{76}
+Cascada de los Deseos, en las{7E}{73}
+colinas donde nace el rio{43}{73}
+LINK, deberias conocerla{73}
+al menos una vez.  Seguro que{7E}{73}
+te gustara.
+@374
+Toma unas Rupias, pero no le{75}
+digas a nadie que te las di.{76}
+Que quede entre nosotros, vale?
+@375
+Mira la cueva al este del Lago{75}
+Hylia.  Viven en ella cosas{76}
+raras y maravillosas{43}
+@376
+Puedes ganar muchas Rupias{75}
+derrotando enemigos.  Es el{76}
+secreto de mi exito{43}
+@377
+LINK, sabias que si destruyes{75}
+enemigos congelados con el{76}
+Martillo, a menudo obtendras{7E}{73}
+una Garrafa Magica?
+@378
+Tralalara, busca a{75}
+Sahasrahla.{76}
+{43}  {43}  {43}
+@379
+Oh si, encontraste a Sahasrahla!{75}
+{43}  {43}  {43}{76}
+Buen trabajo, lara lara!
+@380
+Lo siento, pero no pareces{75}
+tener suficientes Rupias{43}
+@381
+Coc coc{43}  Que?!  Me convertiste{75}
+en humano.  Hasta puedo hablar!{76}
+Ajaa, tu eres quien siempre{7E}{73}
+molesta a mis amigos.{73}
+La Veleta siempre te ve{73}
+acosandolos.{7E}{73}
+Bueno, esta forma humana me{73}
+resulta incomoda.{73}
+Ahhh, quiero volver a ser{7E}{73}
+gallina!  Coc coc{43}
+@382
+Paga 20 Rupias y te dejo abrir{75}
+un cofre.  Puedes quedarte con{76}
+lo que haya dentro.{7E}{73}
+Que haras?{73}
+    {44}  Abrir un cofre{73}
+        Huir{68}
+@383
+Muy bien!  Abre el cofre que{75}
+quieras!
+@384
+Ah, ya veo{43}  Que lastima.{75}
+Vuelve despues de reunir{76}
+Rupias.
+@385
+Por 100 Rupias te dejo abrir un{75}
+cofre y quedarte con el tesoro{76}
+que haya dentro.{7E}{73}
+Que haras?{73}
+    {44}  Abrir un cofre{73}
+        Huir{68}
+@386
+Hola, LINK.  Perdona mi jardin.{75}
+Esta algo descuidado.  Gracias{76}
+por la visita.{7E}{73}
+Me alegra tener compania para{73}
+charlar.  Te contare una{73}
+historia interesante.{7E}{73}
+Hay un lago lleno de Zoras en{73}
+la fuente del rio, pero es{73}
+dificil de encontrar.{7E}{73}
+El tesoro Zora puede convertir{73}
+a la gente en peces.  Je je je.{73}
+Me encantaria verlo.
+@387
+No he podido podar mis setos{75}
+ultimamente.  Gracias por{76}
+venir igualmente{43}{7E}{73}
+Hace tiempo, un chico de esta{73}
+aldea podia hablar con los{73}
+animales con su Flauta.{7E}{73}
+Tenia un ave que volaba con el{73}
+a todas partes, pero fue{73}
+al monte y nunca volvio.
+@388
+{7A00}{44}Empezar en casa de LINK{75}
+  Empezar en el Santuario{72}
+@389
+{7A00}{44}Empezar en casa de LINK{75}
+  Empezar en el Santuario{76}
+  Empezar en la cueva del monte{71}
+@390
+{7A00}{44} Continuar partida{75}
+   Guardar y salir{72}
+@391
+Bienvenido al campo del tesoro.{75}
+El objetivo es cavar cuantos{76}
+hoyos puedas en 30 segundos.{7E}{73}
+Los tesoros que desentierres{73}
+seran tuyos.{73}
+Jugar cuesta solo 80 Rupias.{7E}{73}
+Que dices?{73}
+    {44} Quiero cavar{73}
+       No quiero cavar{68}
+@392
+Entonces te presto una pala.{75}
+Cuando la tengas en la mano,{76}
+empieza a cavar! {45}Pulsa el{7E}{73}
+boton {5E} para cavar.{46}
+@393
+Ya veo.  Entonces me rindo.{75}
+Ahorra algunas Rupias y vuelve.
+@394
+Bien!  Se acabo el tiempo.{75}
+Vuelve otra vez.  Adios{43}
+@395
+Vuelve otra vez!{75}
+Te estare esperando.
+@396
+No puedo darte detalles, pero{75}
+ahora no es buen momento para{76}
+mi.  Vuelve por aqui otra vez.{7E}{73}
+Perdona.
