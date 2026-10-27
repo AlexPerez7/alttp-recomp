@@ -2,12 +2,15 @@
 # licencia) más games\ de este repositorio. El usuario descomprime, arrastra su ROM sobre snes-port.exe y juega.
 # No lleva ROMs, partidas guardadas ni C generado: si algo así acaba en la carpeta, el script falla y no crea el zip.
 #
-#   powershell -File scripts\release.ps1 -Engine <zip o carpeta de snes-port del motor> [-Version 0.1.0]
+#   powershell -File scripts\release.ps1 -Engine <zip o carpeta de snes-port del motor> [-Version 0.1.0] [-NoTcc]
 #
+# El paquete debe llevar el compilador del motor (toolchain\tcc\tcc.exe) para que quien solo quiere jugar no tenga que
+# instalar ni descargar nada; si el zip del motor no lo trae, el script falla (salvo con -NoTcc).
 # El zip del motor sale de `powershell -File scripts\release.ps1` en el repositorio snes-recomp.
 param(
     [Parameter(Mandatory = $true)][string]$Engine,
-    [string]$Version = "0.1.0"
+    [string]$Version = "0.1.0",
+    [switch]$NoTcc
 )
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
@@ -31,6 +34,12 @@ if ((Get-Item $Engine).PSIsContainer) {
     Remove-Item -Recurse -Force $tmp
 }
 if (-not (Test-Path "$stage\snes-port.exe")) { Remove-Item -Recurse -Force $stage; throw "el motor no trae snes-port.exe" }
+
+# quien solo quiere jugar no tiene compilador: el paquete lleva el del motor
+if (-not $NoTcc -and -not (Test-Path "$stage\toolchain\tcc\tcc.exe")) {
+    Remove-Item -Recurse -Force $stage
+    throw "el motor no trae toolchain\tcc\tcc.exe: usa un zip del motor con TinyCC (release.ps1 del motor, sin -NoTcc) o pasa -NoTcc para armar un paquete que pide descargarlo"
+}
 
 # el juego: su README sustituye al del motor, y su licencia va junto a la del motor
 if (Test-Path "$stage\README.md") { Move-Item "$stage\README.md" "$stage\README-engine.md" -Force }
