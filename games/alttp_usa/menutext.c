@@ -19,7 +19,7 @@
  *
  * The pause menu names what the A button does (lift, read, talk, pull, run, swim) in boxes of five tiles side by side, in the letters of the message font
  * (tile $50 is A, $F5 a space, attribute $2D). Each is one row of five words in bank 0D that the menu copies to the tilemap, so they go
- * through the same file, with their own table (`actions` below): the text is centred in its tiles (four letters, the first tile of a box stays blank) and the lift boxes
+ * through the same file, with their own table (`actions` below): the text starts where the English word does (four letters, the first tile of a box stays blank; only "run", five tiles with a blank at both ends in the ROM, is centred) and the lift boxes
  * keep their last tile (the glove level). */
 #include <stdio.h>
 #include <stdlib.h>
@@ -193,7 +193,7 @@ static void put_action(Action *ac, const char *text) { /* text == NULL: the orig
     uint8_t row[MAX_ACTION * 2];
     int i;
     if (text) {
-        int len = (int)strlen(text), left = (ac->n - len + 1) / 2;
+        int len = (int)strlen(text), left = ac->n == 5 ? (ac->n - len + 1) / 2 : 0; /* the five-tile "run" is centred as in the ROM; the others start where the English word does */
         for (i = 0; i < ac->n; i++) {
             int k = i - left;
             char ch = k >= 0 && k < len ? text[k] : ' ';
