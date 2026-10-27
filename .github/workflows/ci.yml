@@ -21,7 +21,7 @@ jobs:
 
       - name: Nada derivado de la ROM en git
         run: |
-          prohibidos=$(git ls-files | grep -Ei '\.(sfc|smc|srm|sst)$|^(roms|out|engine)/' || true)
+          prohibidos=$(git ls-files | grep -Ei '\.(sfc|smc|srm|sst)$|^(roms|out)/' || true)
           if [ -n "$prohibidos" ]; then echo "Ficheros que no deben estar en git:"; echo "$prohibidos"; exit 1; fi
 
       - name: El perfil es TOML válido

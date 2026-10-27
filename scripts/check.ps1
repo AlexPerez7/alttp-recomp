@@ -25,13 +25,13 @@ function Skip($why) { Write-Warning "omitido: $why"; exit 0 }
 
 if (-not (Test-Path $Rom)) { Skip "no hay ROM en $Rom" }
 if ($Engine -eq "") {
-    # el mismo motor que usa play.bat: SNES_ENGINE, engine\ de este repositorio o, en su defecto, el compilado en ..\snes-recomp
+    # el mismo motor que usa play.bat: SNES_ENGINE o el de la raíz de este repositorio
     $cands = @()
     if ($env:SNES_ENGINE) { $cands += "$env:SNES_ENGINE\snes-recomp.exe" }
-    $cands += "engine\snes-recomp.exe", "..\snes-recomp\target\release\snes-recomp.exe"
+    $cands += (Join-Path $root "snes-recomp.exe")
     $Engine = $cands | Where-Object { Test-Path $_ } | Select-Object -First 1
 }
-if (-not $Engine -or -not (Test-Path $Engine)) { Skip "no hay motor (ejecuta play.bat una vez para extraerlo a engine\, o define SNES_ENGINE)" }
+if (-not $Engine -or -not (Test-Path $Engine)) { Skip "no hay motor (snes-recomp.exe en la raíz: scripts\update-engine.ps1; o define SNES_ENGINE)" }
 if ($Vcvars -eq "") {
     $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
     if (Test-Path $vswhere) {

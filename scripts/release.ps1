@@ -2,13 +2,15 @@
 # licencia) más games\ de este repositorio. El usuario descomprime, arrastra su ROM sobre snes-port.exe y juega.
 # No lleva ROMs, partidas guardadas ni C generado: si algo así acaba en la carpeta, el script falla y no crea el zip.
 #
-#   powershell -File scripts\release.ps1 -Engine <zip o carpeta de snes-port del motor> [-Version 0.1.0] [-NoTcc]
+#   powershell -File scripts\release.ps1 [-Engine <zip o carpeta de snes-port del motor>] [-Version 0.1.0] [-NoTcc]
+#
+# Sin -Engine usa el motor de la raíz de este repositorio (snes-port.exe, sdl2\, toolchain\; ver scripts\update-engine.ps1).
 #
 # El paquete debe llevar el compilador del motor (toolchain\tcc\tcc.exe) para que quien solo quiere jugar no tenga que
 # instalar ni descargar nada; si el zip del motor no lo trae, el script falla (salvo con -NoTcc).
 # El zip del motor sale de `powershell -File scripts\release.ps1` en el repositorio snes-recomp.
 param(
-    [Parameter(Mandatory = $true)][string]$Engine,
+    [string]$Engine = "",
     [string]$Version = "0.1.0",
     [switch]$NoTcc
 )
@@ -22,7 +24,11 @@ if (Test-Path $stage) { Remove-Item -Recurse -Force $stage }
 New-Item -ItemType Directory -Force $stage | Out-Null
 
 # el motor: un zip (se descomprime) o la carpeta ya armada
-if ((Get-Item $Engine).PSIsContainer) {
+if ($Engine -eq "") {
+    foreach ($f in "snes-port.exe", "snes-recomp.exe", "sdl2", "toolchain", "README-engine.md", "LICENSE-engine") {
+        if (Test-Path $f) { Copy-Item $f $stage -Recurse }
+    }
+} elseif ((Get-Item $Engine).PSIsContainer) {
     Copy-Item "$Engine\*" $stage -Recurse
 } else {
     $tmp = Join-Path $root "out\release\engine-tmp"

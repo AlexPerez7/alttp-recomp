@@ -8,11 +8,8 @@
 /roms/
 /out/
 *.log
-/engine/
 /engine.tmp/
 # volcado del texto de la ROM (derivado de ella)
 alttp_messages_*.txt
 alttp_menu_*.txt
 # games/*/lang/es.txt y es_menu.txt son la traduccion propia al espanol y SI se suben; nunca una copia del volcado (derivado de la ROM)
-# acceso directo al lanzador que crea scripts\play.ps1 (es del equipo)
-*.lnk

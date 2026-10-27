@@ -1,0 +1,7 @@
+﻿TinyCC tcc-0.9.27-win64-bin (LGPL 2.1)
+
+Este compilador de C viaja con el paquete solo para construir el juego en tu maquina cuando no tienes uno propio
+(Visual Studio Build Tools, gcc o clang): snes-port lo usa en ese caso y nunca lo ejecuta si ya tienes uno.
+Es software libre bajo la licencia LGPL; su licencia y su documentacion estan en la carpeta tcc.
+Codigo fuente: https://download.savannah.gnu.org/releases/tinycc/ y https://repo.or.cz/tinycc.git
+Descargado de https://download.savannah.gnu.org/releases/tinycc/tcc-0.9.27-win64-bin.zip (SHA-256 34a721949a2583fdff725312da092fa0f5f1f284b702e6f811c6954714faabb2).

@@ -67,11 +67,10 @@ Controles, menú F1, opciones, partidas guardadas (`.srm` junto a la ROM) y dem�
 play.bat                 # construye si hace falta y abre el juego (ROM en roms\alttp_usa.sfc)
 play.bat -Rebuild        # borra la caché y lo construye de nuevo
 play.bat -NoLaunch       # solo construye
-# play.bat deja además "Zelda ALttP.lnk" en la raíz: doble clic y se abre la ventana del lanzador (elige la ROM y juega)
 play.bat -- --game-opt dialog_skip=0   # opciones del juego
 ```
 
-`scripts\play.ps1` usa el motor de `engine\` (ignorado por git). Si no existe, lo extrae del zip más reciente de `..\snes-recomp\out\release\` o del que pases con `-EngineZip`; con `SNES_ENGINE` apuntas a otra carpeta. Una vez extraído no hace falta el repositorio del motor. Para actualizar el motor, borra `engine\` y repite.
+Este repositorio lleva el motor ya hecho en la raíz (`snes-port.exe`, `snes-recomp.exe`, `sdl2\`, `toolchain\` con TinyCC; licencia y README del motor como `LICENSE-engine` y `README-engine.md`), así que no hace falta clonar `snes-recomp` para jugar: **doble clic en `snes-port.exe`** abre la ventana del lanzador (reconoce el juego por `games\`), eliges tu ROM y juegas; `play.bat` hace lo mismo sin ventana y con opciones. Con `SNES_ENGINE` apuntas a otra carpeta. Para actualizar el motor: en `snes-recomp`, `powershell -File scripts\release.ps1`; aquí, `powershell -File scripts\update-engine.ps1`, y se sube como cualquier cambio.
 
 ### Con el motor
 
@@ -89,7 +88,7 @@ Opciones del juego tras `--`, por ejemplo `-- --game-opt dialog_skip=0`.
 ```
 powershell -File scripts\check.ps1 -Rom ruta\a\alttp_usa.sfc      # genera, compila y ejecuta; ~3 min
 cd ..\snes-recomp ; powershell -File scripts\release.ps1 ; cd ..\alttp-recomp
-powershell -File scripts\release.ps1 -Engine ..\snes-recomp\out\release\snes-port-0.1.0-win64.zip
+powershell -File scripts\release.ps1
 ```
 
 `check.ps1` se omite con un aviso si falta la ROM, el motor o Visual Studio. `release.ps1` falla si el paquete llevara ROMs, partidas guardadas, estados guardados (`.sst`) o C generado.
