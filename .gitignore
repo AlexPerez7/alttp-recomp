@@ -2,6 +2,7 @@
 *.sfc
 *.smc
 *.srm
+*.sst
 *.fig
 *.swc
 /roms/
