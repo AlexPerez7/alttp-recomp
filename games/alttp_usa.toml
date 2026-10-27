@@ -774,3 +774,8 @@ key = "language"
 label = "Language"
 names = ["en", "es"]
 default = "en"
+
+# Bucle principal: espera del NMI ($12) y, por cada fotograma, el módulo del juego. Es un bloque de la función de reset (00:8000)
+# con la pila del 65816 en su base ($01FF) y sin interrupción en curso; aquí se guardan y cargan los estados.
+[resume]
+addr = "00:8034"
