@@ -7,7 +7,7 @@ Este repositorio es el juego (*A Link to the Past*, USA); el recompilador, el ru
 - **Nunca la ROM ni nada derivado de ella**: ni en commits, ni en issues, ni en PR. Eso incluye volcados de VRAM/WRAM, capturas con gráficos del juego, el C generado y bytes de tablas copiados de la ROM. `.gitignore` excluye `*.sfc`, `*.smc`, `*.srm`, `roms/` y `out/`. Antes de abrir un PR, con el motor compilado:
 
   ```
-  ..\snes-recomp\target\release\snes-recomp.exe scan ruta\a\alttp_usa.sfc .
+  .\snes-recomp.exe scan ruta\a\alttp_usa.sfc .
   ```
 
   Debe terminar sin error.
