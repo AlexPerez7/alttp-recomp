@@ -9,7 +9,7 @@ play.bat                  # construye si hace falta y abre el juego (ROM en roms
 play.bat -Rebuild         # borra la caché de la ROM y reconstruye (si un cambio no se nota)
 play.bat -NoLaunch        # solo construye
 play.bat -- --game-opt dialog_skip=0      # opciones del C del juego tras --
-powershell -File scripts\check.ps1        # genera, compila y ejecuta las pruebas con la ROM (~10 min: la parte de las mejoras de calidad juega varias partidas desde el principio); se omite si falta ROM, motor o Visual Studio
+powershell -File scripts\check.ps1        # genera, compila y ejecuta las pruebas con la ROM (~3 min: las partidas de las mejoras de calidad se juegan en paralelo); se omite si falta ROM, motor o Visual Studio
 powershell -File scripts\release.ps1 -Engine <zip del motor>   # paquete para repartir; falla si lleva ROM, .srm o C generado
 ```
 

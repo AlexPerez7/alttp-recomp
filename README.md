@@ -86,7 +86,7 @@ Opciones del juego tras `--`, por ejemplo `-- --game-opt dialog_skip=0`.
 ## Comprobar y empaquetar
 
 ```
-powershell -File scripts\check.ps1 -Rom ruta\a\alttp_usa.sfc      # genera, compila y ejecuta; ~10 min
+powershell -File scripts\check.ps1 -Rom ruta\a\alttp_usa.sfc      # genera, compila y ejecuta; ~3 min
 cd ..\snes-recomp ; powershell -File scripts\release.ps1 ; cd ..\alttp-recomp
 powershell -File scripts\release.ps1 -Engine ..\snes-recomp\out\release\snes-port-0.1.0-win64.zip
 ```

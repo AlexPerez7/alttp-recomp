@@ -197,12 +197,21 @@ Write-Host "la WRAM del juego no cambia con los menús traducidos = $menuGame"
 # escrituras en la WRAM, comprobar cada opción. Con --trace-frames y --watch el motor lista cada cambio de una dirección.
 $toControl = @($toMessage)
 for ($f = 2100; $f -lt 5200; $f += 50) { $toControl += @("--press", "A@$f-$($f+3)") }
-function Play($name, $frames, $extra) {
+# Las 8 partidas son independientes: se lanzan todas a la vez (Launch) y se recogen después (Play), así tarda lo que la más larga.
+$running = @{}
+function Launch($name, $frames, $extra) {
     $d = Join-Path $out "q_$name"
     New-Item -ItemType Directory -Force $d | Out-Null
-    $log = & "$out\headless_fast.exe" $textRom --frames $frames --frame-blocks 20000 --dump $d @toControl @extra 2>&1
-    if ($LASTEXITCODE -ne 0) { throw "headless.exe termino con codigo $LASTEXITCODE ($name)" }
-    return @{ wram = [System.IO.File]::ReadAllBytes("$d\wram.bin"); log = $log }
+    $argList = @($textRom, "--frames", $frames, "--frame-blocks", 20000, "--dump", $d) + $toControl + $extra
+    $proc = Start-Process "$out\headless_fast.exe" -ArgumentList $argList -NoNewWindow -PassThru -RedirectStandardOutput "$d\log.txt" -RedirectStandardError "$d\err.txt"
+    $null = $proc.Handle   # sin esto Windows PowerShell 5.1 pierde el código de salida
+    $running[$name] = @{ dir = $d; proc = $proc }
+}
+function Play($name) {
+    $r = $running[$name]
+    $r.proc.WaitForExit()
+    if ($r.proc.ExitCode -ne 0) { throw "headless_fast.exe termino con codigo $($r.proc.ExitCode) ($name)" }
+    return @{ wram = [System.IO.File]::ReadAllBytes("$($r.dir)\wram.bin"); log = @(Get-Content "$($r.dir)\log.txt") + @(Get-Content "$($r.dir)\err.txt") }
 }
 function Writes($log) {
     foreach ($l in $log) {
@@ -217,22 +226,38 @@ function Pal($w, $from, $n) { @(0..($n - 1) | ForEach-Object { ($w[$from + 2 * $
 function Counters($w) { @((Pal $w 0xC750 3), (Pal $w 0xC758 2), (Pal $w 0xC75E 2)) -join " " }
 $allMax = @("--poke", "0F360=E703E703@5250", "--poke", "0F343=0A@5250", "--poke", "0F377=1E@5250")
 $someMax = @("--poke", "0F360=F401F401@5250", "--poke", "0F343=0A@5250", "--poke", "0F377=1E@5250")
-$yOff = Counters (Play "y_off" 5400 ($allMax + @("--game-opt", "max_yellow=0"))).wram
-$yOn = Counters (Play "y_on" 5400 ($allMax + @("--game-opt", "max_yellow=1"))).wram
-$yPart = Counters (Play "y_part" 5400 ($someMax + @("--game-opt", "max_yellow=1"))).wram
-$yellowOk = ($yOff -eq "1,1,1 1,1 1,1" -and $yOn -eq "5,5,5 5,5 5,5" -and $yPart -eq "1,1,1 5,5 5,5")
-Write-Host "max_yellow: paletas (rupias bombas flechas) apagado = $yOff, activo = $yOn, con 500 rupias = $yPart -> $yellowOk"
+Launch "y_off" 5400 ($allMax + @("--game-opt", "max_yellow=0"))
+Launch "y_on" 5400 ($allMax + @("--game-opt", "max_yellow=1"))
+Launch "y_part" 5400 ($someMax + @("--game-opt", "max_yellow=1"))
 
 # low_hp_beep: con un corazón ($F36D = 8) el juego escribe el efecto $2B en $012E cada 32 fotogramas. Con la opción en 1 queda
 # hasta el fotograma siguiente (el motor de sonido lo consume); en 0 se borra en el mismo fotograma. Con la vida llena, nada.
-function Beep($name, $beep, $low) {
+function LaunchBeep($name, $beep, $low) {
     $extra = @("--watch", "012E", "--trace-frames", "5260-5400", "--game-opt", "low_hp_beep=$beep")
     if ($low) { $extra += @("--poke", "0F36D=08@5250") }
-    return @(Writes (Play $name 5400 $extra).log | Where-Object { $_.Addr -eq 0x12E })
+    Launch $name 5400 $extra
 }
-$bOn = Beep "b_on" 1 $true
-$bOff = Beep "b_off" 0 $true
-$bFull = Beep "b_full" 1 $false
+function Beep($name) { return @(Writes (Play $name).log | Where-Object { $_.Addr -eq 0x12E }) }
+LaunchBeep "b_on" 1 $true
+LaunchBeep "b_off" 0 $true
+LaunchBeep "b_full" 1 $false
+
+
+# dash_turn: con las botas ($F355 y la habilidad $F379) se corre con A. Mientras se corre a la derecha se pulsa arriba (fotograma
+# 6031): sin la opción la carrera termina ($5D deja de valer $11) en ese fotograma; con ella Link gira ($2F pasa a 0, arriba) y la
+# carrera sigue hasta chocar con la pared unos fotogramas después.
+foreach ($opt in 0, 1) {
+    Launch "dash$opt" 6150 @("--poke", "0F355=01@5250", "--poke", "0F379=FF@5250", "--watch", "05D", "--watch", "02F", "--trace-frames", "5950-6150",
+        "--press", "A@5900-5904", "--press", "A+RIGHT@6000-6030", "--press", "A+UP@6031-6062", "--game-opt", "dash_turn=$opt")
+}
+
+# Resultados (las ocho partidas ya están en marcha)
+$yOff = Counters (Play "y_off").wram
+$yOn = Counters (Play "y_on").wram
+$yPart = Counters (Play "y_part").wram
+$yellowOk = ($yOff -eq "1,1,1 1,1 1,1" -and $yOn -eq "5,5,5 5,5 5,5" -and $yPart -eq "1,1,1 5,5 5,5")
+Write-Host "max_yellow: paletas (rupias bombas flechas) apagado = $yOff, activo = $yOn, con 500 rupias = $yPart -> $yellowOk"
+$bOn = Beep "b_on"; $bOff = Beep "b_off"; $bFull = Beep "b_full"
 $setOn = @($bOn | Where-Object { $_.New -eq "2B" }); $clrOn = @($bOn | Where-Object { $_.Old -eq "2B" })
 $setOff = @($bOff | Where-Object { $_.New -eq "2B" }); $clrOff = @($bOff | Where-Object { $_.Old -eq "2B" })
 $beepOn = ($setOn.Count -ge 4 -and $setOn.Count -eq $clrOn.Count -and @(0..($setOn.Count - 1) | Where-Object { $clrOn[$_].Frame -le $setOn[$_].Frame }).Count -eq 0)
@@ -240,17 +265,8 @@ $beepOff = ($setOff.Count -eq $setOn.Count -and $clrOff.Count -eq $setOff.Count 
 $beepFull = ($bFull.Count -eq 0)
 $beepOthers = (@($bOn | Where-Object { $_.New -ne "2B" -and $_.Old -ne "2B" }).Count -eq @($bOff | Where-Object { $_.New -ne "2B" -and $_.Old -ne "2B" }).Count)
 Write-Host "low_hp_beep: con poca vida el `$2B se pide $($setOn.Count) veces y dura un fotograma = $beepOn; con la opción en 0 se borra en el mismo fotograma = $beepOff; con la vida llena no hay nada = $beepFull; los demás efectos no cambian = $beepOthers"
-
-# dash_turn: con las botas ($F355 y la habilidad $F379) se corre con A. Mientras se corre a la derecha se pulsa arriba (fotograma
-# 6031): sin la opción la carrera termina ($5D deja de valer $11) en ese fotograma; con ella Link gira ($2F pasa a 0, arriba) y la
-# carrera sigue hasta chocar con la pared unos fotogramas después.
-function Dash($opt) {
-    $extra = @("--poke", "0F355=01@5250", "--poke", "0F379=FF@5250", "--watch", "05D", "--watch", "02F", "--trace-frames", "5950-6150",
-        "--press", "A@5900-5904", "--press", "A+RIGHT@6000-6030", "--press", "A+UP@6031-6062", "--game-opt", "dash_turn=$opt")
-    return @(Writes (Play "dash$opt" 6150 $extra).log)
-}
-$d0 = Dash 0
-$d1 = Dash 1
+$d0 = @(Writes (Play "dash0").log)
+$d1 = @(Writes (Play "dash1").log)
 $run0 = $d0 | Where-Object { $_.Addr -eq 0x5D -and $_.New -eq "11" } | Select-Object -First 1
 $end0 = $d0 | Where-Object { $_.Addr -eq 0x5D -and $_.Old -eq "11" } | Select-Object -First 1
 $end1 = $d1 | Where-Object { $_.Addr -eq 0x5D -and $_.Old -eq "11" } | Select-Object -First 1
