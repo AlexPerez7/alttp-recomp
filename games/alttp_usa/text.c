@@ -430,12 +430,13 @@ static void use_letters(int on) {
  * the font in the message. */
 static const struct { uint8_t code; uint16_t mask; } buttons[] = { { 0x5B, 0x0080 }, { 0x5C, 0x8000 }, { 0x5D, 0x0040 }, { 0x5E, 0x4000 } };
 
-/* The four PlayStation symbols (cross, circle, square, triangle) as 6x6 bodies; the outline is drawn around them. */
-static const char *const symbols[4][6] = {
-    { "##..##", ".####.", "..##..", "..##..", ".####.", "##..##" },
-    { ".####.", "##..##", "##..##", "##..##", "##..##", ".####." },
-    { "######", "##..##", "##..##", "##..##", "##..##", "######" },
-    { "..##..", "..##..", ".#..#.", "##..##", "##..##", "######" },
+/* The four PlayStation symbols (cross, circle, square, triangle) as 7x7 bodies; the outline is drawn around them (the column left of the
+ * glyph is cut, so it only shows on the right, where it keeps the symbol apart from the next letter). */
+static const char *const symbols[4][7] = {
+    { "##...##", ".##.##.", "..###..", "..###..", "..###..", ".##.##.", "##...##" },
+    { ".#####.", "##...##", "##...##", "##...##", "##...##", "##...##", ".#####." },
+    { "#######", "##...##", "##...##", "##...##", "##...##", "##...##", "#######" },
+    { "...#...", "..###..", "..#.#..", ".##.##.", ".#...#.", "##...##", "#######" },
 };
 
 static uint8_t icon_orig[4][32];  /* the glyphs of the four codes as the game has them */
@@ -451,14 +452,14 @@ static void set_icon(int k, int want) {
     else if (want >= 4) memcpy(g, icon_orig[want - 4], 32);
     else {
         memset(g, 0, sizeof g);
-        for (r = 0; r < 6; r++)
-            for (c = 0; c < 6; c++)
-                if (symbols[want][r][c] == '#') put_pixel(g, 4 + r, 1 + c, 8, 'o');
-        for (r = 0; r < 6; r++)
-            for (c = 0; c < 6; c++)
+        for (r = 0; r < 7; r++)
+            for (c = 0; c < 7; c++)
+                if (symbols[want][r][c] == '#') put_pixel(g, 3 + r, c, 8, 'o');
+        for (r = 0; r < 7; r++)
+            for (c = 0; c < 7; c++)
                 if (symbols[want][r][c] == '#')
                     for (y = -1; y <= 1; y++)
-                        for (x = -1; x <= 1; x++) put_pixel(g, 4 + r + y, 1 + c + x, 8, '.');
+                        for (x = -1; x <= 1; x++) put_pixel(g, 3 + r + y, c + x, 8, '.');
     }
     rom_overlay(glyph_at(buttons[k].code), (const uint8_t *)g, 16);
     rom_overlay(glyph_at(buttons[k].code) + 0x100u, (const uint8_t *)g + 16, 16);
