@@ -1,0 +1,43 @@
+# Integración continua. No hay ROM en CI (nunca se sube), así que aquí solo van las comprobaciones que no la necesitan:
+# que no haya nada derivado de la ROM en git, que el perfil sea TOML válido y que el C propio compile contra snes_rt.h del motor.
+# Las pruebas con la ROM (scripts/check.ps1) y `snes-recomp scan` se ejecutan en local.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  comprobar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Motor (snes-recomp, solo para snes_rt.h)
+        uses: actions/checkout@v4
+        with:
+          repository: AlexPerez7/snes-recomp
+          path: snes-recomp
+
+      - name: Nada derivado de la ROM en git
+        run: |
+          prohibidos=$(git ls-files | grep -Ei '\.(sfc|smc|srm|sst)$|^(roms|out|engine)/' || true)
+          if [ -n "$prohibidos" ]; then echo "Ficheros que no deben estar en git:"; echo "$prohibidos"; exit 1; fi
+
+      - name: El perfil es TOML válido
+        run: python3 -c "import tomllib,sys; tomllib.load(open('games/alttp_usa.toml','rb'))"
+
+      - name: Cada fichero C propio está en la lista de check.ps1
+        run: |
+          for f in games/alttp_usa/*.c; do
+            grep -q "\"$(basename "$f")\"" scripts/check.ps1 || { echo "falta $(basename "$f") en scripts/check.ps1"; exit 1; }
+          done
+
+      - name: El C propio compila contra snes_rt.h
+        run: |
+          # snes_funcs.h lo genera el motor a partir de la ROM; aquí se declaran solo las funciones que el C propio llama.
+          mkdir stub
+          { echo '#include "snes_rt.h"'; grep -ohE '\bf_[0-9A-F]{2}_[0-9A-F]{4}\b' games/alttp_usa/*.c | sort -u | sed 's/.*/void &(Cpu *c);/'; } > stub/snes_funcs.h
+          for f in games/alttp_usa/*.c; do
+            gcc -std=c11 -Wall -fsyntax-only -Isnes-recomp/runtime -Istub "$f"
+          done

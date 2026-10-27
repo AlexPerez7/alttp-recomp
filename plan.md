@@ -36,6 +36,7 @@ Reparto (ver `CLAUDE.md`): lo general va al motor (`snes-recomp`, con OpenSpec);
 
 5. **Otras ROMs de ALttP** (aquí): EU, JP y la alemana. Mismo perfil con otras direcciones (`alttp_eu.toml`...); la traducción puede compartir `lang/`. Cada tabla de saltos se vuelve a comprobar a mano.
 6. **CI** (ambos repos): GitHub Actions que compile, pase `cargo test` y `scripts\check.ps1` (se omite sola sin ROM) y vigile que `scan` termine sin error.
+   - **Hecho aquí** (`.github/workflows/ci.yml`, sin ROM): nada derivado de la ROM en git, perfil TOML válido, cada `.c` en la lista de `check.ps1` y el C propio compila con gcc contra `snes_rt.h` del motor (con un `snes_funcs.h` de relleno). Falta ver que pase en GitHub la primera vez (no se ha subido) y, en `snes-recomp`, su propio CI (`cargo build`/`cargo test`). `check.ps1` y `scan` necesitan la ROM y siguen siendo locales.
 7. **Linux y macOS** (motor): el runtime ya usa SDL2 y gcc/clang; faltan rutas, el selector de ROM, la caché (`%LOCALAPPDATA%`) y los paquetes. Después Steam Deck.
 8. **Instalador/paquete** más cómodo: ya existe `release.ps1`; añadir firma y una página de descargas cuando haya versión.
 
