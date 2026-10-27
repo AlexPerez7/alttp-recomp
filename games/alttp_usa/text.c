@@ -521,6 +521,12 @@ static void spell_buttons(void) {
     for (i = 0; i < n; i++) bus_write8(BUF + (uint32_t)i, out[i]);
 }
 
+/* The letters sit on codes whose tiles the menus use ($5F is the tile of their narrow I), so outside the game (title, file select, copy,
+ * erase, name: modules 0 to 5) the game's own shapes go back; the first message of a game puts the letters on again. */
+void alttp_text_menus(void) {
+    if (letters_state == 1 && wram_read8(0x10) < 6) use_letters(0);
+}
+
 /* After the loader (0E:C4E2): puts the translated text in the buffer in place of the English one. */
 void alttp_text_translate(Cpu *c) {
     int id, i;
