@@ -27,7 +27,9 @@ Reparto (ver `CLAUDE.md`): lo general va al motor (`snes-recomp`, con OpenSpec);
    - cambio de objeto con L/R;
    - contador de rupias/llaves legible;
    - arreglos de bugs conocidos (los de `zelda3` sirven de guía; hay que comprobar cada dirección a mano contra la ROM);
-   - ya hecho: mensajes rápidos (`dialog.c`).
+   - ya hecho: mensajes rápidos (`dialog.c`) pitido de poca vida desactivable con `low_hp_beep=0` (`quality.c`, gancho en `0D:DB75`; falta probarlo en una partida con pocos corazones) y rupias, bombas y flechas máximas en amarillo con `max_yellow=1` (`quality.c`, gancho en `0D:FC09`; apagado por defecto) y girar mientras se corre con `dash_turn=1` (`quality.c`, gancho al entrar en el manejador del dash `07:8F86`; apagado por defecto; **sin probar**: ver pruebas pendientes);
+   - **pruebas pendientes** (se hacen después de implementar las mejoras): `low_hp_beep=0` en una partida con pocos corazones (que no suene el `$2B` y que el resto de efectos suenen igual; con `low_hp_beep=1` debe sonar como siempre), y una prueba automática en `check.ps1` que compare `$012E` con la opción en cada valor; `max_yellow` también: prueba automática que ponga 999 rupias con `--poke 0F360=E703E703@N` y compare las entradas `$C750-$C754` de la WRAM con la opción apagada y encendida, con las bombas y flechas en su máximo y con una por debajo; `dash_turn`: no he conseguido arrancar el dash sin ventana (con `$7EF355=1`, A pulsada y dirección, `$5D` no llega a `$11`; poner `$5D=$11`, `$0372=1`, `$0374=$1D` con `--poke` tampoco lo mantiene), hay que probarlo jugando fuera de casa o buscar qué condición (`07:B281`, la llamada es indirecta) falta, y comprobar que `$2F` cambia y Link sigue corriendo; cada mejora nueva añade la suya aquí;
+   - candidatos de `zelda3` (`zelda3.ini`) aún sin hacer: espejo al Mundo Oscuro, recoger con la espada, romper vasijas con la espada, más bombas activas, 9999 rupias, cancelar el viaje en pájaro.
 4. **Volumen separado de música y efectos** (motor, y puede requerir saber qué voces del DSP son qué).
 
 ## Fase 2: ampliar el público

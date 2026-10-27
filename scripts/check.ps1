@@ -46,7 +46,7 @@ New-Item -ItemType Directory -Force $gen | Out-Null
 
 & $Engine codegen $Rom --all -o $gen --game games\alttp_usa.toml 2>$null
 if ($LASTEXITCODE -ne 0) { throw "codegen fallo" }
-foreach ($f in "dialog.c", "widefill.c", "text.c", "menutext.c", "hud.c") {
+foreach ($f in "dialog.c", "widefill.c", "text.c", "menutext.c", "hud.c", "quality.c") {
     if (-not (Test-Path "$gen\game\$f")) { throw "el motor no copio $f a out\rom\game" }
 }
 

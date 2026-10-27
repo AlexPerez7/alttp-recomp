@@ -769,6 +769,29 @@ addr = "00:80B5"
 kind = "before"
 call = "alttp_menu_poll"
 
+# Pitido de poca vida (quality.c): la rutina del marcador (0D:DB75) pide el efecto $2B en $012E; con low_hp_beep=0 se retira.
+[[hook]]
+addr = "0D:DB75"
+kind = "before"
+call = "alttp_hud_beep_enter"
+
+[[hook]]
+addr = "0D:DB75"
+kind = "after"
+call = "alttp_hud_beep_leave"
+
+# Maximo en amarillo (quality.c): al final de la rutina que dibuja los contadores del marcador (0D:FC09).
+[[hook]]
+addr = "0D:FC09"
+kind = "after"
+call = "alttp_hud_max_yellow"
+
+# Girar mientras se corre (quality.c): al entrar en el manejador del dash (07:8F86, estado $11 de $5D).
+[[hook]]
+addr = "07:8F86"
+kind = "before"
+call = "alttp_dash_turn"
+
 [[option]]
 key = "language"
 label = "Language"
