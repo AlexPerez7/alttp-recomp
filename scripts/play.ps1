@@ -19,8 +19,6 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
 Set-Location $root
 
-if (-not (Test-Path $Rom)) { throw "no hay ROM en $Rom (pásala con -Rom o ponla en roms\)" }
-
 $dir = $null
 if ($env:SNES_ENGINE -and (Test-Path "$env:SNES_ENGINE\snes-port.exe")) { $dir = $env:SNES_ENGINE }
 elseif (Test-Path "engine\snes-port.exe") { $dir = Join-Path $root "engine" }
@@ -46,6 +44,20 @@ else {
     $dir = Join-Path $root "engine"
 }
 $exe = Join-Path $dir "snes-port.exe"
+
+# "Zelda ALttP.lnk" en la raíz: doble clic y se abre la ventana del lanzador (con games\ de este repositorio como carpeta de trabajo,
+# así reconoce el juego); desde ahí se elige la ROM y se juega sin pasar por play.bat. Es del equipo, no se sube (*.lnk ignorado).
+try {
+    $sh = New-Object -ComObject WScript.Shell
+    $lnk = $sh.CreateShortcut((Join-Path $root "Zelda ALttP.lnk"))
+    $lnk.TargetPath = $exe
+    $lnk.WorkingDirectory = $root
+    $lnk.IconLocation = "$exe,0"
+    $lnk.Description = "Abre el lanzador de A Link to the Past"
+    $lnk.Save()
+} catch { Write-Warning "no se pudo crear el acceso directo: $_" }
+
+if (-not (Test-Path $Rom)) { throw "no hay ROM en $Rom (pásala con -Rom o ponla en roms\)" }
 
 if ($Rebuild) { & $exe clean $Rom; if ($LASTEXITCODE -ne 0) { throw "snes-port clean fallo" } }
 

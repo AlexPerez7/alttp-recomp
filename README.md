@@ -67,6 +67,7 @@ Controles, menú F1, opciones, partidas guardadas (`.srm` junto a la ROM) y dem�
 play.bat                 # construye si hace falta y abre el juego (ROM en roms\alttp_usa.sfc)
 play.bat -Rebuild        # borra la caché y lo construye de nuevo
 play.bat -NoLaunch       # solo construye
+# play.bat deja además "Zelda ALttP.lnk" en la raíz: doble clic y se abre la ventana del lanzador (elige la ROM y juega)
 play.bat -- --game-opt dialog_skip=0   # opciones del juego
 ```
 
