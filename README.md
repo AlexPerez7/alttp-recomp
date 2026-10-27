@@ -21,6 +21,7 @@ Licencia: [MIT](LICENSE), solo para el código de este repositorio; no da derech
 | Mejora | Cómo se usa |
 |---|---|
 | Pantalla ancha sin basura | Con `wide` mayor que 0 el borde del mapa y el interior de salas y cuevas se ven en negro en lugar de repetir el lado contrario del mapa. |
+| Estados guardados y rebobinado | **F5** guarda, **F7** carga, **F3**/**F4** cambian de ranura (1 a 9) y mantener **Retroceso** rebobina unos 10 s. Solo en la partida: en la intro y la pantalla de título el juego cambia de pila entre NMI e IRQ y el motor lo rechaza con un aviso. Los estados (`.sst`) se quedan junto a la ROM y nunca se publican. |
 | Mensajes más rápidos | Mantén **R** (en el teclado, `W`) durante un mensaje y el texto sale un carácter por fotograma. Se desactiva con `--game-opt dialog_skip=0`. |
 
 ## Texto de los mensajes
@@ -85,10 +86,11 @@ cd ..\snes-recomp ; powershell -File scripts\release.ps1 ; cd ..\alttp-recomp
 powershell -File scripts\release.ps1 -Engine ..\snes-recomp\out\release\snes-port-0.1.0-win64.zip
 ```
 
-`check.ps1` se omite con un aviso si falta la ROM, el motor o Visual Studio. `release.ps1` falla si el paquete llevara ROMs, partidas guardadas o C generado.
+`check.ps1` se omite con un aviso si falta la ROM, el motor o Visual Studio. `release.ps1` falla si el paquete llevara ROMs, partidas guardadas, estados guardados (`.sst`) o C generado.
 
 ## Limitaciones conocidas
 
+- Los estados guardados no incluyen el fotograma en curso (se redibuja) ni variables estáticas del C propio; por ahora se guardan en un único punto del bucle principal (`[resume]` en `00:8034`).
 - De las 4 178 funciones de la ROM, 2 (`01:CA17`, `08:A8E3`) se quedan como *stub* y no se ejecutan en el juego.
 - La interpolación del DSP usa un núcleo en forma de campana, cercano a la gaussiana del hardware pero no su tabla exacta; la PPU no emula el entrelazado; los comportamientos que dependen de ciclos exactos no se reproducen.
 

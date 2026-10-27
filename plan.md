@@ -15,12 +15,13 @@ Reparto (ver `CLAUDE.md`): lo general va al motor (`snes-recomp`, con OpenSpec);
 | Pantalla ancha hasta 96 px por lado y relleno específico de ALttP | motor + `widefill.c` |
 | Traducción al español de mensajes y menús, botones del jugador en los textos | `text.c`, `menutext.c`, `hud.c` |
 | Opciones de juego propias, `rom_overlay`, ganchos `[[hook]]` en el perfil | motor + perfil |
+| Save states (F5/F7, ranuras 1 a 9) y rebobinado (Retroceso) | motor, `[resume]` en el perfil |
 | Captura PNG (F10), pruebas sin ventana (`--press`, `--poke`, `--dump`, trazas) | motor |
 | Más de 200 pruebas y fuzz de 30 000 fotogramas | motor + `check.ps1` |
 
 ## Fase 1: lo que más se nota al jugar
 
-1. **Save states y rebobinado** (motor). Hoy solo hay `.srm`. Hace falta serializar WRAM, VRAM, CGRAM, OAM, registros de la PPU, estado del SPC700/DSP, DMA/HDMA y el reloj. Teclas para guardar/cargar en varias ranuras y mantener una tecla para rebobinar (anillo de estados comprimidos por fotograma). Prueba: guardar, cargar y comparar el fotograma y el audio con `--no-window`.
+1. **Save states y rebobinado** (motor). **Hecho** (cambio `savestates` de `snes-recomp`): perfil `[resume]` en `00:8034`, F5/F7/F3/F4 y Retroceso. Pendiente: pruebas automáticas de estado ajeno y de K pasos de rebobinado, comparar el audio, filas de menú. Hoy solo hay `.srm`. Hace falta serializar WRAM, VRAM, CGRAM, OAM, registros de la PPU, estado del SPC700/DSP, DMA/HDMA y el reloj. Teclas para guardar/cargar en varias ranuras y mantener una tecla para rebobinar (anillo de estados comprimidos por fotograma). Prueba: guardar, cargar y comparar el fotograma y el audio con `--no-window`.
 2. **Shaders** (motor). Hay scanlines y rejilla, pero no CRT real, máscara de fósforo ni suavizado de borde. Valorar un paso opcional de OpenGL/D3D con shaders simples, manteniendo el camino por software como respaldo.
 3. **Correcciones de bugs del original y calidad de vida** (aquí, `games/alttp_usa/*.c`), cada una como `[[option]]` activable:
    - cambio de objeto con L/R;
@@ -51,7 +52,7 @@ Reparto (ver `CLAUDE.md`): lo general va al motor (`snes-recomp`, con OpenSpec);
 
 ## Orden sugerido
 
-1 → 3 → 5 → 6 → 9 → 2 → 7 → resto. Los puntos 1 y 9 desbloquean después logros y netplay.
+(1 hecho) 3 → 5 → 6 → 9 → 2 → 7 → resto. Los puntos 1 y 9 desbloquean después logros y netplay.
 
 ## Notas
 
