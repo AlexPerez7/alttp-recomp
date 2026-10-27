@@ -6,11 +6,14 @@
  * that wraps and has no neighbour, so all the extra columns are black. In the menus (modules 0 to 5) nothing is changed. */
 #include "snes_rt.h"
 
+void alttp_hud_poll(void); /* hud.c */
+
 static int word(int a) { return wram_read8(a) | wram_read8(a + 1) << 8; }
 
 void alttp_wide_fill(Cpu *c) {
     int e = ppu_wide(), left, right;
     (void)c;
+    alttp_hud_poll();
     if (e == 0 || wram_read8(0x10) < 6) { ppu_wide_blank_clear(); return; }
     if (wram_read8(0x1B)) { ppu_wide_blank(e, e); return; }
     left = e - (word(0xE2) - word(0x0604));

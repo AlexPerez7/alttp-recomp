@@ -46,7 +46,7 @@ New-Item -ItemType Directory -Force $gen | Out-Null
 
 & $Engine codegen $Rom --all -o $gen --game games\alttp_usa.toml 2>$null
 if ($LASTEXITCODE -ne 0) { throw "codegen fallo" }
-foreach ($f in "dialog.c", "widefill.c", "text.c", "menutext.c") {
+foreach ($f in "dialog.c", "widefill.c", "text.c", "menutext.c", "hud.c") {
     if (-not (Test-Path "$gen\game\$f")) { throw "el motor no copio $f a out\rom\game" }
 }
 
@@ -135,7 +135,7 @@ function FirstBox($name, $extra) {
     return @((Get-FileHash "$d\shot.png").Hash, (Get-FileHash "$d\wram.bin").Hash)
 }
 $boxEn = FirstBox "en" @()
-$boxEs = FirstBox "es" @("--game-opt", "language=es", "--game-dir", $textDir)
+$boxEs = FirstBox "es" @("--game-opt", "language=es", "--game-opt", "hud_text=0", "--game-dir", $textDir)
 $boxOk = (($boxEn -join ",") -eq ($boxEs -join ","))
 Write-Host "primer cuadro de texto idéntico con language=en y language=es = $boxOk"
 
