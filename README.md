@@ -25,7 +25,7 @@ Licencia: [MIT](LICENSE), solo para el código de este repositorio; no da derech
 | Mensajes más rápidos | Mantén **R** (en el teclado, `W`) durante un mensaje y el texto sale un carácter por fotograma. Se desactiva con `--game-opt dialog_skip=0`. |
 | Sin pitido de poca vida | Con `--game-opt low_hp_beep=0` no suena el pitido que repite el juego cuando quedan pocos corazones; el resto de efectos suena igual. Por defecto suena como en el original. |
 | Máximos en amarillo | Con `--game-opt max_yellow=1`, las rupias (999), las bombas y las flechas en su tope se dibujan en amarillo pálido en el marcador. Apagado por defecto. |
-| Girar mientras se corre | Con `--game-opt dash_turn=1`, cambiar de dirección durante la carrera con las botas gira a Link en lugar de cortar la carrera. Apagado por defecto. **Sin probar en el juego todavía.** |
+| Girar mientras se corre | Con `--game-opt dash_turn=1`, cambiar de dirección durante la carrera con las botas gira a Link en lugar de cortar la carrera. Apagado por defecto. Probado con `scripts\check.ps1` (con las botas, pulsar otra dirección en plena carrera gira a Link y la carrera sigue). |
 
 ## Texto de los mensajes
 
@@ -86,7 +86,7 @@ Opciones del juego tras `--`, por ejemplo `-- --game-opt dialog_skip=0`.
 ## Comprobar y empaquetar
 
 ```
-powershell -File scripts\check.ps1 -Rom ruta\a\alttp_usa.sfc      # genera, compila y ejecuta; ~1 min
+powershell -File scripts\check.ps1 -Rom ruta\a\alttp_usa.sfc      # genera, compila y ejecuta; ~10 min
 cd ..\snes-recomp ; powershell -File scripts\release.ps1 ; cd ..\alttp-recomp
 powershell -File scripts\release.ps1 -Engine ..\snes-recomp\out\release\snes-port-0.1.0-win64.zip
 ```

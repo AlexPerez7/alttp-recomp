@@ -5,6 +5,8 @@
 # (interior) la captura mide 320 de ancho y las 32 columnas extra de cada lado son negras. Por último comprueba el texto de los
 # mensajes (games/alttp_usa/text.c): el volcado tiene 397 mensajes, lang\es.txt igual al volcado da el mismo texto, cambiar una
 # línea cambia solo ese mensaje y el primer cuadro de texto es idéntico con language=en y language=es.
+# Por último comprueba las mejoras de games/alttp_usa/quality.c en una partida nueva (Link ya se maneja en su casa, fotograma 5200,
+# y fuera de ella): max_yellow, low_hp_beep y dash_turn, mirando las escrituras en la WRAM.
 #
 #   powershell -File scripts\check.ps1 [-Rom roms\alttp_usa.sfc] [-Engine ruta\a\snes-recomp.exe]   (por defecto: el de play.bat)
 #
@@ -42,7 +44,7 @@ if ($Vcvars -eq "" -or -not (Test-Path $Vcvars)) { Skip "no se encuentra vcvars6
 $out = Join-Path $root "out"
 $gen = Join-Path $out "rom"
 if (Test-Path $out) { Remove-Item -Recurse -Force $out }
-New-Item -ItemType Directory -Force $gen | Out-Null
+New-Item -ItemType Directory -Force $gen, "$gen\fast" | Out-Null
 
 & $Engine codegen $Rom --all -o $gen --game games\alttp_usa.toml 2>$null
 if ($LASTEXITCODE -ne 0) { throw "codegen fallo" }
@@ -50,10 +52,12 @@ foreach ($f in "dialog.c", "widefill.c", "text.c", "menutext.c", "hud.c", "quali
     if (-not (Test-Path "$gen\game\$f")) { throw "el motor no copio $f a out\rom\game" }
 }
 
+# el segundo cl compila otro headless sin comprobaciones de anchura y optimizado, para las partidas largas de las mejoras de calidad
 $bat = Join-Path $out "build.bat"
 @"
 call "$Vcvars" >nul 2>&1
 cl /nologo /MP /TC /std:c11 /DSNES_RT_TICK /DSNES_RT_CHECKS /I"$gen" "$gen\*.c" "$gen\game\*.c" /Fe:"$out\headless.exe" /Fo:"$gen\\" >"$out\build.log" 2>&1
+cl /nologo /MP /O2 /TC /std:c11 /DSNES_RT_TICK /I"$gen" "$gen\*.c" "$gen\game\*.c" /Fe:"$out\headless_fast.exe" /Fo:"$gen\fast\\" >"$out\build_fast.log" 2>&1
 "@ | Set-Content -Encoding ascii $bat
 cmd /c $bat
 if ($LASTEXITCODE -ne 0) { Get-Content "$out\build.log" -Tail 30; throw "la compilacion fallo" }
@@ -189,6 +193,71 @@ New-Item -ItemType Directory -Force $a, $b | Out-Null
 $menuGame = ((Get-FileHash "$a\wram.bin").Hash -eq (Get-FileHash "$b\wram.bin").Hash)
 Write-Host "la WRAM del juego no cambia con los menús traducidos = $menuGame"
 
+# mejoras de calidad (games/alttp_usa/quality.c): partida nueva hasta que Link se maneja en su casa (fotograma 5200) y, con las
+# escrituras en la WRAM, comprobar cada opción. Con --trace-frames y --watch el motor lista cada cambio de una dirección.
+$toControl = @($toMessage)
+for ($f = 2100; $f -lt 5200; $f += 50) { $toControl += @("--press", "A@$f-$($f+3)") }
+function Play($name, $frames, $extra) {
+    $d = Join-Path $out "q_$name"
+    New-Item -ItemType Directory -Force $d | Out-Null
+    $log = & "$out\headless_fast.exe" $textRom --frames $frames --frame-blocks 20000 --dump $d @toControl @extra 2>&1
+    if ($LASTEXITCODE -ne 0) { throw "headless.exe termino con codigo $LASTEXITCODE ($name)" }
+    return @{ wram = [System.IO.File]::ReadAllBytes("$d\wram.bin"); log = $log }
+}
+function Writes($log) {
+    foreach ($l in $log) {
+        if ("$l" -match 'frame (\d+) block \S+ wram ([0-9A-F]+): ([0-9A-F]{2}) -> ([0-9A-F]{2})') {
+            [pscustomobject]@{ Frame = [int]$Matches[1]; Addr = [Convert]::ToInt32($Matches[2], 16); Old = $Matches[3]; New = $Matches[4] }
+        }
+    }
+}
+
+# max_yellow: los dígitos de un contador al máximo pasan de la paleta 1 a la 5 (bits 10-12 de la baldosa del marcador, en $C750...)
+function Pal($w, $from, $n) { @(0..($n - 1) | ForEach-Object { ($w[$from + 2 * $_ + 1] -band 0x1C) -shr 2 }) -join "," }
+function Counters($w) { @((Pal $w 0xC750 3), (Pal $w 0xC758 2), (Pal $w 0xC75E 2)) -join " " }
+$allMax = @("--poke", "0F360=E703E703@5250", "--poke", "0F343=0A@5250", "--poke", "0F377=1E@5250")
+$someMax = @("--poke", "0F360=F401F401@5250", "--poke", "0F343=0A@5250", "--poke", "0F377=1E@5250")
+$yOff = Counters (Play "y_off" 5400 ($allMax + @("--game-opt", "max_yellow=0"))).wram
+$yOn = Counters (Play "y_on" 5400 ($allMax + @("--game-opt", "max_yellow=1"))).wram
+$yPart = Counters (Play "y_part" 5400 ($someMax + @("--game-opt", "max_yellow=1"))).wram
+$yellowOk = ($yOff -eq "1,1,1 1,1 1,1" -and $yOn -eq "5,5,5 5,5 5,5" -and $yPart -eq "1,1,1 5,5 5,5")
+Write-Host "max_yellow: paletas (rupias bombas flechas) apagado = $yOff, activo = $yOn, con 500 rupias = $yPart -> $yellowOk"
+
+# low_hp_beep: con un corazón ($F36D = 8) el juego escribe el efecto $2B en $012E cada 32 fotogramas. Con la opción en 1 queda
+# hasta el fotograma siguiente (el motor de sonido lo consume); en 0 se borra en el mismo fotograma. Con la vida llena, nada.
+function Beep($name, $beep, $low) {
+    $extra = @("--watch", "012E", "--trace-frames", "5260-5400", "--game-opt", "low_hp_beep=$beep")
+    if ($low) { $extra += @("--poke", "0F36D=08@5250") }
+    return @(Writes (Play $name 5400 $extra).log | Where-Object { $_.Addr -eq 0x12E })
+}
+$bOn = Beep "b_on" 1 $true
+$bOff = Beep "b_off" 0 $true
+$bFull = Beep "b_full" 1 $false
+$setOn = @($bOn | Where-Object { $_.New -eq "2B" }); $clrOn = @($bOn | Where-Object { $_.Old -eq "2B" })
+$setOff = @($bOff | Where-Object { $_.New -eq "2B" }); $clrOff = @($bOff | Where-Object { $_.Old -eq "2B" })
+$beepOn = ($setOn.Count -ge 4 -and $setOn.Count -eq $clrOn.Count -and @(0..($setOn.Count - 1) | Where-Object { $clrOn[$_].Frame -le $setOn[$_].Frame }).Count -eq 0)
+$beepOff = ($setOff.Count -eq $setOn.Count -and $clrOff.Count -eq $setOff.Count -and @(0..($setOff.Count - 1) | Where-Object { $clrOff[$_].Frame -ne $setOff[$_].Frame }).Count -eq 0)
+$beepFull = ($bFull.Count -eq 0)
+$beepOthers = (@($bOn | Where-Object { $_.New -ne "2B" -and $_.Old -ne "2B" }).Count -eq @($bOff | Where-Object { $_.New -ne "2B" -and $_.Old -ne "2B" }).Count)
+Write-Host "low_hp_beep: con poca vida el `$2B se pide $($setOn.Count) veces y dura un fotograma = $beepOn; con la opción en 0 se borra en el mismo fotograma = $beepOff; con la vida llena no hay nada = $beepFull; los demás efectos no cambian = $beepOthers"
+
+# dash_turn: con las botas ($F355 y la habilidad $F379) se corre con A. Mientras se corre a la derecha se pulsa arriba (fotograma
+# 6031): sin la opción la carrera termina ($5D deja de valer $11) en ese fotograma; con ella Link gira ($2F pasa a 0, arriba) y la
+# carrera sigue hasta chocar con la pared unos fotogramas después.
+function Dash($opt) {
+    $extra = @("--poke", "0F355=01@5250", "--poke", "0F379=FF@5250", "--watch", "05D", "--watch", "02F", "--trace-frames", "5950-6150",
+        "--press", "A@5900-5904", "--press", "A+RIGHT@6000-6030", "--press", "A+UP@6031-6062", "--game-opt", "dash_turn=$opt")
+    return @(Writes (Play "dash$opt" 6150 $extra).log)
+}
+$d0 = Dash 0
+$d1 = Dash 1
+$run0 = $d0 | Where-Object { $_.Addr -eq 0x5D -and $_.New -eq "11" } | Select-Object -First 1
+$end0 = $d0 | Where-Object { $_.Addr -eq 0x5D -and $_.Old -eq "11" } | Select-Object -First 1
+$end1 = $d1 | Where-Object { $_.Addr -eq 0x5D -and $_.Old -eq "11" } | Select-Object -First 1
+$turn1 = $d1 | Where-Object { $_.Addr -eq 0x2F } | Select-Object -First 1
+$dashOk = ($null -ne $run0 -and $null -ne $end0 -and $null -ne $end1 -and $null -ne $turn1 -and $end0.Frame -le 6033 -and $turn1.New -eq "00" -and $turn1.Frame -le 6033 -and $end1.Frame -ge $turn1.Frame + 3)
+Write-Host "dash_turn: la carrera empieza en el fotograma $($run0.Frame); sin la opción acaba en el $($end0.Frame); con ella Link gira en el $($turn1.Frame) y la carrera acaba en el $($end1.Frame) -> $dashOk"
+
 $ok = $true
 if (-not $textOk) { Write-Error "el volcado debe tener 397 mensajes y la huella de siempre" -ErrorAction Continue; $ok = $false }
 if (-not $roundTrip) { Write-Error "con es.txt igual al volcado, el texto debe salir idéntico" -ErrorAction Continue; $ok = $false }
@@ -203,5 +272,11 @@ if (-not $wideOk) { Write-Error "con --wide 32 en un interior las columnas extra
 if ($plain -ne 5) { Write-Error "sin R deberian ser 5" -ErrorAction Continue; $ok = $false }
 if ($fast -lt 2 * $plain) { Write-Error "con R deberian ser al menos el doble" -ErrorAction Continue; $ok = $false }
 if ($off -ne $plain) { Write-Error "con dialog_skip=0, R no debe cambiar nada" -ErrorAction Continue; $ok = $false }
+if (-not $yellowOk) { Write-Error "max_yellow=1 debe pasar a la paleta 5 solo los contadores al máximo, y =0 no debe cambiar nada" -ErrorAction Continue; $ok = $false }
+if (-not $beepOn) { Write-Error "con poca vida y low_hp_beep=1 el efecto `$2B debe pedirse y quedar un fotograma (como siempre)" -ErrorAction Continue; $ok = $false }
+if (-not $beepOff) { Write-Error "con low_hp_beep=0 el efecto `$2B debe borrarse en el mismo fotograma en que se pide" -ErrorAction Continue; $ok = $false }
+if (-not $beepFull) { Write-Error "con la vida llena no debe haber ningún `$2B" -ErrorAction Continue; $ok = $false }
+if (-not $beepOthers) { Write-Error "low_hp_beep no debe tocar los demás efectos de sonido" -ErrorAction Continue; $ok = $false }
+if (-not $dashOk) { Write-Error "con dash_turn=1 pulsar otra dirección en plena carrera debe girar a Link sin cortarla (y sin la opción la corta)" -ErrorAction Continue; $ok = $false }
 if (-not $ok) { exit 1 }
 Write-Host "OK"
