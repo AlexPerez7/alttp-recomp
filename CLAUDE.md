@@ -5,16 +5,16 @@
 ## Comandos
 
 ```
-play.bat                  # construye si hace falta y abre el juego (ROM en roms\alttp_usa.sfc)
-play.bat -Rebuild         # borra la caché de la ROM y reconstruye (si un cambio no se nota)
-play.bat -NoLaunch        # solo construye
-snes-port.exe              # doble clic: ventana del lanzador (eliges tu ROM y juegas, sin consola)
-play.bat -- --game-opt dialog_skip=0      # opciones del C del juego tras --
+snes-port.exe                                  # doble clic: ventana del lanzador (eliges tu ROM y juegas, sin consola)
+snes-port.exe roms\alttp_usa.sfc               # construye si hace falta y abre el juego (el perfil se encuentra solo por games\ junto al exe)
+snes-port.exe roms\alttp_usa.sfc --no-launch   # solo construye
+snes-port.exe clean roms\alttp_usa.sfc         # borra la caché de la ROM (si un cambio no se nota)
+snes-port.exe roms\alttp_usa.sfc -- --game-opt dialog_skip=0   # opciones del C del juego tras --
 powershell -File scripts\check.ps1        # genera, compila y ejecuta las pruebas con la ROM (~3 min: las partidas de las mejoras de calidad se juegan en paralelo); se omite si falta ROM, motor o Visual Studio
 powershell -File scripts\release.ps1   # paquete (motor de la raíz; -Engine <zip> para otro) para repartir; falla si lleva ROM, .srm o C generado
 ```
 
-El motor va **en este repositorio**, en la raíz (`snes-port.exe`, `snes-recomp.exe`, `sdl2\`, `toolchain\` con TinyCC, `LICENSE-engine`, `README-engine.md`): el juego no depende del repositorio del motor para jugarse. `scripts\play.ps1` y `check.ps1` lo usan (o `$env:SNES_ENGINE`); doble clic en `snes-port.exe` abre el lanzador. Para actualizarlo: en `snes-recomp`, `powershell -File scripts\release.ps1`; aquí, `powershell -File scripts\update-engine.ps1`, scan, commit y push. El zip debe ser del motor actual: uno viejo falla al enlazar si el C del juego usa funciones nuevas de `snes_rt.h`.
+El motor va **en este repositorio**, en la raíz (`snes-port.exe`, `snes-recomp.exe`, `sdl2\`, `toolchain\` con TinyCC, `LICENSE-engine`, `README-engine.md`): el juego no depende del repositorio del motor para jugarse. `check.ps1` y `release.ps1` lo usan; doble clic en `snes-port.exe` abre el lanzador. Para actualizarlo: en `snes-recomp`, `powershell -File scripts\release.ps1`; aquí, `powershell -File scripts\update-engine.ps1`, scan, commit y push. El zip debe ser del motor actual: uno viejo falla al enlazar si el C del juego usa funciones nuevas de `snes_rt.h`.
 
 ## Estados guardados
 
@@ -24,7 +24,7 @@ El perfil declara `[resume]` en `00:8034` (la espera del NMI del bucle principal
 
 - `games/alttp_usa.toml`: perfil (entradas, tablas de saltos, ganchos `[[hook]]`). Solo direcciones, nombres y tamaños; ningún byte del juego.
 - `games/alttp_usa/*.c`: C propio (`dialog.c` mensajes rápidos con R; `widefill.c` franjas negras en la pantalla ancha; `text.c` volcado y traducción de los mensajes con `lang/es.txt`; `menutext.c` lo mismo para la selección de partida, el registro de nombre y las acciones del menú de pausa con `lang/es_menu.txt`; `hud.c` el rótulo «LIFE» del marcador, que con `language=es` dice «VIDA»); `icon.c` el icono de la ventana del juego, que `scripts\make_icon.py` (Pillow, arte propio) escribe. Usa la API de `snes_rt.h` del motor (`wram_read8/wram_write8`, `game_opt()`, `ppu_wide()`, `ppu_wide_blank()`...). Cada fichero nuevo hay que añadirlo también a la lista de `check.ps1`.
-- `scripts/`: `play.ps1`, `check.ps1`, `release.ps1`.
+- `scripts/`: `check.ps1`, `release.ps1`, `update-engine.ps1`, `make_icon.py`.
 
 ## Reglas
 

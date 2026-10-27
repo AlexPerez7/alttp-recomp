@@ -8,7 +8,7 @@
 # Por último comprueba las mejoras de games/alttp_usa/quality.c en una partida nueva (Link ya se maneja en su casa, fotograma 5200,
 # y fuera de ella): max_yellow, low_hp_beep y dash_turn, mirando las escrituras en la WRAM.
 #
-#   powershell -File scripts\check.ps1 [-Rom roms\alttp_usa.sfc] [-Engine ruta\a\snes-recomp.exe]   (por defecto: el de play.bat)
+#   powershell -File scripts\check.ps1 [-Rom roms\alttp_usa.sfc] [-Engine ruta\a\snes-recomp.exe]   (por defecto: el de la raíz)
 #
 # Se omite con un aviso (código 0) si falta la ROM, el motor o un compilador de Visual Studio. Todo lo que genera va a
 # out\ (ignorado por git): deriva de la ROM y no se sube.
@@ -25,7 +25,7 @@ function Skip($why) { Write-Warning "omitido: $why"; exit 0 }
 
 if (-not (Test-Path $Rom)) { Skip "no hay ROM en $Rom" }
 if ($Engine -eq "") {
-    # el mismo motor que usa play.bat: SNES_ENGINE o el de la raíz de este repositorio
+    # SNES_ENGINE (una carpeta) o el motor de la raíz de este repositorio
     $cands = @()
     if ($env:SNES_ENGINE) { $cands += "$env:SNES_ENGINE\snes-recomp.exe" }
     $cands += (Join-Path $root "snes-recomp.exe")
