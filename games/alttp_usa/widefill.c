@@ -7,6 +7,7 @@
 #include "snes_rt.h"
 
 void alttp_hud_poll(void); /* hud.c */
+void alttp_window_icon(void); /* icon.c */
 
 static int word(int a) { return wram_read8(a) | wram_read8(a + 1) << 8; }
 
@@ -14,6 +15,7 @@ void alttp_wide_fill(Cpu *c) {
     int e = ppu_wide(), left, right;
     (void)c;
     alttp_hud_poll();
+    alttp_window_icon();
     if (e == 0 || wram_read8(0x10) < 6) { ppu_wide_blank_clear(); return; }
     if (wram_read8(0x1B)) { ppu_wide_blank(e, e); return; }
     left = e - (word(0xE2) - word(0x0604));
