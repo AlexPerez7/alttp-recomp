@@ -819,6 +819,14 @@ kind = "replace"
 call = "alttp_item_touch"
 ret = "rts"
 
+# Mas bombas a la vez (quality.c): el reparto de huecos de efectos (0F:F577) se reemplaza por una copia en C que, con more_bombs=1, deja cuatro bombas
+# (huecos 0-3) en vez de dos.
+[[hook]]
+addr = "0F:F577"
+kind = "replace"
+call = "alttp_ancilla_slot"
+ret = "rtl"
+
 [[option]]
 key = "language"
 label = "Language"

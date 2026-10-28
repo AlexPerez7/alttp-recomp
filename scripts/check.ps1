@@ -296,6 +296,15 @@ foreach ($opt in 0, 1) {
         "--press", "LEFT@5340-5420", "--press", "UP@5430-5460", "--press", "B@5480-5483", "--game-opt", "sword_pots=$opt")
 }
 
+# more_bombs: con 10 bombas ($F343), las bombas elegidas (ranura 4 en $0202, objeto 1 en $0303) y el hueco 0 de los efectos libre ($0C4A = 0 en el
+# fotograma 5299), Y seis veces separadas (5300 a 5350). Sin la opción el juego deja dos bombas a la vez (tipo $07 en $0C4A-$0C4E) y gasta dos; con
+# ella, cuatro y gasta cuatro.
+foreach ($opt in 0, 1) {
+    Launch "bomb$opt" 5360 @("--poke", "0F343=0A@5250", "--poke", "00202=04@5250", "--poke", "00303=01@5250", "--poke", "00C4A=00@5299",
+        "--press", "Y@5300-5301", "--press", "Y@5310-5311", "--press", "Y@5320-5321", "--press", "Y@5330-5331", "--press", "Y@5340-5341", "--press", "Y@5350-5351",
+        "--game-opt", "more_bombs=$opt")
+}
+
 # Resultados (las ocho partidas ya están en marcha)
 $yOff = Counters (Play "y_off").wram
 $yOn = Counters (Play "y_on").wram
@@ -350,6 +359,11 @@ $q0 = Pot (Play "pot0").wram; $q1 = Pot (Play "pot1").wram
 $potOk = ($q0.Attrs -eq "70 71 72" -and $q0.Shards -eq 0 -and $q1.Attrs -eq "70 71 00" -and $q1.Shards -ge 1 -and $q1.Module -eq 7 -and $q1.Sub -eq 0)
 Write-Host "sword_pots: baldosas de las vasijas sin la opción $($q0.Attrs), con ella $($q1.Attrs) y $($q1.Shards) sprite(s) de vasija rota -> $potOk"
 
+function Bombs($w) { [pscustomobject]@{ Active = @(0..4 | Where-Object { $w[0xC4A + $_] -eq 7 }).Count; Left = $w[0xF343] } }
+$m0 = Bombs (Play "bomb0").wram; $m1 = Bombs (Play "bomb1").wram
+$bombOk = ($m0.Active -eq 2 -and $m0.Left -eq 8 -and $m1.Active -eq 4 -and $m1.Left -eq 6)
+Write-Host "more_bombs: bombas a la vez sin la opción $($m0.Active) (quedan $($m0.Left) de 10), con ella $($m1.Active) (quedan $($m1.Left)) -> $bombOk"
+
 $ok = $true
 if (-not $textOk) { Write-Error "el volcado debe tener 397 mensajes y la huella de siempre" -ErrorAction Continue; $ok = $false }
 if (-not $roundTrip) { Write-Error "con es.txt igual al volcado, el texto debe salir idéntico" -ErrorAction Continue; $ok = $false }
@@ -375,5 +389,6 @@ if (-not $birdOk) { Write-Error "con bird_cancel=1 B en la elección de destino 
 if (-not $rupOk) { Write-Error "con rupees_9999=1 el tope debe ser 9999 con cuatro dígitos en el marcador (y 999 sin la opción)" -ErrorAction Continue; $ok = $false }
 if (-not $pickOk) { Write-Error "con sword_pickup=1 el espadazo debe recoger un objeto fuera del alcance del cuerpo (sin la opción no) y tocarlo debe seguir recogiéndolo" -ErrorAction Continue; $ok = $false }
 if (-not $potOk) { Write-Error "con sword_pots=1 un espadazo en mazmorra debe romper la vasija que alcanza (y sin la opción no)" -ErrorAction Continue; $ok = $false }
+if (-not $bombOk) { Write-Error "con more_bombs=1 deben poder estar cuatro bombas a la vez, cada una gastando una (y sin la opción dos)" -ErrorAction Continue; $ok = $false }
 if (-not $ok) { exit 1 }
 Write-Host "OK"

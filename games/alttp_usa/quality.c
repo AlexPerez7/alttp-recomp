@@ -329,3 +329,37 @@ static void sword_pots(Cpu *c) {
     }
     for (n = 0; n < 16; n++) wram_write8(n, save[n]);
 }
+
+/* More active bombs: Y with the bombs chosen (07:A138) puts one with the ancilla routine 09:811F, which asks the slot allocator 0F:F577 for a place
+ * with A = the ancilla type ($07 for a bomb) and Y = the most ancillae of that type that may exist at once, minus 1 (it is 1 for bombs). The
+ * allocator counts the ones of that type in the five slots of $0C4A (type 0 is free), says no (Y = $FF, N set) when that is Y + 1 and otherwise looks
+ * for a free slot from slot 1 (bombs and type $08) or 4 (the rest) down to 0; when there is none it takes over, turning the cycling index $03C4,
+ * a slot with an effect of type $3C, $13 or $0A. So the original keeps at most two bombs, in slots 0 and 1. alttp_ancilla_slot replaces it
+ * with the same steps and, for a bomb, Y = 3 and the search starting at slot 3: four bombs, whenever those slots are free. Callers (08:80B7,
+ * 08:81D9, 09:9CE3) read N afterwards, so it ends with N as the original left it (set only when there is no place). Each bomb still costs one,
+ * so what changes is how many can lie at once. On with `--game-opt more_bombs=1`. */
+#define BOMBS_AT_ONCE 4
+
+void alttp_ancilla_slot(Cpu *c) {
+    uint8_t type = (uint8_t)c->a, lim = (uint8_t)c->y, count = 0, start, y;
+    int8_t x;
+    wram_write8(0x0F, lim);
+    if (type == 0x07 && game_opt("more_bombs", 0)) lim = BOMBS_AT_ONCE - 1;
+    for (x = 4; x >= 0; x--) if (wram_read8(0x0C4A + x) == type) count++;
+    if (count == (uint8_t)(lim + 1)) { c->y = 0xFF; c->n = 1; c->z = 0; return; }
+    start = (type == 0x07 || type == 0x08) ? (type == 0x07 && game_opt("more_bombs", 0) ? BOMBS_AT_ONCE - 1 : 1) : 4;
+    for (y = start; y != 0xFF; y--) {
+        if (!wram_read8(0x0C4A + y)) { c->y = y; c->a = (uint16_t)(c->a & 0xFF00); c->n = 0; c->z = 1; return; }
+    }
+    for (;;) {
+        y = (uint8_t)(wram_read8(0x03C4) - 1);
+        wram_write8(0x03C4, y);
+        if (y & 0x80) { y = wram_read8(0x0F); wram_write8(0x03C4, y); }
+        for (;;) {
+            uint8_t t = wram_read8(0x0C4A + y);
+            if (t == 0x3C || t == 0x13 || t == 0x0A) { c->y = y; c->a = (uint16_t)((c->a & 0xFF00) | t); c->n = 0; c->z = 0; return; }
+            if (y-- == 0) { c->y = 0xFF; c->n = 1; c->z = 0; return; }
+            break;
+        }
+    }
+}
