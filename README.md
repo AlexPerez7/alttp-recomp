@@ -21,7 +21,7 @@ Licencia: [MIT](LICENSE), solo para el código de este repositorio; no da derech
 | Mejora | Cómo se usa |
 |---|---|
 | Pantalla ancha sin basura | Con `wide` mayor que 0 el borde del mapa y el interior de salas y cuevas se ven en negro en lugar de repetir el lado contrario del mapa. |
-| Estados guardados y rebobinado | **F5** guarda, **F7** carga, **F3**/**F4** cambian de ranura (1 a 9) y mantener **Retroceso** rebobina unos 10 s. Solo en la partida: en la intro y la pantalla de título el juego cambia de pila entre NMI e IRQ y el motor lo rechaza con un aviso. Los estados (`.sst`) se quedan junto a la ROM y nunca se publican. |
+| Estados guardados y rebobinado | **F5** guarda, **F7** carga, **F3**/**F4** cambian de ranura (1 a 9) y mantener **Retroceso** rebobina unos 10 s. Solo en la partida: en la intro y la pantalla de título el juego cambia de pila entre NMI e IRQ y el motor lo rechaza con un aviso. Los estados (`.sst`) van a la carpeta `saves\` junto a `snes-port.exe` y nunca se publican. |
 | Mensajes más rápidos | Mantén **R** (en el teclado, `W`) durante un mensaje y el texto sale un carácter por fotograma. Se desactiva con `--game-opt dialog_skip=0`. |
 | Sin pitido de poca vida | Con `--game-opt low_hp_beep=0` no suena el pitido que repite el juego cuando quedan pocos corazones; el resto de efectos suena igual. Por defecto suena como en el original. |
 | Máximos en amarillo | Con `--game-opt max_yellow=1`, las rupias (999), las bombas y las flechas en su tope se dibujan en amarillo pálido en el marcador. Apagado por defecto. |
@@ -59,7 +59,7 @@ Una línea `clave = TEXTO` por cadena, con su máximo de letras en un comentario
 
 Es normal que algún antivirus desconfíe de un programa sin firmar que compila código al arrancar. Todo ocurre en tu máquina, y nada de tu ROM sale de ella.
 
-Controles, menú F1, opciones, partidas guardadas (`.srm` junto a la ROM) y demás: ver el [README del motor](https://github.com/AlexPerez7/snes-recomp#readme).
+Controles, menú F1, opciones, partidas guardadas (`.srm` en `saves\` junto a `snes-port.exe`; las que haya junto a la ROM se importan solas) y demás: ver el [README del motor](https://github.com/AlexPerez7/snes-recomp#readme).
 
 ### Desde este repositorio (para desarrollar)
 

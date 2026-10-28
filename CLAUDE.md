@@ -20,6 +20,8 @@ El motor va **en este repositorio**, en la raíz (`snes-port.exe`, `snes-recomp.
 
 El perfil declara `[resume]` en `00:8034` (la espera del NMI del bucle principal, dentro de la función de reset, con `S = $01FF`). El motor guarda y carga ahí: F5 guarda, F7 carga, F3/F4 cambian de ranura, Retroceso rebobina. En la intro y la pantalla de título no se puede (el juego cambia de pila entre NMI e IRQ); en la partida sí. Si algún C de este repositorio guarda estado propio en variables estáticas, hay que poder recuperarlo desde la WRAM.
 
+Las partidas (`.srm`) y los estados (`.sst`) van a `saves\` junto a `snes-port.exe` (carpeta por instalación; `%APPDATA%\snes-port\saves` si ahí no se puede escribir). Está en `.gitignore`.
+
 ## Estructura
 
 - `games/alttp_usa.toml`: perfil (entradas, tablas de saltos, ganchos `[[hook]]`). Solo direcciones, nombres y tamaños; ningún byte del juego.
