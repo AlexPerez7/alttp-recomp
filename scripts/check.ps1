@@ -251,6 +251,25 @@ foreach ($opt in 0, 1) {
         "--press", "A@5900-5904", "--press", "A+RIGHT@6000-6030", "--press", "A+UP@6031-6062", "--game-opt", "dash_turn=$opt")
 }
 
+# item_switch_lr: con arco, bumerán y gancho ($F340-$F342) y el arco elegido ($0202 = 1), R en los fotogramas 5300, 5320 y 5340 y L en el 5360:
+# la ranura pasa a 2, 3, 1 (da la vuelta saltando las vacías) y 3, y $0303 cambia con ella; sin la opción no cambia nada.
+foreach ($opt in 0, 1) {
+    Launch "sw$opt" 5450 @("--poke", "0F340=010101@5250", "--poke", "00202=01@5250", "--watch", "00202", "--watch", "00303", "--trace-frames", "5250-5450",
+        "--press", "R@5300-5302", "--press", "R@5320-5322", "--press", "R@5340-5342", "--press", "L@5360-5362", "--game-opt", "item_switch_lr=$opt")
+}
+
+# bird_cancel: Link sale de casa (fotograma 5300 a 6000), con la flauta activada ($F34C = 3, elegida con R: ranura 13) y la historia avanzada
+# ($F3C5 = 3) la toca con Y en el fotograma 6500, el pájaro se lo lleva al mapa (módulo $0E, submódulo $0A) y en el 6900 se pulsa B. Con la opción
+# Link vuelve al mismo área ($8A = $34) y se maneja (el módulo $09 y, con la derecha pulsada del 7100 al 7130, avanza); sin ella B elige destino y
+# acaba en otra área. Además el área de destino de una partida con A es la de siempre aunque la rutina de colocar a Link sea otra (ver la prueba
+# de WRAM idéntica, en el cambio que la introdujo).
+foreach ($opt in 0, 1) {
+    Launch "bird$opt" 7300 @("--game-opt", "item_switch_lr=1", "--game-opt", "bird_cancel=$opt", "--poke", "0F34C=03@5250", "--poke", "00202=0C@5250", "--poke", "0F3C5=03@5250",
+        "--press", "RIGHT@5300-5330", "--press", "LEFT@5340-5350", "--press", "DOWN@5360-6000", "--press", "A@6100-6103", "--press", "A@6150-6153",
+        "--press", "A@6200-6203", "--press", "A@6250-6253", "--press", "R@6400-6402", "--press", "Y@6500-6503", "--press", "B@6900-6903",
+        "--press", "RIGHT@7100-7130")
+}
+
 # Resultados (las ocho partidas ya están en marcha)
 $yOff = Counters (Play "y_off").wram
 $yOn = Counters (Play "y_on").wram
@@ -273,6 +292,19 @@ $end1 = $d1 | Where-Object { $_.Addr -eq 0x5D -and $_.Old -eq "11" } | Select-Ob
 $turn1 = $d1 | Where-Object { $_.Addr -eq 0x2F } | Select-Object -First 1
 $dashOk = ($null -ne $run0 -and $null -ne $end0 -and $null -ne $end1 -and $null -ne $turn1 -and $end0.Frame -le 6033 -and $turn1.New -eq "00" -and $turn1.Frame -le 6033 -and $end1.Frame -ge $turn1.Frame + 3)
 Write-Host "dash_turn: la carrera empieza en el fotograma $($run0.Frame); sin la opción acaba en el $($end0.Frame); con ella Link gira en el $($turn1.Frame) y la carrera acaba en el $($end1.Frame) -> $dashOk"
+$sw0 = @(Writes (Play "sw0").log | Where-Object { $_.Frame -gt 5250 })
+$sw1 = @(Writes (Play "sw1").log | Where-Object { $_.Frame -gt 5250 })
+$slots = (@($sw1 | Where-Object { $_.Addr -eq 0x202 } | ForEach-Object { $_.New }) -join ",")
+$items = @($sw1 | Where-Object { $_.Addr -eq 0x303 }).Count
+$switchOk = ($sw0.Count -eq 0 -and $slots -eq "02,03,01,03" -and $items -ge 4)
+Write-Host "item_switch_lr: sin la opción no cambia nada ($($sw0.Count) escrituras); con ella la ranura pasa por $slots y `$0303 cambia $items veces -> $switchOk"
+
+$b0 = (Play "bird0").wram
+$b1 = (Play "bird1").wram
+function Link($w) { [pscustomobject]@{ Module = $w[0x10]; Sub = $w[0x11]; Area = $w[0x8A]; X = $w[0x22] + 256 * $w[0x23]; Y = $w[0x20] + 256 * $w[0x21] } }
+$l0 = Link $b0; $l1 = Link $b1
+$birdOk = ($l1.Module -eq 9 -and $l1.Sub -eq 0 -and $l1.Area -eq 0x34 -and $l1.X -gt 2256 -and $l0.Area -ne 0x34)
+Write-Host "bird_cancel: con la opción el área final es `$$('{0:X2}' -f $l1.Area) (módulo $($l1.Module)) y Link avanza hasta x = $($l1.X); sin ella B elige destino y acaba en el área `$$('{0:X2}' -f $l0.Area) -> $birdOk"
 
 $ok = $true
 if (-not $textOk) { Write-Error "el volcado debe tener 397 mensajes y la huella de siempre" -ErrorAction Continue; $ok = $false }
@@ -294,5 +326,7 @@ if (-not $beepOff) { Write-Error "con low_hp_beep=0 el efecto `$2B debe borrarse
 if (-not $beepFull) { Write-Error "con la vida llena no debe haber ningún `$2B" -ErrorAction Continue; $ok = $false }
 if (-not $beepOthers) { Write-Error "low_hp_beep no debe tocar los demás efectos de sonido" -ErrorAction Continue; $ok = $false }
 if (-not $dashOk) { Write-Error "con dash_turn=1 pulsar otra dirección en plena carrera debe girar a Link sin cortarla (y sin la opción la corta)" -ErrorAction Continue; $ok = $false }
+if (-not $switchOk) { Write-Error "con item_switch_lr=1 L y R deben cambiar el objeto elegido saltando las ranuras vacías (y sin la opción no deben hacer nada)" -ErrorAction Continue; $ok = $false }
+if (-not $birdOk) { Write-Error "con bird_cancel=1 B en la elección de destino de la flauta debe volver al mismo sitio (y sin la opción, elegir destino)" -ErrorAction Continue; $ok = $false }
 if (-not $ok) { exit 1 }
 Write-Host "OK"

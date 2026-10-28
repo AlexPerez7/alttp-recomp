@@ -770,6 +770,7 @@ kind = "before"
 call = "alttp_menu_poll"
 
 # Pitido de poca vida (quality.c): la rutina del marcador (0D:DB75) pide el efecto $2B en $012E; con low_hp_beep=0 se retira.
+# El gancho de entrada hace ademas el cambio de objeto con L/R (item_switch_lr), que corre una vez por fotograma ahi.
 [[hook]]
 addr = "0D:DB75"
 kind = "before"
@@ -791,6 +792,19 @@ call = "alttp_hud_max_yellow"
 addr = "07:8F86"
 kind = "before"
 call = "alttp_dash_turn"
+
+# Cancelar el viaje en pajaro (quality.c): B en la eleccion de destino de la flauta (0A:B78B) vuelve a donde se tocó; 02:EC39 (coloca a Link en el
+# destino) se reemplaza por una copia en C que, con el viaje cancelado, no mueve a Link.
+[[hook]]
+addr = "0A:B78B"
+kind = "before"
+call = "alttp_bird_cancel"
+
+[[hook]]
+addr = "02:EC39"
+kind = "replace"
+call = "alttp_bird_land"
+ret = "rtl"
 
 [[option]]
 key = "language"
