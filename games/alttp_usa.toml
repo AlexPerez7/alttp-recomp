@@ -811,6 +811,14 @@ kind = "replace"
 call = "alttp_bird_land"
 ret = "rtl"
 
+# Recoger objetos con la espada (quality.c): 06:D116 (¿toca Link al objeto?) se reemplaza por una copia en C que, con sword_pickup=1,
+# comprueba tambien la caja de la espada.
+[[hook]]
+addr = "06:D116"
+kind = "replace"
+call = "alttp_item_touch"
+ret = "rts"
+
 [[option]]
 key = "language"
 label = "Language"

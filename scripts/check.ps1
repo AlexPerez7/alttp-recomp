@@ -277,6 +277,17 @@ Launch "rup_on" 5800 @("--poke", "0F360=C409@5250", "--game-opt", "rupees_9999=1
 Launch "rup_big" 5800 @("--poke", "0F360=204E@5250", "--game-opt", "rupees_9999=1", "--game-opt", "max_yellow=1")
 Launch "rup_off" 6400 @("--poke", "0F360=C409@5250", "--game-opt", "rupees_9999=0")
 
+# sword_pickup: con la espada ($F359 = 1, $F379 y $F3C5 para que Link pueda usarla) y una rupia verde (tipo $D9) puesta en la ranura 15 de los sprites
+# ($0DDF = 9 activo, $0E2F tipo, posición en $0D0F/$0D2F y $0D1F/$0D3F) a 20 píxeles a la derecha de Link (que mira a la derecha, en y = $215C,
+# x = $095B): fuera del alcance de su cuerpo, pero no de la espada. B en el fotograma 5310: con la opción la rupia se recoge ($F360 = 1 y la ranura
+# se libera); sin ella no pasa nada. Con la rupia donde está Link y sin espadazo se recoge con las dos (el contacto de siempre no cambia).
+$swordBase = @("--poke", "0F359=01@5250", "--poke", "0F379=FF@5250", "--poke", "0F3C5=02@5250", "--poke", "00DDF=09@5300", "--poke", "00E2F=D9@5300",
+    "--poke", "00D0F=64@5300", "--poke", "00D2F=21@5300", "--poke", "00D3F=09@5300")
+foreach ($opt in 0, 1) {
+    Launch "pick$opt" 5400 ($swordBase + @("--poke", "00D1F=6F@5300", "--press", "B@5310-5313", "--game-opt", "sword_pickup=$opt"))
+}
+Launch "touch0" 5400 ($swordBase + @("--poke", "00D1F=5B@5300", "--game-opt", "sword_pickup=0"))
+
 # Resultados (las ocho partidas ya están en marcha)
 $yOff = Counters (Play "y_off").wram
 $yOn = Counters (Play "y_on").wram
@@ -321,6 +332,10 @@ $rupOk = ((W16 $ro 0xF360) -eq 2500 -and (W16 $ro 0xF362) -eq 2500 -and (Digits 
           (W16 $rf 0xF360) -eq 999 -and (W16 $rf 0xF362) -eq 999)
 Write-Host "rupees_9999: con 2500 el marcador llega a $(W16 $ro 0xF362) y dibuja $(Digits $ro); con 20000 se queda en $(W16 $rb 0xF362) ($(Digits $rb)); sin la opción el tope es $(W16 $rf 0xF360) -> $rupOk"
 
+$p0 = (Play "pick0").wram; $p1 = (Play "pick1").wram; $t0 = (Play "touch0").wram
+$pickOk = ((W16 $p0 0xF360) -eq 0 -and $p0[0xDDF] -eq 9 -and (W16 $p1 0xF360) -eq 1 -and $p1[0xDDF] -eq 0 -and (W16 $t0 0xF360) -eq 1 -and $t0[0xDDF] -eq 0)
+Write-Host "sword_pickup: la rupia a 20 píxeles con espadazo: sin la opción $(W16 $p0 0xF360) rupias (ranura $($p0[0xDDF])), con ella $(W16 $p1 0xF360) (ranura $($p1[0xDDF])); tocándola sin espada $(W16 $t0 0xF360) -> $pickOk"
+
 $ok = $true
 if (-not $textOk) { Write-Error "el volcado debe tener 397 mensajes y la huella de siempre" -ErrorAction Continue; $ok = $false }
 if (-not $roundTrip) { Write-Error "con es.txt igual al volcado, el texto debe salir idéntico" -ErrorAction Continue; $ok = $false }
@@ -344,5 +359,6 @@ if (-not $dashOk) { Write-Error "con dash_turn=1 pulsar otra dirección en plena
 if (-not $switchOk) { Write-Error "con item_switch_lr=1 L y R deben cambiar el objeto elegido saltando las ranuras vacías (y sin la opción no deben hacer nada)" -ErrorAction Continue; $ok = $false }
 if (-not $birdOk) { Write-Error "con bird_cancel=1 B en la elección de destino de la flauta debe volver al mismo sitio (y sin la opción, elegir destino)" -ErrorAction Continue; $ok = $false }
 if (-not $rupOk) { Write-Error "con rupees_9999=1 el tope debe ser 9999 con cuatro dígitos en el marcador (y 999 sin la opción)" -ErrorAction Continue; $ok = $false }
+if (-not $pickOk) { Write-Error "con sword_pickup=1 el espadazo debe recoger un objeto fuera del alcance del cuerpo (sin la opción no) y tocarlo debe seguir recogiéndolo" -ErrorAction Continue; $ok = $false }
 if (-not $ok) { exit 1 }
 Write-Host "OK"

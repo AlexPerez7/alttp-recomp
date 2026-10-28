@@ -258,3 +258,34 @@ static void rupee_digits(void) {
         d = (uint16_t)(d / 10);
     }
 }
+
+/* Collect items with the sword: the item sprites (rupees, hearts, magic, bombs, arrows, keys...; types $D8-$E2) check in 06:D116, once per
+ * frame, whether Link touches them: 06:F14A tests his body and, with carry set, 06:D125 gives the item. alttp_item_touch replaces 06:D116
+ * with the same two steps and, when the body does not touch it, a third one with the sword: the hitbox that sprites use to be hurt by it
+ * (06:F5E0 sets Link's weapon box at $00-$03 and $08, 06:F7EF the sprite's at $04-$07 and $0A-$0B, 06:F836 compares them as 06:F2C8 does)
+ * while Link is swinging the sword ($3C not 0, no other item in use in $0301 or $037A) and on the same layer ($EE, $0F20,X). Spin attacks
+ * count too. The sprite is picked up the same way as by touch, so nothing else changes. On with `--game-opt sword_pickup=1`. */
+#define CALL_RTS(fn, back) do { uint16_t s0_ = c->s; rt_push16(c, back); fn(c); if (c->s != s0_ || c->ret != (back)) return; } while (0)
+
+static void item_give(Cpu *c) {
+    uint16_t s0 = c->s;
+    rt_push8(c, 0x06);
+    rt_push16(c, 0xD124);
+    f_06_D125(c);
+    if (c->s != s0 || c->ret != 0xD124) return;
+}
+
+void alttp_item_touch(Cpu *c) {
+    uint8_t x = (uint8_t)c->x;
+    if (wram_read8(0x0F10 + x)) return;
+    CALL_RTS(f_06_F14A, 0xD11E);
+    if (c->c) { item_give(c); return; }
+    if (!game_opt("sword_pickup", 0) || !wram_read8(0x0DD0 + x) || !wram_read8(0x3C)) return;
+    if (wram_read8(0x0301) || (wram_read8(0x037A) & 0x10) || wram_read8(0x0372)) return;
+    if (wram_read8(0xEE) != wram_read8(0x0F20 + x)) return;
+    c->x = x;
+    CALL_RTS(f_06_F5E0, 0xF5E1);
+    CALL_RTS(f_06_F7EF, 0xF7F0);
+    CALL_RTS(f_06_F836, 0xF837);
+    if (c->c) item_give(c);
+}
