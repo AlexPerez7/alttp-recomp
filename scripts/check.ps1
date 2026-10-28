@@ -288,6 +288,14 @@ foreach ($opt in 0, 1) {
 }
 Launch "touch0" 5400 ($swordBase + @("--poke", "00D1F=5B@5300", "--game-opt", "sword_pickup=0"))
 
+# sword_pots: en la casa de Link hay tres vasijas a la izquierda de la cama (bloques de 2x2 baldosas con atributo $70, $71 y $72 en $7F:2000, filas 43,
+# 45 y 47, columna 37). Link, con la espada, baja (fotogramas 5300-5335), va a la izquierda (5340-5420), sube hasta chocar con la tercera (5430-5460) y da
+# un espadazo hacia arriba (5480): con la opción la baldosa $72 desaparece y nace el sprite de la vasija rota (tipo $EC); sin ella la vasija sigue.
+foreach ($opt in 0, 1) {
+    Launch "pot$opt" 5580 @("--poke", "0F359=01@5250", "--poke", "0F379=FF@5250", "--poke", "0F3C5=02@5250", "--press", "DOWN@5300-5335",
+        "--press", "LEFT@5340-5420", "--press", "UP@5430-5460", "--press", "B@5480-5483", "--game-opt", "sword_pots=$opt")
+}
+
 # Resultados (las ocho partidas ya están en marcha)
 $yOff = Counters (Play "y_off").wram
 $yOn = Counters (Play "y_on").wram
@@ -336,6 +344,12 @@ $p0 = (Play "pick0").wram; $p1 = (Play "pick1").wram; $t0 = (Play "touch0").wram
 $pickOk = ((W16 $p0 0xF360) -eq 0 -and $p0[0xDDF] -eq 9 -and (W16 $p1 0xF360) -eq 1 -and $p1[0xDDF] -eq 0 -and (W16 $t0 0xF360) -eq 1 -and $t0[0xDDF] -eq 0)
 Write-Host "sword_pickup: la rupia a 20 píxeles con espadazo: sin la opción $(W16 $p0 0xF360) rupias (ranura $($p0[0xDDF])), con ella $(W16 $p1 0xF360) (ranura $($p1[0xDDF])); tocándola sin espada $(W16 $t0 0xF360) -> $pickOk"
 
+function Pot($w) { [pscustomobject]@{ Attrs = (($w[0x12000 + 43 * 64 + 37], $w[0x12000 + 45 * 64 + 37], $w[0x12000 + 47 * 64 + 37] | ForEach-Object { '{0:X2}' -f $_ }) -join " ");
+    Shards = @(0..15 | Where-Object { $w[0xE20 + $_] -eq 0xEC }).Count; Module = $w[0x10]; Sub = $w[0x11] } }
+$q0 = Pot (Play "pot0").wram; $q1 = Pot (Play "pot1").wram
+$potOk = ($q0.Attrs -eq "70 71 72" -and $q0.Shards -eq 0 -and $q1.Attrs -eq "70 71 00" -and $q1.Shards -ge 1 -and $q1.Module -eq 7 -and $q1.Sub -eq 0)
+Write-Host "sword_pots: baldosas de las vasijas sin la opción $($q0.Attrs), con ella $($q1.Attrs) y $($q1.Shards) sprite(s) de vasija rota -> $potOk"
+
 $ok = $true
 if (-not $textOk) { Write-Error "el volcado debe tener 397 mensajes y la huella de siempre" -ErrorAction Continue; $ok = $false }
 if (-not $roundTrip) { Write-Error "con es.txt igual al volcado, el texto debe salir idéntico" -ErrorAction Continue; $ok = $false }
@@ -360,5 +374,6 @@ if (-not $switchOk) { Write-Error "con item_switch_lr=1 L y R deben cambiar el o
 if (-not $birdOk) { Write-Error "con bird_cancel=1 B en la elección de destino de la flauta debe volver al mismo sitio (y sin la opción, elegir destino)" -ErrorAction Continue; $ok = $false }
 if (-not $rupOk) { Write-Error "con rupees_9999=1 el tope debe ser 9999 con cuatro dígitos en el marcador (y 999 sin la opción)" -ErrorAction Continue; $ok = $false }
 if (-not $pickOk) { Write-Error "con sword_pickup=1 el espadazo debe recoger un objeto fuera del alcance del cuerpo (sin la opción no) y tocarlo debe seguir recogiéndolo" -ErrorAction Continue; $ok = $false }
+if (-not $potOk) { Write-Error "con sword_pots=1 un espadazo en mazmorra debe romper la vasija que alcanza (y sin la opción no)" -ErrorAction Continue; $ok = $false }
 if (-not $ok) { exit 1 }
 Write-Host "OK"

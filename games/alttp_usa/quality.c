@@ -12,11 +12,13 @@
 static uint8_t sfx_on_entry;
 
 static void item_switch(Cpu *c);
+static void sword_pots(Cpu *c);
 static void rupees_enter(void);
 static void rupees_leave(void);
 
 void alttp_hud_beep_enter(Cpu *c) {
     item_switch(c);
+    sword_pots(c);
     rupees_enter();
     sfx_on_entry = wram_read8(0x012E);
 }
@@ -288,4 +290,42 @@ void alttp_item_touch(Cpu *c) {
     CALL_RTS(f_06_F7EF, 0xF7F0);
     CALL_RTS(f_06_F836, 0xF837);
     if (c->c) item_give(c);
+}
+
+/* Break pots with the sword: in the underworld the hammer smashes a pot (tile attribute $7x in $7F:2000) through 1B:BD7A, which indoors jumps to
+ * 01:DABB: with bit 1 of $0301 set (the hammer) it takes the tile row from $00 (pixel y; the row is ($00 & $1F8) / 8) and the column from $02
+ * (tile x, 0-63), looks the pot up in the objects at $0500, removes its tiles, shatters it (06:812D) and reveals what was under it
+ * (09:91C3), all with the game's own code. sword_pots, once per frame (called from the status bar hook), does that for the tile under the
+ * centre of the box the sword hits sprites with (06:F5E0, set at $00-$03 and $08) while Link swings it indoors ($3C not 0, $1B not 0, free
+ * to move in module 7, no other item in use in $0301 or $037A): it puts the tile in $00 and $02, sets the bit of the hammer for the call and
+ * takes it away afterwards. Where there is no pot, or no secret to reveal, 01:DABB leaves things as they were. The scratch bytes $00-$0F are
+ * restored. On with `--game-opt sword_pots=1`. */
+static void sword_pots(Cpu *c) {
+    Cpu k;
+    uint8_t save[16], n, hit;
+    uint16_t s0, x, y;
+    if (!game_opt("sword_pots", 0) || !wram_read8(0x1B) || !wram_read8(0x3C)) return;
+    if (wram_read8(0x10) != 7 || wram_read8(0x11) || wram_read8(0x0301) || (wram_read8(0x037A) & 0x10) || wram_read8(0x0372)) return;
+    for (n = 0; n < 16; n++) save[n] = wram_read8(n);
+    k = *c;
+    k.d = 0; k.e = 0; k.m = 1; k.xf = 1; k.db = 0x06;
+    k.ret = RT_NO_RET;
+    s0 = k.s;
+    rt_push16(&k, 0xF5E1);
+    f_06_F5E0(&k);
+    hit = (k.s == s0 && k.ret == 0xF5E1 && wram_read8(0x08) != 0x80);
+    if (hit) {
+        x = (uint16_t)((wram_read8(0x00) | wram_read8(0x08) << 8) + wram_read8(0x02) / 2);
+        y = (uint16_t)((wram_read8(0x01) | wram_read8(0x09) << 8) + wram_read8(0x03) / 2);
+        wr16(0x00, (uint16_t)(y & 0x1FF));
+        wr16(0x02, (uint16_t)((x >> 3) & 0x3F));
+        wram_write8(0x0301, 2);
+        k.db = 0x07;
+        s0 = k.s;
+        rt_push8(&k, 0x07);
+        rt_push16(&k, 0xDC4D);
+        f_1B_BD7A(&k);
+        wram_write8(0x0301, 0);
+    }
+    for (n = 0; n < 16; n++) wram_write8(n, save[n]);
 }
