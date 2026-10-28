@@ -12,14 +12,18 @@
 static uint8_t sfx_on_entry;
 
 static void item_switch(Cpu *c);
+static void rupees_enter(void);
+static void rupees_leave(void);
 
 void alttp_hud_beep_enter(Cpu *c) {
     item_switch(c);
+    rupees_enter();
     sfx_on_entry = wram_read8(0x012E);
 }
 
 void alttp_hud_beep_leave(Cpu *c) {
     (void)c;
+    rupees_leave();
     if (game_opt("low_hp_beep", 1)) return;
     if (sfx_on_entry != SFX_LOW_HEALTH && wram_read8(0x012E) == SFX_LOW_HEALTH) wram_write8(0x012E, 0);
 }
@@ -43,10 +47,15 @@ static void paint(uint32_t first, int n) {
     }
 }
 
+static uint16_t rupees_shown(void);
+static uint16_t rupees_max(void);
+static void rupee_digits(void);
+
 void alttp_hud_max_yellow(Cpu *c) {
     (void)c;
+    rupee_digits();
     if (!game_opt("max_yellow", 0)) return;
-    if ((wram_read8(0xF362) | wram_read8(0xF363) << 8) == 999) paint(0xC750, 3);
+    if (rupees_shown() == rupees_max()) paint(rupees_shown() > 999 ? 0xC74E : 0xC750, rupees_shown() > 999 ? 4 : 3);
     if (wram_read8(0xF343) == bus_read8(0x0DDB48u + wram_read8(0xF370))) paint(0xC758, 2);
     if (wram_read8(0xF377) == bus_read8(0x0DDB58u + wram_read8(0xF371))) paint(0xC75E, 2);
 }
@@ -108,22 +117,33 @@ static void item_switch(Cpu *c) {
  * whose steps run through the table of 0A:B730 with $0200 as the index). Step 5 (0A:B78B) waits for a destination ($1AF0, 0 to 7) and any of
  * A, X, B or Y takes it; step 6 draws the map away, step 7 (0A:B8C5) calls 02:EC39 to place Link and the scroll at the destination from the
  * tables at 02:EAE5-02:EC17, loads the area and, after two more steps (0A:B964, 0A:B96C), the bird sets Link down.
- * alttp_bird_cancel, on entry to step 5, takes B as the cancel button: it removes A, X, B and Y from what the step sees, goes to step 6 itself
- * and remembers that the trip is cancelled. alttp_bird_land replaces 02:EC39: its table part is the same as the original and runs for a
- * destination, but for a cancelled trip it leaves Link, the scroll and the area as they were (the map restored them in step 6), so the rest of
- * the steps load the area Link was in and the bird sets him down where he took off. Link's position and the area are the same in both, so
- * the second part (sprites, Link's state) is the original code, called from here. On with `--game-opt bird_cancel=1`. */
-static uint8_t bird_cancelled;
+ * alttp_bird_cancel, on entry to step 5, takes B as the cancel button: it removes A, X, B and Y from what the step sees and goes to step 6
+ * itself; alttp_bird_cancelled, on its return, marks the trip as cancelled with bit 7 of $1AF0 (the step masks the destination with 7 on its
+ * own, so the mark has to go after it). That is in WRAM, so a saved state keeps it; the one static, `cancelling`, lives only from the entry
+ * to the return of one call. alttp_bird_land replaces 02:EC39: its table part is the same as the original and runs for a destination, but
+ * for a cancelled trip it leaves Link, the scroll and the area as they were (the map restored them in step 6), so the rest of the steps load
+ * the area Link was in and the bird sets him down where he took off. Link's position and the area are the same in both, so the second part
+ * (sprites, Link's state) is the original code, called from here. On with `--game-opt bird_cancel=1`. */
+#define BIRD_CANCEL_MARK 0x80
+static uint8_t cancelling;
 
 void alttp_bird_cancel(Cpu *c) {
     (void)c;
+    cancelling = 0;
     if (!game_opt("bird_cancel", 0) || wram_read8(0xC8)) return;
     if (wram_read8(0xF4) & 0x80) {
-        bird_cancelled = 1;
+        cancelling = 1;
         wram_write8(0x0200, 6);
     }
     wram_write8(0xF0, wram_read8(0xF0) & 0x3F);
     wram_write8(0xF2, wram_read8(0xF2) & 0x3F);
+}
+
+void alttp_bird_cancelled(Cpu *c) {
+    (void)c;
+    if (!cancelling) return;
+    cancelling = 0;
+    wram_write8(0x1AF0, wram_read8(0x1AF0) | BIRD_CANCEL_MARK);
 }
 
 static uint16_t tab(uint32_t base, uint8_t x) { return (uint16_t)bus_read16(0x020000u + base + x); }
@@ -131,9 +151,11 @@ static void put(uint32_t a, uint16_t v) { bus_write16(a, v); }
 
 void alttp_bird_land(Cpu *c) {
     uint16_t s0, v;
+    uint8_t cancelled;
     put(0x04AC, 0);
     rt_rep(c, 0x20);
-    if (!bird_cancelled) {
+    cancelled = wram_read8(0x1AF0) & BIRD_CANCEL_MARK;
+    if (!cancelled) {
         uint8_t x;
         v = (uint16_t)(bus_read16(0x1AF0) << 1);
         put(0x1AF0, v);
@@ -152,10 +174,10 @@ void alttp_bird_land(Cpu *c) {
         v = tab(0xEBB1, x); put(0x0618, v); put(0x061A, (uint16_t)(v - 2));
         v = tab(0xEBD3, x); put(0x061C, v); put(0x061E, (uint16_t)(v - 2));
     } else {
+        wram_write8(0x1AF0, 0);
         v = (uint16_t)bus_read16(0xE6); put(0x0122, v); put(0x0124, v);
         v = (uint16_t)bus_read16(0xE0); put(0x011E, v); put(0x0120, v);
     }
-    bird_cancelled = 0;
     put(0x0696, 0);
     put(0x0698, 0);
     s0 = c->s; rt_push16(c, 0xECCE); f_02_E58B(c); if (c->s != s0 || c->ret != 0xECCE) return;
@@ -163,4 +185,76 @@ void alttp_bird_land(Cpu *c) {
     s0 = c->s; rt_push8(c, 0x02); rt_push16(c, 0xECD6); f_09_C499(c); if (c->s != s0 || c->ret != 0xECD6) return;
     bus_write8(0x6C, 0);
     s0 = c->s; rt_push16(c, 0xECDB); f_02_8B0C(c); if (c->s != s0 || c->ret != 0xECDB) return;
+}
+
+/* Up to 9999 rupees: $F360 holds the amount the player has and $F362 the one the status bar shows, that follows it one rupee per frame. The
+ * routine of the status bar (0D:DB75), once per frame, makes the shown one equal to the real one and caps both at 999 (0D:DBEB-0D:DBF3), and
+ * 0D:FC09 draws the three digits of the shown one at $C750-$C754. rupees_enter, on entry, does the counting itself with a cap of 9999 (one
+ * rupee per frame, more when the difference is large: 1 + difference / 50) and the same coin sound, and gives the original routine the
+ * shown amount capped at 999 in both, so it finds them equal and leaves them alone; rupees_leave puts the real ones back before each return.
+ * The digits of the real amount are drawn by rupee_digits at the end of 0D:FC09: from 1000 on four, at $C74E-$C754 (the tile at $C74E is
+ * otherwise the one of the template at 0D:FE77), tile $90 + digit with palette 1. The real values live in WRAM; the statics here only live
+ * from the entry to the return of that routine. With a count that does not fit (more than $7FFF, from a subtraction below zero) the
+ * original runs untouched. On with `--game-opt rupees_9999=1`. */
+#define RUPEE_CAP 9999
+#define RUPEE_TEMPLATE 0x0DFE77u
+#define RUPEE_DIGIT_TILE 0x2490u
+static uint16_t rup_real_target, rup_real_shown;
+static uint8_t rup_active;
+
+static uint16_t rd16(uint32_t a) { return (uint16_t)(wram_read8(a) | wram_read8(a + 1) << 8); }
+static void wr16(uint32_t a, uint16_t v) { wram_write8(a, v & 0xFF); wram_write8(a + 1, v >> 8); }
+
+static void rupees_enter(void) {
+    uint16_t t, d, p;
+    rup_active = 0;
+    if (!game_opt("rupees_9999", 0) || wram_read8(0x0200)) return;
+    t = rd16(0xF360);
+    d = rd16(0xF362);
+    if (t > 0x7FFF || d > RUPEE_CAP) return;
+    if (t > RUPEE_CAP) t = RUPEE_CAP;
+    if (t <= 999 && d <= 999) return;
+    if (d == t || wram_read8(0x012E)) {
+        wram_write8(0x0CFD, 0);
+    } else {
+        uint8_t n = wram_read8(0x0CFD);
+        wram_write8(0x0CFD, (uint8_t)(n + 1));
+        if (!(n & 7)) wram_write8(0x012E, 0x29);
+    }
+    if (d != t) {
+        uint16_t diff = t > d ? (uint16_t)(t - d) : (uint16_t)(d - t), step = (uint16_t)(1 + diff / 50);
+        if (step > diff) step = diff;
+        d = t > d ? (uint16_t)(d + step) : (uint16_t)(d - step);
+    }
+    p = d > 999 ? 999 : d;
+    wr16(0xF360, p);
+    wr16(0xF362, p);
+    rup_real_target = t;
+    rup_real_shown = d;
+    rup_active = 1;
+}
+
+static void rupees_leave(void) {
+    if (!rup_active) return;
+    wr16(0xF360, rup_real_target);
+    wr16(0xF362, rup_real_shown);
+    rup_active = 0;
+}
+
+static uint16_t rupees_shown(void) { return rup_active ? rup_real_shown : rd16(0xF362); }
+static uint16_t rupees_max(void) { return game_opt("rupees_9999", 0) ? RUPEE_CAP : 999; }
+
+static void rupee_digits(void) {
+    uint16_t d;
+    int i;
+    if (!game_opt("rupees_9999", 0)) return;
+    d = rupees_shown();
+    if (d < 1000 || d > RUPEE_CAP) {
+        wr16(0xC74E, (uint16_t)bus_read16(RUPEE_TEMPLATE + 0x4E));
+        return;
+    }
+    for (i = 3; i >= 0; i--) {
+        wr16(0xC74E + 2 * i, (uint16_t)(RUPEE_DIGIT_TILE + d % 10));
+        d = (uint16_t)(d / 10);
+    }
 }

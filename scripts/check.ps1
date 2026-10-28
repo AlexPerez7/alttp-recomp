@@ -270,6 +270,13 @@ foreach ($opt in 0, 1) {
         "--press", "RIGHT@7100-7130")
 }
 
+# rupees_9999: con 2500 rupias ($F360 = $09C4 puesto en el fotograma 5250) el marcador cuenta hasta 2500 y dibuja cuatro dígitos ($C74E-$C754,
+# baldosas $2490 + dígito); con 20000 se queda en 9999 (en amarillo con max_yellow=1); sin la opción el tope es 999 como siempre (el contador
+# llega a 999 un fotograma por rupia, de ahí los 6400 fotogramas).
+Launch "rup_on" 5800 @("--poke", "0F360=C409@5250", "--game-opt", "rupees_9999=1")
+Launch "rup_big" 5800 @("--poke", "0F360=204E@5250", "--game-opt", "rupees_9999=1", "--game-opt", "max_yellow=1")
+Launch "rup_off" 6400 @("--poke", "0F360=C409@5250", "--game-opt", "rupees_9999=0")
+
 # Resultados (las ocho partidas ya están en marcha)
 $yOff = Counters (Play "y_off").wram
 $yOn = Counters (Play "y_on").wram
@@ -306,6 +313,14 @@ $l0 = Link $b0; $l1 = Link $b1
 $birdOk = ($l1.Module -eq 9 -and $l1.Sub -eq 0 -and $l1.Area -eq 0x34 -and $l1.X -gt 2256 -and $l0.Area -ne 0x34)
 Write-Host "bird_cancel: con la opción el área final es `$$('{0:X2}' -f $l1.Area) (módulo $($l1.Module)) y Link avanza hasta x = $($l1.X); sin ella B elige destino y acaba en el área `$$('{0:X2}' -f $l0.Area) -> $birdOk"
 
+function W16($w, $a) { $w[$a] + 256 * $w[$a + 1] }
+function Digits($w) { (0..3 | ForEach-Object { '{0:X4}' -f (W16 $w (0xC74E + 2 * $_)) }) -join " " }
+$ro = (Play "rup_on").wram; $rb = (Play "rup_big").wram; $rf = (Play "rup_off").wram
+$rupOk = ((W16 $ro 0xF360) -eq 2500 -and (W16 $ro 0xF362) -eq 2500 -and (Digits $ro) -eq "2492 2495 2490 2490" -and
+          (W16 $rb 0xF360) -eq 9999 -and (W16 $rb 0xF362) -eq 9999 -and (Digits $rb) -eq "3499 3499 3499 3499" -and
+          (W16 $rf 0xF360) -eq 999 -and (W16 $rf 0xF362) -eq 999)
+Write-Host "rupees_9999: con 2500 el marcador llega a $(W16 $ro 0xF362) y dibuja $(Digits $ro); con 20000 se queda en $(W16 $rb 0xF362) ($(Digits $rb)); sin la opción el tope es $(W16 $rf 0xF360) -> $rupOk"
+
 $ok = $true
 if (-not $textOk) { Write-Error "el volcado debe tener 397 mensajes y la huella de siempre" -ErrorAction Continue; $ok = $false }
 if (-not $roundTrip) { Write-Error "con es.txt igual al volcado, el texto debe salir idéntico" -ErrorAction Continue; $ok = $false }
@@ -328,5 +343,6 @@ if (-not $beepOthers) { Write-Error "low_hp_beep no debe tocar los demás efecto
 if (-not $dashOk) { Write-Error "con dash_turn=1 pulsar otra dirección en plena carrera debe girar a Link sin cortarla (y sin la opción la corta)" -ErrorAction Continue; $ok = $false }
 if (-not $switchOk) { Write-Error "con item_switch_lr=1 L y R deben cambiar el objeto elegido saltando las ranuras vacías (y sin la opción no deben hacer nada)" -ErrorAction Continue; $ok = $false }
 if (-not $birdOk) { Write-Error "con bird_cancel=1 B en la elección de destino de la flauta debe volver al mismo sitio (y sin la opción, elegir destino)" -ErrorAction Continue; $ok = $false }
+if (-not $rupOk) { Write-Error "con rupees_9999=1 el tope debe ser 9999 con cuatro dígitos en el marcador (y 999 sin la opción)" -ErrorAction Continue; $ok = $false }
 if (-not $ok) { exit 1 }
 Write-Host "OK"

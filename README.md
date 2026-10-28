@@ -28,6 +28,7 @@ Licencia: [MIT](LICENSE), solo para el código de este repositorio; no da derech
 | Girar mientras se corre | Con `--game-opt dash_turn=1`, cambiar de dirección durante la carrera con las botas gira a Link en lugar de cortar la carrera. Apagado por defecto. Probado con `scripts\check.ps1` (con las botas, pulsar otra dirección en plena carrera gira a Link y la carrera sigue). |
 | Cambio de objeto con L/R | Con `--game-opt item_switch_lr=1`, **L** y **R** (en el teclado, `Q` y `W`) eligen el objeto anterior o siguiente que tengas, como el menú, y lo ponen en el botón Y sin abrir el menú. Solo con Link libre en mazmorras y exteriores; apagado por defecto. Probado con `scripts\check.ps1`. |
 | Cancelar el viaje en pájaro | Con `--game-opt bird_cancel=1`, en la pantalla del mapa donde eliges destino tras tocar la flauta, **B** cancela: el pájaro te deja donde estabas. A, X e Y siguen eligiendo el destino. Apagado por defecto. Probado con `scripts\check.ps1` (con la opción Link vuelve al mismo área y se maneja; sin ella B elige destino). |
+| Hasta 9999 rupias | Con `--game-opt rupees_9999=1` la cartera guarda hasta 9999 rupias en lugar de 999 y el marcador dibuja cuatro dígitos desde las 1000 (el contador sube más deprisa cuanto mayor es la diferencia). Con `max_yellow=1` el tope se pone en amarillo. Apagado por defecto. Probado con `scripts\check.ps1`. |
 
 ## Texto de los mensajes
 

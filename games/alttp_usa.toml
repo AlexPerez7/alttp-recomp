@@ -801,6 +801,11 @@ kind = "before"
 call = "alttp_bird_cancel"
 
 [[hook]]
+addr = "0A:B78B"
+kind = "after"
+call = "alttp_bird_cancelled"
+
+[[hook]]
 addr = "02:EC39"
 kind = "replace"
 call = "alttp_bird_land"
