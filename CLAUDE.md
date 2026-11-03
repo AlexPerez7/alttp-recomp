@@ -25,6 +25,8 @@ sudo apt install build-essential pkg-config libsdl2-dev python3-pil   # una vez;
 ../snes-recomp/target/release/snes-port roms/alttp_usa.sfc --game games/alttp_usa.toml --no-launch  # solo construye
 ../snes-recomp/target/release/snes-port clean roms/alttp_usa.sfc                                    # borra la caché (~/.cache/snes-port)
 scripts/check.sh                                                      # el equivalente de check.ps1 (gcc/clang, Python 3 con Pillow); se omite si falta ROM, motor o compilador
+scripts/bench.sh [-r REPS] [-f FOTOGRAMAS]                          # tiempo por fotograma con el runtime sin vídeo (base, mejoras apagadas, language=es, --wide 96) frente a 16 639 us; escribe out/bench/summary.txt
+scripts/bench_play.sh [-t SEGUNDOS] [-d dummy|x11]                    # frontal interactivo con --stats por configuración de imagen (~11 min); con -d dummy es una cota de CPU, no la ventana real
 ```
 
 `check.sh` busca el motor en su 2º argumento, `$SNES_ENGINE`, `./snes-recomp` o `../snes-recomp/target/release/snes-recomp`; la lógica de datos está en `scripts/check_eval.py`. Al añadir un fichero C nuevo hay que añadirlo a la lista de `check.sh` además de a la de `check.ps1`. `release.ps1` y `update-engine.ps1` siguen siendo solo de Windows (empaquetan el motor de Windows). Las partidas y los estados van a `saves/` junto a `snes-port` (aquí `../snes-recomp/target/release/saves/`), o a `~/.local/share/snes-port/saves` si ahí no se puede escribir.
@@ -41,7 +43,7 @@ Las partidas (`.srm`) y los estados (`.sst`) van a `saves\` junto a `snes-port.e
 
 - `games/alttp_usa.toml`: perfil (entradas, tablas de saltos, ganchos `[[hook]]`). Solo direcciones, nombres y tamaños; ningún byte del juego.
 - `games/alttp_usa/*.c`: C propio (`dialog.c` mensajes rápidos con R; `widefill.c` franjas negras en la pantalla ancha; `text.c` volcado y traducción de los mensajes con `lang/es.txt`; `menutext.c` lo mismo para la selección de partida, el registro de nombre y las acciones del menú de pausa con `lang/es_menu.txt`; `hud.c` el rótulo «LIFE» del marcador, que con `language=es` dice «VIDA»); `icon.c` el icono de la ventana del juego, que `scripts\make_icon.py` (Pillow, arte propio) escribe. Usa la API de `snes_rt.h` del motor (`wram_read8/wram_write8`, `game_opt()`, `ppu_wide()`, `ppu_wide_blank()`...). Cada fichero nuevo hay que añadirlo también a la lista de `check.ps1`.
-- `scripts/`: `check.ps1` (Windows), `check.sh` + `check_eval.py` (Linux), `release.ps1`, `update-engine.ps1`, `make_icon.py`.
+- `scripts/`: `check.ps1` (Windows), `check.sh` + `check_eval.py` (Linux), `bench.sh` y `bench_play.sh` (rendimiento, Linux), `release.ps1`, `update-engine.ps1`, `make_icon.py`.
 
 ## Reglas
 
