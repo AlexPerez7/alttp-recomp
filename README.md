@@ -79,6 +79,20 @@ snes-port.exe roms\alttp_usa.sfc -- --game-opt dialog_skip=0   # opciones del ju
 
 Este repositorio lleva el motor ya hecho en la raíz (`snes-port.exe`, `snes-recomp.exe`, `sdl2\`, `toolchain\` con TinyCC; licencia y README del motor como `LICENSE-engine` y `README-engine.md`), así que no hace falta clonar `snes-recomp` para jugar: **doble clic en `snes-port.exe`** abre la ventana del lanzador (reconoce el juego por `games\`), eliges tu ROM y juegas; con una ROM como argumento lo hace sin ventana. Para actualizar el motor: en `snes-recomp`, `powershell -File scripts\release.ps1`; aquí, `powershell -File scripts\update-engine.ps1`, y se sube como cualquier cambio.
 
+### En Linux
+
+Los binarios de la raíz son de Windows; en Linux se compila el motor y se usa con el perfil de este repositorio:
+
+```
+sudo apt install build-essential pkg-config libsdl2-dev python3-pil   # compilador de C, SDL2 y Pillow (solo para check.sh)
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh        # Rust, si no lo tienes
+git clone https://github.com/AlexPerez7/snes-recomp ../snes-recomp
+(cd ../snes-recomp && cargo build --release)
+../snes-recomp/target/release/snes-port roms/alttp_usa.sfc --game games/alttp_usa.toml
+```
+
+La primera vez construye el juego con gcc (unos 3 minutos) y lo guarda en `~/.cache/snes-port`; las siguientes arranca al instante. Opciones del juego tras `--`, como en Windows. Las partidas y los estados van a `saves/` junto a `snes-port` (o a `~/.local/share/snes-port/saves` si ahí no se puede escribir). Hace falta un motor que sepa construir en Linux (con el arreglo del nombre del ejecutable y la detección de SDL2 del sistema).
+
 ### Con el motor
 
 ```
@@ -98,7 +112,7 @@ cd ..\snes-recomp ; powershell -File scripts\release.ps1 ; cd ..\alttp-recomp
 powershell -File scripts\release.ps1
 ```
 
-`check.ps1` se omite con un aviso si falta la ROM, el motor o Visual Studio. `release.ps1` falla si el paquete llevara ROMs, partidas guardadas, estados guardados (`.sst`) o C generado.
+En Linux, `scripts/check.sh [roms/alttp_usa.sfc] [ruta/a/snes-recomp]` hace lo mismo con gcc o clang (necesita Python 3 con Pillow y busca el motor en `../snes-recomp/target/release/`). `check.ps1` y `check.sh` se omiten con un aviso si falta la ROM, el motor o el compilador. `release.ps1` y `update-engine.ps1` son solo de Windows. `release.ps1` falla si el paquete llevara ROMs, partidas guardadas, estados guardados (`.sst`) o C generado.
 
 ## Limitaciones conocidas
 

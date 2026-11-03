@@ -14,6 +14,21 @@ powershell -File scripts\check.ps1        # genera, compila y ejecuta las prueba
 powershell -File scripts\release.ps1   # paquete (motor de la raíz; -Engine <zip> para otro) para repartir; falla si lleva ROM, .srm o C generado
 ```
 
+### Linux
+
+Los binarios de la raíz (`snes-port.exe`, `snes-recomp.exe`, `sdl2\`, `toolchain\`) son de Windows. En Linux se usa el motor compilado desde el repositorio hermano `../snes-recomp` (el perfil se pasa con `--game`, porque no hay `games/` junto al ejecutable del motor):
+
+```
+sudo apt install build-essential pkg-config libsdl2-dev python3-pil   # una vez; Rust con rustup
+(cd ../snes-recomp && cargo build --release)                          # snes-port y snes-recomp en ../snes-recomp/target/release/
+../snes-recomp/target/release/snes-port roms/alttp_usa.sfc --game games/alttp_usa.toml              # construye (gcc, unos 3 min la primera vez) y juega
+../snes-recomp/target/release/snes-port roms/alttp_usa.sfc --game games/alttp_usa.toml --no-launch  # solo construye
+../snes-recomp/target/release/snes-port clean roms/alttp_usa.sfc                                    # borra la caché (~/.cache/snes-port)
+scripts/check.sh                                                      # el equivalente de check.ps1 (gcc/clang, Python 3 con Pillow); se omite si falta ROM, motor o compilador
+```
+
+`check.sh` busca el motor en su 2º argumento, `$SNES_ENGINE`, `./snes-recomp` o `../snes-recomp/target/release/snes-recomp`; la lógica de datos está en `scripts/check_eval.py`. Al añadir un fichero C nuevo hay que añadirlo a la lista de `check.sh` además de a la de `check.ps1`. `release.ps1` y `update-engine.ps1` siguen siendo solo de Windows (empaquetan el motor de Windows). Las partidas y los estados van a `saves/` junto a `snes-port` (aquí `../snes-recomp/target/release/saves/`), o a `~/.local/share/snes-port/saves` si ahí no se puede escribir.
+
 El motor va **en este repositorio**, en la raíz (`snes-port.exe`, `snes-recomp.exe`, `sdl2\`, `toolchain\` con TinyCC, `LICENSE-engine`, `README-engine.md`): el juego no depende del repositorio del motor para jugarse. `check.ps1` y `release.ps1` lo usan; doble clic en `snes-port.exe` abre el lanzador. Para actualizarlo: en `snes-recomp`, `powershell -File scripts\release.ps1`; aquí, `powershell -File scripts\update-engine.ps1`, scan, commit y push. El zip debe ser del motor actual: uno viejo falla al enlazar si el C del juego usa funciones nuevas de `snes_rt.h`.
 
 ## Estados guardados
@@ -26,7 +41,7 @@ Las partidas (`.srm`) y los estados (`.sst`) van a `saves\` junto a `snes-port.e
 
 - `games/alttp_usa.toml`: perfil (entradas, tablas de saltos, ganchos `[[hook]]`). Solo direcciones, nombres y tamaños; ningún byte del juego.
 - `games/alttp_usa/*.c`: C propio (`dialog.c` mensajes rápidos con R; `widefill.c` franjas negras en la pantalla ancha; `text.c` volcado y traducción de los mensajes con `lang/es.txt`; `menutext.c` lo mismo para la selección de partida, el registro de nombre y las acciones del menú de pausa con `lang/es_menu.txt`; `hud.c` el rótulo «LIFE» del marcador, que con `language=es` dice «VIDA»); `icon.c` el icono de la ventana del juego, que `scripts\make_icon.py` (Pillow, arte propio) escribe. Usa la API de `snes_rt.h` del motor (`wram_read8/wram_write8`, `game_opt()`, `ppu_wide()`, `ppu_wide_blank()`...). Cada fichero nuevo hay que añadirlo también a la lista de `check.ps1`.
-- `scripts/`: `check.ps1`, `release.ps1`, `update-engine.ps1`, `make_icon.py`.
+- `scripts/`: `check.ps1` (Windows), `check.sh` + `check_eval.py` (Linux), `release.ps1`, `update-engine.ps1`, `make_icon.py`.
 
 ## Reglas
 
