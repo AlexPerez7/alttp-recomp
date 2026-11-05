@@ -81,15 +81,7 @@ Este repositorio lleva el motor ya hecho en la raíz (`snes-port.exe`, `snes-rec
 
 ### En Linux
 
-**Paquete listo** (x86_64, glibc 2.39 o más nueva, p. ej. Ubuntu 24.04): descarga `alttp-recomp-0.1-linux-x86_64.tar.gz` de [Releases](https://github.com/AlexPerez7/alttp-recomp/releases), descomprime, instala lo que necesita y juega con tu ROM:
-
-```
-sudo apt install build-essential libsdl2-dev
-tar xzf alttp-recomp-0.1-linux-x86_64.tar.gz && cd alttp-recomp-0.1-linux-x86_64
-./jugar.sh ruta/a/alttp_usa.sfc
-```
-
-La primera vez construye el juego con gcc (unos 3 minutos). El paquete se arma con `scripts/release.sh`.
+**Paquete listo** (x86_64, glibc 2.38 o más nueva, p. ej. Ubuntu 24.04 o Debian 13): descarga `alttp-recomp-0.1-linux-x86_64.tar.gz` de [Releases](https://github.com/AlexPerez7/alttp-recomp/releases), extrae y abre `alttp-recomp` (doble clic o desde la terminal). Se abre una ventana: **Elegir ROM** (con el selector de archivos del sistema, o arrastrando el archivo a la ventana), **Jugar**. No hace falta instalar nada: el paquete lleva su propio compilador (TinyCC) y SDL2, y el juego se prepara en unos 2 segundos cada vez que lo abres. La ROM se queda donde está; solo se recuerda su ruta (`~/.local/share/alttp-recomp`, donde también van las partidas). Se arma con `scripts/release.sh`.
 
 **Desde el código:** los binarios de la raíz son de Windows; en Linux se compila el motor y se usa con el perfil de este repositorio:
 

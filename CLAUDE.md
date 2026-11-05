@@ -25,7 +25,7 @@ sudo apt install build-essential pkg-config libsdl2-dev python3-pil   # una vez;
 ../snes-recomp/target/release/snes-port roms/alttp_usa.sfc --game games/alttp_usa.toml --no-launch  # solo construye
 ../snes-recomp/target/release/snes-port clean roms/alttp_usa.sfc                                    # borra la caché (~/.cache/snes-port)
 scripts/check.sh                                                      # el equivalente de check.ps1 (gcc/clang, Python 3 con Pillow); se omite si falta ROM, motor o compilador
-scripts/release.sh [version]                                          # paquete .tar.gz de Linux (motor de ../snes-recomp + games/ + jugar.sh) en out/release/
+scripts/release.sh [version]                                          # paquete .tar.gz de Linux autónomo (lanzador del motor, ../snes-recomp/linux/build.sh) en out/release/
 scripts/bench.sh [-r REPS] [-f FOTOGRAMAS]                          # tiempo por fotograma con el runtime sin vídeo (base, mejoras apagadas, language=es, --wide 96) frente a 16 639 us; escribe out/bench/summary.txt
 scripts/bench_play.sh [-t SEGUNDOS] [-d dummy|x11]                    # frontal interactivo con --stats por configuración de imagen (~11 min); con -d dummy es una cota de CPU, no la ventana real
 ```
