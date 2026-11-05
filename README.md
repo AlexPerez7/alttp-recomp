@@ -81,7 +81,17 @@ Este repositorio lleva el motor ya hecho en la raíz (`snes-port.exe`, `snes-rec
 
 ### En Linux
 
-Los binarios de la raíz son de Windows; en Linux se compila el motor y se usa con el perfil de este repositorio:
+**Paquete listo** (x86_64, glibc 2.39 o más nueva, p. ej. Ubuntu 24.04): descarga `alttp-recomp-0.1-linux-x86_64.tar.gz` de [Releases](https://github.com/AlexPerez7/alttp-recomp/releases), descomprime, instala lo que necesita y juega con tu ROM:
+
+```
+sudo apt install build-essential libsdl2-dev
+tar xzf alttp-recomp-0.1-linux-x86_64.tar.gz && cd alttp-recomp-0.1-linux-x86_64
+./jugar.sh ruta/a/alttp_usa.sfc
+```
+
+La primera vez construye el juego con gcc (unos 3 minutos). El paquete se arma con `scripts/release.sh`.
+
+**Desde el código:** los binarios de la raíz son de Windows; en Linux se compila el motor y se usa con el perfil de este repositorio:
 
 ```
 sudo apt install build-essential pkg-config libsdl2-dev python3-pil   # compilador de C, SDL2 y Pillow (solo para check.sh)
@@ -92,6 +102,10 @@ git clone https://github.com/AlexPerez7/snes-recomp ../snes-recomp
 ```
 
 La primera vez construye el juego con gcc (unos 3 minutos) y lo guarda en `~/.cache/snes-port`; las siguientes arranca al instante. Opciones del juego tras `--`, como en Windows. Las partidas y los estados van a `saves/` junto a `snes-port` (o a `~/.local/share/snes-port/saves` si ahí no se puede escribir). Hace falta un motor que sepa construir en Linux (con el arreglo del nombre del ejecutable y la detección de SDL2 del sistema).
+
+### En Android
+
+Descarga el APK de [Releases](https://github.com/AlexPerez7/alttp-recomp/releases), ábrelo (permite instalar desde esa fuente) y elige tu ROM USA al abrir la app. El juego se compila en el propio teléfono; la ROM no sale de él. Detalles del port en el repositorio del motor (`android/README.md`).
 
 ### Con el motor
 
