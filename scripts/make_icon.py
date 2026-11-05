@@ -16,7 +16,7 @@ def lerp(a, b, t):
     return tuple(round(a[i] + (b[i] - a[i]) * t) for i in range(3))
 
 
-def draw(bg_top, bg_bottom, gem_light, gem_dark, gem_shine, ring=None):
+def draw(bg_top, bg_bottom, gem_light, gem_dark, gem_shine, ring=None, bg=True):
     img = Image.new("RGBA", (N, N), (0, 0, 0, 0))
     grad = Image.new("RGBA", (N, N))
     gd = ImageDraw.Draw(grad)
@@ -24,9 +24,10 @@ def draw(bg_top, bg_bottom, gem_light, gem_dark, gem_shine, ring=None):
         gd.line([(0, y), (N, y)], fill=lerp(bg_top, bg_bottom, y / N) + (255,))
     mask = Image.new("L", (N, N), 0)
     ImageDraw.Draw(mask).rounded_rectangle([0, 0, N - 1, N - 1], radius=int(N * 0.22), fill=255)
-    img.paste(grad, (0, 0), mask)
+    if bg:
+        img.paste(grad, (0, 0), mask)
     d = ImageDraw.Draw(img)
-    if ring:
+    if bg and ring:
         d.rounded_rectangle([N * 0.03, N * 0.03, N * 0.97, N * 0.97], radius=int(N * 0.19), outline=ring + (255,), width=int(N * 0.028))
     s = N / 256.0
     P = lambda x, y: (x * s, y * s)
@@ -65,9 +66,51 @@ def write_c(img, path, size=64):
     path.write_text(text, encoding="utf-8", newline="\n")
 
 
+
+DENSITIES = {"mdpi": 1, "hdpi": 1.5, "xhdpi": 2, "xxhdpi": 3, "xxxhdpi": 4}
+
+
+def write_android(res, app_name, colors, ring):
+    """Escribe los recursos de Android: nombre, icono adaptable (fondo + gema + silueta monocroma) y el icono clásico."""
+    res.mkdir(parents=True, exist_ok=True)
+    (res / "values").mkdir(exist_ok=True)
+    (res / "values" / "strings.xml").write_text(
+        '<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <string name="app_name">%s</string>\n</resources>\n' % app_name, encoding="utf-8")
+    (res / "mipmap-anydpi-v26").mkdir(exist_ok=True)
+    (res / "mipmap-anydpi-v26" / "ic_launcher.xml").write_text(
+        '<?xml version="1.0" encoding="utf-8"?>\n<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">\n'
+        '    <background android:drawable="@mipmap/ic_launcher_background" />\n'
+        '    <foreground android:drawable="@mipmap/ic_launcher_foreground" />\n'
+        '    <monochrome android:drawable="@mipmap/ic_launcher_monochrome" />\n</adaptive-icon>\n', encoding="utf-8")
+    top, bottom, light, dark, shine = colors
+    full = draw(top, bottom, light, dark, shine, ring=ring)
+    gem = draw(top, bottom, light, dark, shine, bg=False)
+    # La capa adaptable es de 108 dp y solo se ve el círculo central de 66 dp: la gema se encoge para caber.
+    layer = Image.new("RGBA", (N, N), (0, 0, 0, 0))
+    small = gem.resize((int(N * 0.72), int(N * 0.72)), Image.LANCZOS)
+    layer.paste(small, ((N - small.width) // 2, (N - small.height) // 2), small)
+    mono = Image.new("RGBA", (N, N), (0, 0, 0, 0))
+    mono.paste((255, 255, 255, 255), (0, 0), layer.getchannel("A").point(lambda a: 255 if a > 40 else 0))
+    grad = Image.new("RGBA", (N, N))
+    gd = ImageDraw.Draw(grad)
+    for y in range(N):
+        gd.line([(0, y), (N, y)], fill=lerp(top, bottom, y / N) + (255,))
+    for name, scale in DENSITIES.items():
+        d = res / ("mipmap-" + name)
+        d.mkdir(exist_ok=True)
+        px = round(48 * scale)
+        full.resize((px, px), Image.LANCZOS).save(d / "ic_launcher.png")
+        lp = round(108 * scale)
+        layer.resize((lp, lp), Image.LANCZOS).save(d / "ic_launcher_foreground.png")
+        mono.resize((lp, lp), Image.LANCZOS).save(d / "ic_launcher_monochrome.png")
+        grad.resize((lp, lp), Image.LANCZOS).save(d / "ic_launcher_background.png")
+
+
 if __name__ == "__main__":
     icon = draw((0x1A, 0x46, 0x2C), (0x08, 0x20, 0x14), (0x62, 0xE0, 0x7E), (0x1F, 0x9A, 0x45), (0xC8, 0xFA, 0xD2), ring=(0xF2, 0xC1, 0x4E))
     write_c(icon, ROOT / "games" / "alttp_usa" / "icon.c")
+    write_android(ROOT / "games" / "alttp_usa" / "android" / "res", "ALttP Recomp",
+                  ((0x1A, 0x46, 0x2C), (0x08, 0x20, 0x14), (0x62, 0xE0, 0x7E), (0x1F, 0x9A, 0x45), (0xC8, 0xFA, 0xD2)), (0xF2, 0xC1, 0x4E))
     if (ROOT / "out").is_dir():
         icon.resize((256, 256), Image.LANCZOS).save(ROOT / "out" / "icon_preview.png")
     print("escrito")
