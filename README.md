@@ -55,6 +55,33 @@ La ROM se queda donde está: solo se recuerda su ruta, y en Android se copia a l
 </p>
 <p align="center"><sub>Controles táctiles de la versión Android (arte propio).</sub></p>
 
+## ¿Por qué no usar un emulador?
+
+Un emulador es la mejor opción para jugar *cualquier* juego de SNES con la máxima fidelidad. Este proyecto hace otra cosa: convierte **este** juego en un programa nativo, y eso permite lo que un emulador no puede dar con la ROM original.
+
+| | Emulador | ALttP Recomp |
+|---|---|---|
+| **Mejoras de jugabilidad** (cambio de objeto con L/R, espada que recoge objetos y rompe vasijas, más bombas, 9999 rupias…) | Exigen un hack de la ROM o un parche IPS | Se activan desde el menú sobre tu ROM sin tocar, y cada una tiene prueba automática |
+| **Español** | Parche aplicado a la ROM | Se sustituye en tiempo real, con acentos y `ñ` dibujados con la propia fuente del juego; el fichero se relee mientras juegas |
+| **Pantalla ancha** | Casi siempre no, o con trucos por juego | Columnas extra reales, tapadas en negro donde no hay mapa |
+| **Android** | Instalar un emulador y configurarlo | Un APK con controles táctiles hechos para el juego |
+| **Extensible** | Hay que hacer ingeniería inversa y parchear | Se añade una mejora escribiendo C sobre el código ya traducido |
+| **Fidelidad al hardware** | Muy alta (bsnes, por ejemplo) | Menor: la PPU no emula el entrelazado, lo que depende de ciclos exactos no se reproduce y el DSP no usa la tabla exacta |
+| **Juegos** | Todos los de SNES | Solo este (USA, CRC32 `777AAC2F`) |
+
+Lo que sí tiene este proyecto y también tienen los emuladores: estados guardados y rebobinado, filtros y scanlines, y reasignación de teclas y mandos desde el menú **F1**.
+
+## Hoja de ruta
+
+Cosas que los emuladores dan y este proyecto aún no. No están prometidas ni tienen fecha: son la dirección.
+
+- **Shader de CRT** (máscara de fósforo, haz de scanline, curvatura y resplandor): en curso en el motor.
+- **Más ajustes de imagen y mando**, con la comodidad de un emulador maduro.
+- **Logros** (RetroAchievements) para el juego.
+- **Juego en red** (netplay) o partida compartida.
+- **Más mejoras de calidad de vida** en C, a medida que se prueben.
+- **Pruebas en Windows** de la actualización automática y de la reconstrucción del `.exe` del motor.
+
 ## Mejoras de calidad de vida
 
 Son opciones del juego: se activan en la pestaña **Game** del menú **F1** o con `--game-opt nombre=valor`. Las marcadas con ✔ están activas por defecto; el resto, apagadas.
