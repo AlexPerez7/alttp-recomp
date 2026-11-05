@@ -64,6 +64,9 @@ Reparto (ver `CLAUDE.md`): lo general va al motor (`snes-recomp`, con OpenSpec);
    - **Probado a mano el 2026-10-28** en la máquina de desarrollo: zip de `release.ps1` descomprimido en una carpeta limpia fuera del repositorio, ROM fuera del repositorio, `SNES_PORT_NO_LOCAL_COMPILER=1` y caché borrada con `clean` (se reconstruye con el TinyCC del paquete): construye rápido, no descarga nada, entra al juego y las partidas van a `saves\` junto al exe. Aún con Visual Studio instalado, así que no sustituye a un equipo limpio.
    - **Falta**: probar el paquete completo en un Windows limpio (máquina virtual o equipo sin Visual Studio ni gcc, con y sin red), una partida con muchos sprites y un equipo más lento con TinyCC, y probar a mano `snes-port.exe` en `cmd` y PowerShell interactivos; valorar un segundo paquete con clang si el equipo va justo; firma de código (antivirus). Lo de motor, en `snes-recomp` (`openspec/changes/launcher-window`).
 
+7c. **Paquetes descargables y actualizaciones** (anotado el 2026-11-05). Hecho: release `v0.1` con los tres paquetes (Windows zip, Linux `.tar.gz` autónomo, APK) y `SHA256SUMS`; lanzador de Linux nativo (`snes-recomp/linux/`, cambio `linux-launcher`: ventana con el arte del juego, TinyCC y SDL2 dentro, sin gcc); aviso e instalación de versiones nuevas en Windows y Linux (`src/update.rs`, cambio `desktop-updates`, apagado por defecto, comprueba SHA-256); README de cara al público con `docs/`.
+   - **Falta**: reconstruir `snes-port.exe` en Windows con el motor nuevo y probar casilla, aviso y reemplazo del propio `.exe` (solo compila); una release `v0.2` real con `update.info` para ver el aviso contra GitHub; arrastrar la ROM a la ventana de Linux; jugar de verdad en Linux; firmar las releases (minisign) si se quiere defender de una cuenta comprometida; workflow de GitHub Actions que construya y suba los paquetes; glibc anterior a 2.38 (compilar en un entorno más antiguo); mando Bluetooth y dedos reales en Android, y un móvil de gama media (el 4.1 que quedó fuera de `android-frontend`).
+
 ## Fase 3: confianza y herramientas
 
 9. **Verificación contra un emulador de referencia** (motor): grabar entradas, ejecutar el mismo tramo en bsnes (o similar) y en el recompilado, y comparar fotogramas o WRAM cada N cuadros. Hoy el fuzz solo detecta paradas y *stubs*, no desvíos sutiles. Documentar las 2 funciones que quedan como *stub* (`01:CA17`, `08:A8E3`).
@@ -75,7 +78,7 @@ Reparto (ver `CLAUDE.md`): lo general va al motor (`snes-recomp`, con OpenSpec);
 12. **Audio mejorado**: pistas MSU-1 (u otro formato) opcionales, cargadas de una carpeta del usuario; ningún audio en el repositorio.
 13. **60 fps o más** con interpolación, y modo 7 en alta resolución (motor; es el cambio más grande y arriesgado).
 14. **Modding**: cargar C propio como plugin sin recompilar el juego, o un formato de parches de datos (ya existe la carpeta `game_dir()` editable sin reconstruir).
-15. **Logros y netplay/cooperativo**: solo si hay demanda; requieren determinismo estricto, que depende de los puntos 1 y 9.
+15. **Logros y netplay/cooperativo**: solo si hay demanda; requieren determinismo estricto, que depende de los puntos 1 y 9. Ya figuran en la «Hoja de ruta» del README (2026-11-05), junto con el shader de CRT (cambio `crt-shader` en curso en el motor) y más ajustes de imagen y mando; si se hacen, actualizar ambos sitios.
 
 ## Orden sugerido
 
