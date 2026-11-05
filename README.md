@@ -59,7 +59,7 @@ Una línea `clave = TEXTO` por cadena, con su máximo de letras en un comentario
 
 ### Con el paquete (lo más simple)
 
-1. Descarga `alttp-recomp-<versión>-win64.zip` y descomprímelo.
+1. Descarga `alttp-recomp-<versión>-win64.zip` de [Releases](https://github.com/AlexPerez7/alttp-recomp/releases) y descomprímelo.
 2. Abre `snes-port.exe` con doble clic: se abre una ventana donde eliges **tu** ROM (`alttp_usa.sfc`) y el juego arranca. También puedes arrastrar la ROM sobre `snes-port.exe`.
 3. La primera vez se prepara el juego en tu máquina (unos segundos, o unos minutos según el compilador). No tienes que instalar nada: el paquete lleva un compilador pequeño (TinyCC) que solo se usa si tu equipo no tiene uno (Visual Studio Build Tools, gcc o clang). Las siguientes veces la ventana te ofrece **Jugar** con la misma ROM y arranca al instante. Si algo falla, la ventana lo cuenta y puedes copiar el detalle.
 
