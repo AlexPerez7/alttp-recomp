@@ -52,6 +52,8 @@ if (Test-Path "$stage\README.md") { Move-Item "$stage\README.md" "$stage\README-
 if (Test-Path "$stage\LICENSE") { Move-Item "$stage\LICENSE" "$stage\LICENSE-engine" -Force }
 Copy-Item README.md, LICENSE $stage
 Copy-Item games $stage -Recurse
+# lo lee el aviso de version nueva del lanzador (src/update.rs del motor): repo y version instalada
+Set-Content -Path "$stage\update.info" -Value "repo=AlexPerez7/alttp-recomp`nversion=$Version" -Encoding ASCII
 
 # la guarda: nada de ROMs, partidas guardadas ni C generado
 $bad = Get-ChildItem $stage -Recurse -File | Where-Object {

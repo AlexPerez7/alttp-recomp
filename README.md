@@ -95,6 +95,10 @@ git clone https://github.com/AlexPerez7/snes-recomp ../snes-recomp
 
 La primera vez construye el juego con gcc (unos 3 minutos) y lo guarda en `~/.cache/snes-port`; las siguientes arranca al instante. Opciones del juego tras `--`, como en Windows. Las partidas y los estados van a `saves/` junto a `snes-port` (o a `~/.local/share/snes-port/saves` si ahí no se puede escribir). Hace falta un motor que sepa construir en Linux (con el arreglo del nombre del ejecutable y la detección de SDL2 del sistema).
 
+### Actualizaciones (Windows y Linux)
+
+El lanzador puede avisar de una versión nueva e instalarla. Está **apagado por defecto**: marca **Buscar actualizaciones (usa Internet)** en la ventana y consultará a GitHub como mucho una vez al día. Si hay una versión mayor, pregunta (**Actualizar**, **Ahora no**, **Omitir esta versión**); al aceptar descarga el paquete de tu sistema, comprueba su SHA-256 contra el `SHA256SUMS` de la misma release y copia los archivos sobre la instalación (las partidas de `saves\` y la ROM no se tocan), y se reinicia. Solo se descarga; no se envía nada. Para publicar una versión: `scripts/release.sh X.Y` (y `release.ps1 -Version X.Y` en Windows), `scripts/sums.sh`, y subir los paquetes y `SHA256SUMS` a una release `vX.Y`.
+
 ### En Android
 
 Descarga el APK de [Releases](https://github.com/AlexPerez7/alttp-recomp/releases), ábrelo (permite instalar desde esa fuente) y elige tu ROM USA al abrir la app. El juego se compila en el propio teléfono; la ROM no sale de él. Detalles del port en el repositorio del motor (`android/README.md`).
