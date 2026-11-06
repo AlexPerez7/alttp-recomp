@@ -207,15 +207,29 @@ static uint8_t rup_active;
 static uint16_t rd16(uint32_t a) { return (uint16_t)(wram_read8(a) | wram_read8(a + 1) << 8); }
 static void wr16(uint32_t a, uint16_t v) { wram_write8(a, v & 0xFF); wram_write8(a + 1, v >> 8); }
 
+/* Fast rupee counter: the status bar follows the real amount one rupee per frame, so 500 rupees take 8 seconds to show. With
+ * `--game-opt rupee_fast=1`, before the original counts its one, the shown amount ($F362) moves 1/16 of the difference towards the real one
+ * ($F360), up or down, so a big change takes about a second and a half and the last rupees go one by one as before (with the coin sound
+ * the original asks for while the two differ). From 1000 up, with rupees_9999, the step of rupees_enter is the same 1/16 instead of 1/50. */
+static int rupee_fast_on(void) { return game_opt("rupee_fast", 0); }
+
+static void rupees_speedup(void) {
+    uint16_t t = rd16(0xF360), d = rd16(0xF362), diff;
+    if (!rupee_fast_on() || wram_read8(0x0200) || t > 999 || d > 999) return;
+    diff = t > d ? (uint16_t)(t - d) : (uint16_t)(d - t);
+    if (diff < 16) return;
+    wr16(0xF362, t > d ? (uint16_t)(d + diff / 16) : (uint16_t)(d - diff / 16));
+}
+
 static void rupees_enter(void) {
     uint16_t t, d, p;
     rup_active = 0;
-    if (!game_opt("rupees_9999", 0) || wram_read8(0x0200)) return;
+    if (!game_opt("rupees_9999", 0) || wram_read8(0x0200)) { rupees_speedup(); return; }
     t = rd16(0xF360);
     d = rd16(0xF362);
     if (t > 0x7FFF || d > RUPEE_CAP) return;
     if (t > RUPEE_CAP) t = RUPEE_CAP;
-    if (t <= 999 && d <= 999) return;
+    if (t <= 999 && d <= 999) { rupees_speedup(); return; }
     if (d == t || wram_read8(0x012E)) {
         wram_write8(0x0CFD, 0);
     } else {
@@ -224,7 +238,7 @@ static void rupees_enter(void) {
         if (!(n & 7)) wram_write8(0x012E, 0x29);
     }
     if (d != t) {
-        uint16_t diff = t > d ? (uint16_t)(t - d) : (uint16_t)(d - t), step = (uint16_t)(1 + diff / 50);
+        uint16_t diff = t > d ? (uint16_t)(t - d) : (uint16_t)(d - t), step = (uint16_t)(1 + diff / (rupee_fast_on() ? 16 : 50));
         if (step > diff) step = diff;
         d = t > d ? (uint16_t)(d + step) : (uint16_t)(d - step);
     }

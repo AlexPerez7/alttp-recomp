@@ -192,6 +192,16 @@ def cmd_quality(out):
            f"fix_medallion_abort: Bombos empieza en {m0[0]}; sin la opción el giro lo aborta en {m0[1]} ($5D = {m0[2]} al final); con ella sigue ($5D = {m1[2]})",
            "con fix_medallion_abort=1 Bombos no debe abortarse con el espadazo giratorio del mismo fotograma (y sin la opción sí)")
 
+    # rupee_fast
+    def rupees(n):
+        w = R(n).wram
+        return w[0xF360] | w[0xF361] << 8, w[0xF362] | w[0xF363] << 8
+
+    rf = {n: rupees(n) for n in ("rfu0", "rfu1", "rfd0", "rfd1")}
+    report(rf == {"rfu0": (500, 150), "rfu1": (500, 500), "rfd0": (0, 350), "rfd1": (0, 0)},
+           f"rupee_fast: a los 150 fotogramas (cartera, marcador) subiendo {rf['rfu0']} sin la opción y {rf['rfu1']} con ella; bajando {rf['rfd0']} y {rf['rfd1']}",
+           "con rupee_fast=1 el marcador debe alcanzar la cartera mucho antes (subiendo y bajando) sin cambiarla, y sin la opción seguir de una en una")
+
     sys.exit(0 if ok else 1)
 
 

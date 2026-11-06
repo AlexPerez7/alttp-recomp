@@ -290,6 +290,13 @@ for opt in 0 1; do
         --poke 00202=08@5250 --poke 00303=0F@5250 --poke 00C4A=00@5290 --watch 05D --trace-frames 5250-5600 \
         --press B@5300-5390 --press Y@5391-5393 --game-opt "fix_medallion_abort=$opt"
 done
+# rupee_fast: el marcador ($F362) sigue a la cartera ($F360) de una en una; con la opción, 1/16 de la diferencia por fotograma. Se pone la cartera a 500
+# ($F360 = $01F4) en el fotograma 5300 (subida) o, con las dos a 500 desde el 5250, a 0 (bajada); a los 150 fotogramas el marcador va por 150 o 350 sin la
+# opción y ya ha llegado con ella; la cartera no cambia.
+for opt in 0 1; do
+    launch "rfu$opt" 5450 --poke 0F360=F401@5300 --game-opt "rupee_fast=$opt"
+    launch "rfd$opt" 5450 --poke 0F360=F401F401@5250 --poke 0F360=0000@5300 --game-opt "rupee_fast=$opt"
+done
 wait
 for rc in "$out"/q_*/rc; do
     [ "$(cat "$rc")" = 0 ] || die "headless_fast termino con codigo $(cat "$rc") ($(basename "$(dirname "$rc")"))"

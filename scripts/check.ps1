@@ -348,6 +348,14 @@ foreach ($opt in 0, 1) {
         "--press", "B@5300-5390", "--press", "Y@5391-5393", "--game-opt", "fix_medallion_abort=$opt")
 }
 
+# rupee_fast: el marcador ($F362) sigue a la cartera ($F360) de una en una; con la opción, 1/16 de la diferencia por fotograma. Se pone la cartera a 500
+# ($F360 = $01F4) en el fotograma 5300 (subida) o, con las dos a 500 desde el 5250, a 0 (bajada); a los 150 fotogramas el marcador va por 150 o 350 sin la
+# opción y ya ha llegado con ella; la cartera no cambia.
+foreach ($opt in 0, 1) {
+    Launch "rfu$opt" 5450 @("--poke", "0F360=F401@5300", "--game-opt", "rupee_fast=$opt")
+    Launch "rfd$opt" 5450 @("--poke", "0F360=F401F401@5250", "--poke", "0F360=0000@5300", "--game-opt", "rupee_fast=$opt")
+}
+
 # more_bombs: con 10 bombas ($F343), las bombas elegidas (ranura 4 en $0202, objeto 1 en $0303) y el hueco 0 de los efectos libre ($0C4A = 0 en el
 # fotograma 5299), Y seis veces separadas (5300 a 5350). Sin la opción el juego deja dos bombas a la vez (tipo $07 en $0C4A-$0C4E) y gasta dos; con
 # ella, cuatro y gasta cuatro.
@@ -431,6 +439,10 @@ function Medallion($name) {
 $med0 = Medallion "med0"; $med1 = Medallion "med1"
 $medOk = ($med0.Start -eq 1) -and ($med0.Abort -eq 1) -and ($med1.Start -eq 1) -and ($med1.Abort -eq 0) -and ($med1.State -eq 9)
 Write-Host "fix_medallion_abort: Bombos empieza $($med0.Start) vez; sin la opción el giro lo aborta $($med0.Abort) vez (`$5D = $($med0.State) al final); con ella `$5D = $($med1.State) -> $medOk"
+function Rupees($name) { $w = (Play $name).wram; return @(($w[0xF360] + 256 * $w[0xF361]), ($w[0xF362] + 256 * $w[0xF363])) }
+$rfu0 = Rupees "rfu0"; $rfu1 = Rupees "rfu1"; $rfd0 = Rupees "rfd0"; $rfd1 = Rupees "rfd1"
+$fastOk = ($rfu0[0] -eq 500) -and ($rfu0[1] -eq 150) -and ($rfu1[0] -eq 500) -and ($rfu1[1] -eq 500) -and ($rfd0[0] -eq 0) -and ($rfd0[1] -eq 350) -and ($rfd1[0] -eq 0) -and ($rfd1[1] -eq 0)
+Write-Host "rupee_fast: a los 150 fotogramas (cartera, marcador) subiendo $($rfu0 -join ',') sin la opción y $($rfu1 -join ',') con ella; bajando $($rfd0 -join ',') y $($rfd1 -join ',') -> $fastOk"
 Write-Host "more_bombs: bombas a la vez sin la opción $($m0.Active) (quedan $($m0.Left) de 10), con ella $($m1.Active) (quedan $($m1.Left)) -> $bombOk"
 
 $ok = $true
@@ -462,6 +474,7 @@ if (-not $potOk) { Write-Error "con sword_pots=1 un espadazo en mazmorra debe ro
 if (-not $portalOk) { Write-Error "con fix_portal_chime=1 la roca del portal (`$82) debe sonar aunque la pantalla ya esté vista (y sin la opción no); sin el bit debe sonar igual con las dos" -ErrorAction Continue; $ok = $false }
 if (-not $deathOk) { Write-Error "con fix_death_count=1 continuar sin guardar no debe contar la muerte (y sin la opción sí); guardar y continuar la cuenta siempre" -ErrorAction Continue; $ok = $false }
 if (-not $medOk) { Write-Error "con fix_medallion_abort=1 Bombos no debe abortarse con el espadazo giratorio del mismo fotograma (y sin la opción sí)" -ErrorAction Continue; $ok = $false }
+if (-not $fastOk) { Write-Error "con rupee_fast=1 el marcador debe alcanzar la cartera mucho antes (subiendo y bajando) sin cambiarla, y sin la opción seguir de una en una" -ErrorAction Continue; $ok = $false }
 if (-not $bombOk) { Write-Error "con more_bombs=1 deben poder estar cuatro bombas a la vez, cada una gastando una (y sin la opción dos)" -ErrorAction Continue; $ok = $false }
 if (-not $ok) { exit 1 }
 Write-Host "OK"
