@@ -456,3 +456,16 @@ void alttp_sword_swing(Cpu *c) {
     if (wram_read8(0x0372)) return;
     CALL_RTS(f_07_9CD9, 0x9ADF);
 }
+
+/* Refund of magic: 07:B0E9 (JSL; X = item: 0 the cane of Somaria, 4 the boomerang...) adds the cost of the item (table 07:B0A2 + $F37B, the
+ * magic half or quarter) back to the magic of $F36E with no limit, so a refund of a cost that was never paid (a bomb or boomerang
+ * thrown with the cane of Somaria out) can pass 128 and wrap the meter around. alttp_magic_refund replaces it with a copy in C (the
+ * tables are read from the ROM as the original does) that stops at 128. On with `--game-opt fix_magic_refund=1`. */
+void alttp_magic_refund(Cpu *c) {
+    uint8_t x = (uint8_t)(bus_read8(0x07B0A2u + (c->x & 0xFF)) + wram_read8(0xF37B));
+    uint16_t m = (uint16_t)(wram_read8(0xF36E) + bus_read8(0x07B087u + x));
+    c->x = x;
+    if (game_opt("fix_magic_refund", 0) && m > 0x80) m = 0x80;
+    wram_write8(0xF36E, (uint8_t)m);
+    c->a = (uint16_t)((c->a & 0xFF00) | (uint8_t)m);
+}

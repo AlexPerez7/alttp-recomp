@@ -866,3 +866,10 @@ default = "en"
 # con la pila del 65816 en su base ($01FF) y sin interrupción en curso; aquí se guardan y cargan los estados.
 [resume]
 addr = "00:8034"
+
+# Devolucion de magia (quality.c): 07:B0E9 suma el coste de vuelta a la magia sin tope; la copia en C lo limita a 128 con fix_magic_refund=1.
+[[hook]]
+addr = "07:B0E9"
+kind = "replace"
+call = "alttp_magic_refund"
+ret = "rtl"
