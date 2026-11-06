@@ -595,3 +595,73 @@ void alttp_absorb_leave(Cpu *c) {
     if (!game_opt("fix_shield_palette", 0) || wram_read8(0xF35A) == absorb_in_shield) return;
     gear_palettes(c, f_1B_ED29, 0x1B);
 }
+
+/* Fixes from the list of bug fixes of zelda3 that need a hook inside a function (`kind = "guard"` of the engine: the C function returns
+ * non-zero to leave the function, or to go on at another address). Each with its option, off by default; none changes the difficulty.
+ *
+ * fix_door_submodule: 07:E905 (HandleDoorTransitions, after it clears $68/$69) leaves the function unless the main module is 7 and its
+ * submodule 0: using a potion changes the module in the middle of the frame and the door routines below would bump the submodule.
+ * fix_stair_tags: 01:C307 (Dungeon_HandleRoomTags, after the staircase detection) leaves when the submodule is not 0: a room tag that
+ * triggers on the same frame as a staircase would spawn items in the wrong place.
+ * fix_skullwoods_door: 02:87AF (Module07_Dungeon, after the submodule of the frame) goes straight to 02:87E1 when the main module is
+ * no longer 7 (the Cane of Somaria on a door button and leaving Skull Woods), so the rest does not overwrite the submodule.
+ * fix_mushroom_warp: 05:EE82 (the mushroom, after "is Link busy?") leaves while a submodule is running (the mirror warp), so Link
+ * does not take it half way.
+ * fix_double_absorb: the heart (06:CEC9) and the fairy (06:CFDC) leave if they were absorbed already, because
+ * Sprite_HandleDraggingByAncilla absorbs them a second time otherwise.
+ * fix_hidden_hookshot: 06:D287, where an absorbable hidden under a rock leaves, clears $0DA0 (the sprite that grabbed it with the hookshot).
+ * fix_camera_twice: spin attack between bumpers can call the camera routine (07:E9D3) twice in a frame; the call from the ground
+ * handler at 07:82D5 is skipped if it already ran in the frame (the flag is cleared at 07:81A0 and set on entry to 07:E9D3).
+ * fix_bunny_walk: 07:E732, the walking animation of the bunny, also for the temporary one ($5D = $1C), as for the permanent one ($17). */
+static uint8_t camera_applied;
+
+int alttp_door_guard(Cpu *c) {
+    (void)c;
+    return game_opt("fix_door_submodule", 0) && !(wram_read8(0x10) == 7 && wram_read8(0x11) == 0);
+}
+
+int alttp_stair_tags_guard(Cpu *c) {
+    (void)c;
+    return game_opt("fix_stair_tags", 0) && wram_read8(0x11) != 0;
+}
+
+int alttp_skullwoods_guard(Cpu *c) {
+    (void)c;
+    return game_opt("fix_skullwoods_door", 0) && wram_read8(0x10) != 7;
+}
+
+int alttp_mushroom_guard(Cpu *c) {
+    (void)c;
+    return game_opt("fix_mushroom_warp", 0) && wram_read8(0x11) != 0;
+}
+
+int alttp_heart_guard(Cpu *c) {
+    return game_opt("fix_double_absorb", 0) && !wram_read8(0x0DD0 + (c->x & 0xFF));
+}
+
+int alttp_hidden_hookshot_guard(Cpu *c) {
+    if (game_opt("fix_hidden_hookshot", 0)) wram_write8(0x0DA0 + (c->x & 0xFF), 0);
+    return 0;
+}
+
+int alttp_camera_frame(Cpu *c) {
+    (void)c;
+    camera_applied = 0;
+    return 0;
+}
+
+void alttp_camera_applied(Cpu *c) {
+    (void)c;
+    camera_applied = 1;
+}
+
+int alttp_camera_guard(Cpu *c) {
+    (void)c;
+    return game_opt("fix_camera_twice", 0) && camera_applied;
+}
+
+int alttp_bunny_walk_guard(Cpu *c) {
+    if (!game_opt("fix_bunny_walk", 0) || wram_read8(0x5D) != 0x1C) return 0;
+    c->a = 0x17; /* as the original arrives at the bunny code, with the state of the permanent one */
+    return 1;
+}

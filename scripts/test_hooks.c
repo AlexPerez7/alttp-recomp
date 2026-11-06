@@ -62,5 +62,28 @@ int main(void) {
     CHECK(calls_ed29 == 0, "Escudo: sin cambio de escudo no la carga");
     reset(""); wram[0xF35A] = 1; alttp_absorb_enter(&c); wram[0xF35A] = 2; alttp_absorb_leave(&c);
     CHECK(calls_ed29 == 0, "Escudo: sin la opcion no la carga");
+    /* Ganchos guarda (el motor los saca de la funcion o los salta si devuelven distinto de 0) */
+    reset("fix_door_submodule"); wram[0x10] = 7; wram[0x11] = 0; CHECK(alttp_door_guard(&c) == 0, "Puertas: modulo 7 y submodulo 0 sigue");
+    wram[0x10] = 14; CHECK(alttp_door_guard(&c) == 1, "Puertas: otro modulo sale (pocion)");
+    wram[0x10] = 7; wram[0x11] = 2; CHECK(alttp_door_guard(&c) == 1, "Puertas: submodulo distinto de 0 sale");
+    reset(""); wram[0x10] = 14; CHECK(alttp_door_guard(&c) == 0, "Puertas: sin la opcion nunca sale");
+    reset("fix_stair_tags"); wram[0x11] = 0; CHECK(alttp_stair_tags_guard(&c) == 0, "Escaleras: submodulo 0 sigue con las etiquetas");
+    wram[0x11] = 16; CHECK(alttp_stair_tags_guard(&c) == 1, "Escaleras: submodulo distinto de 0 sale");
+    reset("fix_skullwoods_door"); wram[0x10] = 7; CHECK(alttp_skullwoods_guard(&c) == 0, "Skull Woods: modulo 7 sigue");
+    wram[0x10] = 9; CHECK(alttp_skullwoods_guard(&c) == 1, "Skull Woods: otro modulo salta al final");
+    reset("fix_mushroom_warp"); wram[0x11] = 0; CHECK(alttp_mushroom_guard(&c) == 0, "Seta: sin submodulo se puede coger");
+    wram[0x11] = 35; CHECK(alttp_mushroom_guard(&c) == 1, "Seta: durante el warp del espejo no");
+    reset("fix_double_absorb"); c.x = 3; wram[0x0DD0 + 3] = 0; CHECK(alttp_heart_guard(&c) == 1, "Corazon: ya absorbido sale");
+    wram[0x0DD0 + 3] = 9; CHECK(alttp_heart_guard(&c) == 0, "Corazon: sin absorber sigue");
+    reset(""); c.x = 3; wram[0x0DD0 + 3] = 0; CHECK(alttp_heart_guard(&c) == 0, "Corazon: sin la opcion sigue");
+    reset("fix_hidden_hookshot"); c.x = 5; wram[0x0DA0 + 5] = 7; CHECK(alttp_hidden_hookshot_guard(&c) == 0 && wram[0x0DA0 + 5] == 0, "Gancho: el escondido se suelta y sigue");
+    reset(""); c.x = 5; wram[0x0DA0 + 5] = 7; alttp_hidden_hookshot_guard(&c); CHECK(wram[0x0DA0 + 5] == 7, "Gancho: sin la opcion no cambia nada");
+    reset("fix_camera_twice"); alttp_camera_frame(&c); CHECK(alttp_camera_guard(&c) == 0, "Camara: antes de aplicarla no salta la llamada");
+    alttp_camera_applied(&c); CHECK(alttp_camera_guard(&c) == 1, "Camara: ya aplicada en el fotograma salta la segunda");
+    alttp_camera_frame(&c); CHECK(alttp_camera_guard(&c) == 0, "Camara: el fotograma siguiente vuelve a empezar");
+    reset(""); alttp_camera_applied(&c); CHECK(alttp_camera_guard(&c) == 0, "Camara: sin la opcion nunca salta");
+    reset("fix_bunny_walk"); wram[0x5D] = 0x1C; c.a = 0x1C; CHECK(alttp_bunny_walk_guard(&c) == 1 && c.a == 0x17, "Conejo: el temporal usa la animacion del permanente");
+    wram[0x5D] = 0x17; CHECK(alttp_bunny_walk_guard(&c) == 0, "Conejo: el permanente sigue por su camino");
+    reset(""); wram[0x5D] = 0x1C; CHECK(alttp_bunny_walk_guard(&c) == 0, "Conejo: sin la opcion no cambia");
     return bad;
 }

@@ -113,9 +113,17 @@ Son opciones del juego: se activan en la pestaña **Game** del menú **F1** o co
 | | `fix_spell_lock=1` | Arreglo de un bug del original: tras lanzar un medallón y morir, el menú de guardar ya no se queda bloqueado. |
 | | `fix_ledge_platform=1` | Arreglo de un bug del original: salir mientras saltas una cornisa y recibir un golpe en una plataforma ya no te deja pasar bajo capas sólidas. |
 | | `fix_shield_palette=1` | Arreglo de un bug del original: el escudo que suelta un Pikit carga su paleta (Link no se queda con los colores del anterior). |
+| | `fix_door_submodule=1` | Arreglo de un bug del original: usar una poción en una puerta ya no cambia el submódulo a mitad de fotograma. |
+| | `fix_stair_tags=1` | Arreglo de un bug del original: entrar en una escalera justo cuando se activa la etiqueta de la sala ya no coloca los objetos en un sitio equivocado. |
+| | `fix_skullwoods_door=1` | Arreglo de un bug del original: el bastón de Somaria sobre un botón de puerta al salir de Skull Woods ya no pisa el submódulo. |
+| | `fix_mushroom_warp=1` | Arreglo de un bug del original: la seta no se coge a mitad del warp del espejo. |
+| | `fix_double_absorb=1` | Arreglo de un bug del original: el corazón y el hada no se absorben dos veces en el mismo fotograma. |
+| | `fix_hidden_hookshot=1` | Arreglo de un bug del original: un objeto escondido bajo una roca suelta el gancho que lo agarraba. |
+| | `fix_camera_twice=1` | Arreglo de un bug del original: el espadazo giratorio entre topes ya no coloca la cámara dos veces en un fotograma. |
+| | `fix_bunny_walk=1` | Arreglo de un bug del original: el conejo temporal usa la animación de andar del permanente. |
 | | `low_hp_beep=0` | Quita el pitido de poca vida. |
 
-Las mejoras que tocan el juego (`skip_intro`, `fix_portal_chime`, `fix_death_count`, `fix_medallion_abort`, `fix_magic_refund`, `fix_somaria_nomagic`, `fix_moldorm_sound`, `fix_swamola_bank`, `fix_kiki_bomb`, `fix_bunny_palette`, `fix_spell_lock`, `fix_ledge_platform`, `fix_shield_palette`, `item_switch_lr`, `dash_turn`, `bird_cancel`, `sword_pickup`, `sword_pots`, `more_bombs`, `rupees_9999`, `rupee_fast`) se prueban automáticamente con partidas jugadas por un script (`scripts/check.ps1` / `check.sh`).
+Las mejoras que tocan el juego (`skip_intro`, `fix_portal_chime`, `fix_death_count`, `fix_medallion_abort`, `fix_magic_refund`, `fix_somaria_nomagic`, `fix_moldorm_sound`, `fix_swamola_bank`, `fix_kiki_bomb`, `fix_bunny_palette`, `fix_spell_lock`, `fix_ledge_platform`, `fix_shield_palette`, `fix_door_submodule`, `fix_stair_tags`, `fix_skullwoods_door`, `fix_mushroom_warp`, `fix_double_absorb`, `fix_hidden_hookshot`, `fix_camera_twice`, `fix_bunny_walk`, `item_switch_lr`, `dash_turn`, `bird_cancel`, `sword_pickup`, `sword_pots`, `more_bombs`, `rupees_9999`, `rupee_fast`) se prueban automáticamente con partidas jugadas por un script (`scripts/check.ps1` / `check.sh`).
 
 ## Estados guardados y partidas
 

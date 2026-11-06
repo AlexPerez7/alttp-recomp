@@ -950,3 +950,70 @@ call = "alttp_absorb_enter"
 addr = "06:D13C"
 kind = "after"
 call = "alttp_absorb_leave"
+
+# Arreglos de zelda3 que necesitan un gancho dentro de una funcion (kind = "guard" del motor: la funcion C devuelve distinto de 0 para salir de la
+# funcion recompilada o seguir en otra direccion). Cada uno con su opcion; ver el comentario de quality.c.
+[[hook]] # fix_door_submodule: HandleDoorTransitions, tras poner a 0 $68 y $69, sale si no es el modulo 7 con submodulo 0
+addr = "07:E905"
+kind = "guard"
+call = "alttp_door_guard"
+ret = "rts"
+
+[[hook]] # fix_stair_tags: Dungeon_HandleRoomTags, tras detectar la escalera, sale si el submodulo cambio
+addr = "01:C307"
+kind = "guard"
+call = "alttp_stair_tags_guard"
+ret = "rtl"
+
+[[hook]] # fix_skullwoods_door: Module07_Dungeon, tras el submodulo, salta al final si el modulo ya no es el 7
+addr = "02:87AF"
+kind = "guard"
+call = "alttp_skullwoods_guard"
+goto = "02:87E1"
+
+[[hook]] # fix_mushroom_warp: la seta, tras mirar si Link esta ocupado, sale mientras corre un submodulo
+addr = "05:EE82"
+kind = "guard"
+call = "alttp_mushroom_guard"
+ret = "rts"
+
+[[hook]] # fix_double_absorb: el corazon, tras Sprite_CheckAbsorptionByPlayer, sale si ya se absorbio
+addr = "06:CEC9"
+kind = "guard"
+call = "alttp_heart_guard"
+ret = "rts"
+
+[[hook]] # fix_double_absorb: el hada, antes de Sprite_HandleDraggingByAncilla, sale si ya se absorbio
+addr = "06:CFDC"
+kind = "guard"
+call = "alttp_heart_guard"
+ret = "rts"
+
+[[hook]] # fix_hidden_hookshot: absorbible escondido bajo una roca (sale por 06:D287), se suelta del gancho
+addr = "06:D287"
+kind = "guard"
+call = "alttp_hidden_hookshot_guard"
+goto = "06:D287"
+
+[[hook]] # fix_camera_twice: principio del manejador del suelo, se limpia la marca del fotograma
+addr = "07:81A0"
+kind = "guard"
+call = "alttp_camera_frame"
+goto = "07:81A0"
+
+[[hook]] # fix_camera_twice: al aplicar el movimiento de Link a la camara (07:E9D3) se anota
+addr = "07:E9D3"
+kind = "before"
+call = "alttp_camera_applied"
+
+[[hook]] # fix_camera_twice: la segunda llamada, desde el manejador del suelo, se salta
+addr = "07:82D5"
+kind = "guard"
+call = "alttp_camera_guard"
+goto = "07:82D8"
+
+[[hook]] # fix_bunny_walk: la animacion del conejo permanente tambien para el temporal
+addr = "07:E732"
+kind = "guard"
+call = "alttp_bunny_walk_guard"
+goto = "07:E7CE"
