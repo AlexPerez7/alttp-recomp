@@ -315,6 +315,17 @@ foreach ($opt in 0, 1) {
         "--press", "LEFT@5340-5420", "--press", "UP@5430-5460", "--press", "B@5480-5483", "--game-opt", "sword_pots=$opt")
 }
 
+# fix_portal_chime: Link sale de casa (fotograma 5500), se le pone mirando abajo en y = $0B58, x = $0989 de la pantalla $2F y se pone un arbusto
+# ($0036) en la posición de secreto $0BB2, donde esa pantalla tiene el secreto $82 (un portal). A en el 5600 lo levanta y 1B:C8A4 busca el secreto.
+# Con el bit 2 de $F2AF (la pantalla ya "vista") el original no pide el sonido $1B en $012F; la opción sí. Sin el bit suena igual con las dos.
+foreach ($bit in "00", "02") {
+    foreach ($opt in 0, 1) {
+        Launch "portal$bit$opt" 5700 @("--watch", "012F", "--trace-frames", "5500-5700", "--press", "RIGHT@5300-5330", "--press", "LEFT@5340-5350", "--press", "DOWN@5360-5500",
+            "--poke", "00020=580B@5520", "--poke", "00022=8909@5520", "--poke", "0008A=2F@5520", "--poke", "02BB2=3600@5520", "--poke", "0F2AF=$bit@5520",
+            "--press", "A@5600-5603", "--game-opt", "fix_portal_chime=$opt")
+    }
+}
+
 # more_bombs: con 10 bombas ($F343), las bombas elegidas (ranura 4 en $0202, objeto 1 en $0303) y el hueco 0 de los efectos libre ($0C4A = 0 en el
 # fotograma 5299), Y seis veces separadas (5300 a 5350). Sin la opción el juego deja dos bombas a la vez (tipo $07 en $0C4A-$0C4E) y gasta dos; con
 # ella, cuatro y gasta cuatro.
@@ -381,6 +392,11 @@ Write-Host "sword_pots: baldosas de las vasijas sin la opción $($q0.Attrs), con
 function Bombs($w) { [pscustomobject]@{ Active = @(0..4 | Where-Object { $w[0xC4A + $_] -eq 7 }).Count; Left = $w[0xF343] } }
 $m0 = Bombs (Play "bomb0").wram; $m1 = Bombs (Play "bomb1").wram
 $bombOk = ($m0.Active -eq 2 -and $m0.Left -eq 8 -and $m1.Active -eq 4 -and $m1.Left -eq 6)
+function Chimes($name) { return @(Writes (Play $name).log | Where-Object { $_.Addr -eq 0x12F -and $_.Old -eq "00" -and $_.New -eq "1B" }).Count }
+$pc = @{}
+foreach ($n in "portal000", "portal001", "portal020", "portal021") { $pc[$n] = Chimes $n }
+$portalOk = ($pc["portal000"] -eq 1) -and ($pc["portal001"] -eq 1) -and ($pc["portal020"] -eq 0) -and ($pc["portal021"] -eq 1)
+Write-Host "fix_portal_chime: sonidos al levantar la roca sin el bit 2: $($pc['portal000']) y $($pc['portal001']); con él: $($pc['portal020']) sin la opción y $($pc['portal021']) con ella -> $portalOk"
 Write-Host "more_bombs: bombas a la vez sin la opción $($m0.Active) (quedan $($m0.Left) de 10), con ella $($m1.Active) (quedan $($m1.Left)) -> $bombOk"
 
 $ok = $true
@@ -409,6 +425,7 @@ if (-not $birdOk) { Write-Error "con bird_cancel=1 B en la elección de destino 
 if (-not $rupOk) { Write-Error "con rupees_9999=1 el tope debe ser 9999 con cuatro dígitos en el marcador (y 999 sin la opción)" -ErrorAction Continue; $ok = $false }
 if (-not $pickOk) { Write-Error "con sword_pickup=1 el espadazo debe recoger un objeto fuera del alcance del cuerpo (sin la opción no) y tocarlo debe seguir recogiéndolo" -ErrorAction Continue; $ok = $false }
 if (-not $potOk) { Write-Error "con sword_pots=1 un espadazo en mazmorra debe romper la vasija que alcanza (y sin la opción no)" -ErrorAction Continue; $ok = $false }
+if (-not $portalOk) { Write-Error "con fix_portal_chime=1 la roca del portal (`$82) debe sonar aunque la pantalla ya esté vista (y sin la opción no); sin el bit debe sonar igual con las dos" -ErrorAction Continue; $ok = $false }
 if (-not $bombOk) { Write-Error "con more_bombs=1 deben poder estar cuatro bombas a la vez, cada una gastando una (y sin la opción dos)" -ErrorAction Continue; $ok = $false }
 if (-not $ok) { exit 1 }
 Write-Host "OK"

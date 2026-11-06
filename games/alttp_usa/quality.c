@@ -382,3 +382,23 @@ void alttp_intro_skip(Cpu *c) {
     wram_write8(0x10, 1);
     wram_write8(0x11, 0);
 }
+
+/* Chime of the portal rock: 1B:C8A4 (Overworld_RevealSecret, once per lifted rock; $04 = the tile position it is given) looks up the
+ * secrets of the screen ($8A, under $80) in the lists that 1B:C2F9 points to: entries of three bytes (position word with bit 15 free,
+ * then the id; $80 and above are not items, $82 is the magic portal). It asks for the discovery chime ($1B in $012F) unless the id is $84
+ * or bit 1 of $7EF280 + screen is already set, and with id $82 and that bit set the original is silent when lifting the rock that covers
+ * the portal to the Ice Palace. The hook, on the exit, repeats the lookup and asks for the chime for id $82, which does nothing new when
+ * it was asked for already. On with `--game-opt fix_portal_chime=1`. */
+void alttp_portal_chime(Cpu *c) {
+    uint32_t list, at;
+    uint8_t screen = wram_read8(0x8A);
+    (void)c;
+    if (!game_opt("fix_portal_chime", 0) || wram_read8(0x8B) || screen >= 0x80) return;
+    list = 0x1B0000u | bus_read8(0x1BC2F9u + 2u * screen) | bus_read8(0x1BC2FAu + 2u * screen) << 8;
+    for (at = list; ; at += 3) {
+        uint16_t w = (uint16_t)(bus_read8(at) | bus_read8(at + 1) << 8);
+        if (w == 0xFFFF) return;
+        if ((w & 0x7FFF) == (uint16_t)(wram_read8(0x04) | wram_read8(0x05) << 8)) break;
+    }
+    if (bus_read8(at + 2) == 0x82) wram_write8(0x012F, 0x1B);
+}

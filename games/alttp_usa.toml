@@ -769,6 +769,13 @@ addr = "00:80B5"
 kind = "before"
 call = "alttp_menu_poll"
 
+# Arreglo: sonido al levantar la roca del portal del Templo de Hielo (quality.c, opcion fix_portal_chime). 1B:C8A4 busca el secreto de la
+# pantalla y pide el sonido $1B salvo con el secreto $84 o con el bit 2 de $7EF280+pantalla; el gancho, al salir, lo pide con el secreto $82.
+[[hook]]
+addr = "1B:C8A4"
+kind = "after"
+call = "alttp_portal_chime"
+
 # Pitido de poca vida (quality.c): la rutina del marcador (0D:DB75) pide el efecto $2B en $012E; con low_hp_beep=0 se retira.
 # El gancho de entrada hace ademas el cambio de objeto con L/R (item_switch_lr), que corre una vez por fotograma ahi.
 [[hook]]

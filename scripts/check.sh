@@ -260,6 +260,16 @@ for opt in 0 1; do
         --press Y@5300-5301 --press Y@5310-5311 --press Y@5320-5321 --press Y@5330-5331 --press Y@5340-5341 --press Y@5350-5351 \
         --game-opt "more_bombs=$opt"
 done
+# fix_portal_chime: Link sale de casa (fotograma 5500), se le pone mirando abajo en y = $0B58, x = $0989 de la pantalla $2F y se pone un arbusto
+# ($0036) en la posición de secreto $0BB2, donde esa pantalla tiene el secreto $82 (un portal). A en el 5600 lo levanta y 1B:C8A4 busca el secreto.
+# Con el bit 2 de $F2AF (la pantalla ya "vista") el original no pide el sonido $1B en $012F; la opción sí. Sin el bit suena igual con las dos.
+for bit in 00 02; do
+    for opt in 0 1; do
+        launch "portal$bit$opt" 5700 --watch 012F --trace-frames 5500-5700 --press RIGHT@5300-5330 --press LEFT@5340-5350 --press DOWN@5360-5500 \
+            --poke 00020=580B@5520 --poke 00022=8909@5520 --poke 0008A=2F@5520 --poke 02BB2=3600@5520 --poke "0F2AF=$bit@5520" \
+            --press A@5600-5603 --game-opt "fix_portal_chime=$opt"
+    done
+done
 wait
 for rc in "$out"/q_*/rc; do
     [ "$(cat "$rc")" = 0 ] || die "headless_fast termino con codigo $(cat "$rc") ($(basename "$(dirname "$rc")"))"

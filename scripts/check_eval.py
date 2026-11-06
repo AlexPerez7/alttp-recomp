@@ -167,6 +167,15 @@ def cmd_quality(out):
            f"more_bombs: bombas a la vez sin la opción {m0[0]} (quedan {m0[1]} de 10), con ella {m1[0]} (quedan {m1[1]})",
            "con more_bombs=1 deben poder estar cuatro bombas a la vez, cada una gastando una (y sin la opción dos)")
 
+    # fix_portal_chime
+    def chimes(n):
+        return len([w for w in R(n).at(0x12F) if w[2] == "00" and w[3] == "1B"])
+
+    pc = {n: chimes(n) for n in ("portal000", "portal001", "portal020", "portal021")}
+    report(pc == {"portal000": 1, "portal001": 1, "portal020": 0, "portal021": 1},
+           f"fix_portal_chime: sonidos al levantar la roca sin el bit 2: {pc['portal000']} y {pc['portal001']}; con él: {pc['portal020']} sin la opción y {pc['portal021']} con ella",
+           "con fix_portal_chime=1 la roca del portal ($82) debe sonar aunque la pantalla ya esté vista (y sin la opción no); sin el bit debe sonar igual con las dos")
+
     sys.exit(0 if ok else 1)
 
 
