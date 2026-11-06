@@ -402,3 +402,25 @@ void alttp_portal_chime(Cpu *c) {
     }
     if (bus_read8(at + 2) == 0x82) wram_write8(0x012F, 0x1B);
 }
+
+/* Death counter: 09:F4C1 (Death_Func15 of `zelda3` starts inside it, at 09:F50F) is the handler of the game over menu, once per frame. When the
+ * choice is confirmed it adds 1 to the counter of deaths of the save, the word $7EF403 (when $7EF405 is $FFFF), whatever the choice in $B0
+ * is: 0 save and continue, 1 save and quit, 2 continue without saving. With 2 nothing is saved at that moment, but the new count stays in the
+ * WRAM and is written to the save file the next time the game is saved. The entry hook notes the counter; the exit hook, when the call
+ * has added exactly 1 and the choice is 2, puts it back. On with `--game-opt fix_death_count=1`. */
+static uint16_t deaths_before;
+
+static uint16_t deaths_now(void) { return (uint16_t)(wram_read8(0xF403) | wram_read8(0xF404) << 8); }
+
+void alttp_death_count_enter(Cpu *c) {
+    (void)c;
+    deaths_before = deaths_now();
+}
+
+void alttp_death_count_leave(Cpu *c) {
+    (void)c;
+    if (!game_opt("fix_death_count", 0) || wram_read8(0xB0) != 2) return;
+    if ((uint16_t)(deaths_now() - deaths_before) != 1) return;
+    wram_write8(0xF403, deaths_before & 0xFF);
+    wram_write8(0xF404, deaths_before >> 8);
+}

@@ -776,6 +776,19 @@ addr = "1B:C8A4"
 kind = "after"
 call = "alttp_portal_chime"
 
+# Arreglo: el contador de muertes cuenta tambien al elegir "Continuar" sin guardar (quality.c, opcion fix_death_count). 09:F4C1 es el
+# manejador de la pantalla de fin de partida (una vez por fotograma); al confirmar suma 1 a $7EF403 aunque no se guarde. El gancho de
+# entrada anota el contador y el de salida lo devuelve si la opcion elegida ($B0 = 2) es continuar sin guardar.
+[[hook]]
+addr = "09:F4C1"
+kind = "before"
+call = "alttp_death_count_enter"
+
+[[hook]]
+addr = "09:F4C1"
+kind = "after"
+call = "alttp_death_count_leave"
+
 # Pitido de poca vida (quality.c): la rutina del marcador (0D:DB75) pide el efecto $2B en $012E; con low_hp_beep=0 se retira.
 # El gancho de entrada hace ademas el cambio de objeto con L/R (item_switch_lr), que corre una vez por fotograma ahi.
 [[hook]]
