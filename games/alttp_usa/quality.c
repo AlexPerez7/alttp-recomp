@@ -424,3 +424,21 @@ void alttp_death_count_leave(Cpu *c) {
     wram_write8(0xF403, deaths_before & 0xFF);
     wram_write8(0xF404, deaths_before >> 8);
 }
+
+/* Medallions and the spin attack: the ground handler of Link (state 0 of $5D, 07:8109) uses the item of Y (07:9B0E) and then, in the same
+ * frame, runs the sword (07:9AC2). When Y starts Ether, Bombos or Quake ($5D = $08, $09 or $0A, in 07:A4DB, 07:A5B0 and 07:A692) with the
+ * sword charged ($3C of 9 or more) and B was let go in that very frame, 07:9AC2 releases the spin attack (07:9D72), which sets $5D to 3 and
+ * cancels the medallion, magic already spent. alttp_sword_swing replaces 07:9AC2 with a copy in C: the countdown of $02E3, nothing while
+ * another item is in use ($0301, $037A), 07:9D72 with the charge or else 07:9CD9 (a swing, only if $0372 is 0); with the option, it does
+ * nothing when $5D is a medallion. On with `--game-opt fix_medallion_abort=1`. */
+void alttp_sword_swing(Cpu *c) {
+    uint8_t t = (uint8_t)(wram_read8(0x02E3) - 1), state = wram_read8(0x5D);
+    wram_write8(0x02E3, t);
+    if (!(t & 0x80)) return;
+    wram_write8(0x02E3, 0);
+    if (wram_read8(0x0301) || wram_read8(0x037A)) return;
+    if (state >= 0x08 && state <= 0x0A && game_opt("fix_medallion_abort", 0)) return;
+    if (wram_read8(0x3C) >= 9) { CALL_RTS(f_07_9D72, 0x9AE4); return; }
+    if (wram_read8(0x0372)) return;
+    CALL_RTS(f_07_9CD9, 0x9ADF);
+}

@@ -182,6 +182,16 @@ def cmd_quality(out):
            f"fix_death_count: muertes con guardar y continuar {dc['death00']} sin la opción y {dc['death01']} con ella; con continuar sin guardar {dc['death20']} y {dc['death21']}",
            "con fix_death_count=1 continuar sin guardar no debe contar la muerte (y sin la opción sí); guardar y continuar la cuenta siempre")
 
+    # fix_medallion_abort
+    def medallion(n):
+        r = R(n)
+        return [w[0] for w in r.at(0x5D) if w[2] == "00" and w[3] == "09"], [w[0] for w in r.at(0x5D) if w[2] == "09" and w[3] == "03"], r.wram[0x5D]
+
+    m0, m1 = medallion("med0"), medallion("med1")
+    report(len(m0[0]) == 1 and m0[1] == m0[0] and len(m1[0]) == 1 and not m1[1] and m1[2] == 9,
+           f"fix_medallion_abort: Bombos empieza en {m0[0]}; sin la opción el giro lo aborta en {m0[1]} ($5D = {m0[2]} al final); con ella sigue ($5D = {m1[2]})",
+           "con fix_medallion_abort=1 Bombos no debe abortarse con el espadazo giratorio del mismo fotograma (y sin la opción sí)")
+
     sys.exit(0 if ok else 1)
 
 

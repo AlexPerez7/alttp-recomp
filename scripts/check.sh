@@ -281,6 +281,15 @@ for choice in 0 2; do
             --press A@5800-5803 --game-opt "fix_death_count=$opt"
     done
 done
+# fix_medallion_abort: con la espada ($F359 = 1, $F379, $F3C5), Bombos ($F347), magia llena ($F36E), Bombos elegido en Y (ranura 8 en $0202, objeto $0F
+# en $0303) y el espacio de efectos libre ($0C4A = 0), B se mantiene del fotograma 5300 al 5390 (la espada se carga: $3C llega a 9) y Y se pulsa en
+# el 5391, cuando B se suelta. Bombos empieza ($5D = 9) y el original lo aborta en el mismo fotograma con el espadazo giratorio ($5D = 3, magia
+# gastada, y luego el giro acaba y $5D vuelve a 0); con la opción $5D sigue en 9 al fotograma 5600.
+for opt in 0 1; do
+    launch "med$opt" 5600 --poke 0F359=01@5250 --poke 0F379=FF@5250 --poke 0F3C5=02@5250 --poke 0F347=01@5250 --poke 0F36E=80@5250 \
+        --poke 00202=08@5250 --poke 00303=0F@5250 --poke 00C4A=00@5290 --watch 05D --trace-frames 5250-5600 \
+        --press B@5300-5390 --press Y@5391-5393 --game-opt "fix_medallion_abort=$opt"
+done
 wait
 for rc in "$out"/q_*/rc; do
     [ "$(cat "$rc")" = 0 ] || die "headless_fast termino con codigo $(cat "$rc") ($(basename "$(dirname "$rc")"))"

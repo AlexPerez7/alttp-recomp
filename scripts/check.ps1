@@ -338,6 +338,16 @@ foreach ($choice in 0, 2) {
     }
 }
 
+# fix_medallion_abort: con la espada ($F359 = 1, $F379, $F3C5), Bombos ($F347), magia llena ($F36E), Bombos elegido en Y (ranura 8 en $0202, objeto $0F
+# en $0303) y el espacio de efectos libre ($0C4A = 0), B se mantiene del fotograma 5300 al 5390 (la espada se carga: $3C llega a 9) y Y se pulsa en
+# el 5391, cuando B se suelta. Bombos empieza ($5D = 9) y el original lo aborta en el mismo fotograma con el espadazo giratorio ($5D = 3, magia
+# gastada, y luego el giro acaba y $5D vuelve a 0); con la opción $5D sigue en 9 al fotograma 5600.
+foreach ($opt in 0, 1) {
+    Launch "med$opt" 5600 @("--poke", "0F359=01@5250", "--poke", "0F379=FF@5250", "--poke", "0F3C5=02@5250", "--poke", "0F347=01@5250", "--poke", "0F36E=80@5250",
+        "--poke", "00202=08@5250", "--poke", "00303=0F@5250", "--poke", "00C4A=00@5290", "--watch", "05D", "--trace-frames", "5250-5600",
+        "--press", "B@5300-5390", "--press", "Y@5391-5393", "--game-opt", "fix_medallion_abort=$opt")
+}
+
 # more_bombs: con 10 bombas ($F343), las bombas elegidas (ranura 4 en $0202, objeto 1 en $0303) y el hueco 0 de los efectos libre ($0C4A = 0 en el
 # fotograma 5299), Y seis veces separadas (5300 a 5350). Sin la opción el juego deja dos bombas a la vez (tipo $07 en $0C4A-$0C4E) y gasta dos; con
 # ella, cuatro y gasta cuatro.
@@ -413,6 +423,14 @@ $dc = @{}
 foreach ($n in "death00", "death01", "death20", "death21") { $w = (Play $n).wram; $dc[$n] = $w[0xF403] + 256 * $w[0xF404] }
 $deathOk = ($dc["death00"] -eq 1) -and ($dc["death01"] -eq 1) -and ($dc["death20"] -eq 1) -and ($dc["death21"] -eq 0)
 Write-Host "fix_death_count: muertes con guardar y continuar $($dc['death00']) sin la opción y $($dc['death01']) con ella; con continuar sin guardar $($dc['death20']) y $($dc['death21']) -> $deathOk"
+function Medallion($name) {
+    $r = Play $name
+    $w = @(Writes $r.log | Where-Object { $_.Addr -eq 0x5D })
+    return @{ Start = @($w | Where-Object { $_.Old -eq "00" -and $_.New -eq "09" }).Count; Abort = @($w | Where-Object { $_.Old -eq "09" -and $_.New -eq "03" }).Count; State = $r.wram[0x5D] }
+}
+$med0 = Medallion "med0"; $med1 = Medallion "med1"
+$medOk = ($med0.Start -eq 1) -and ($med0.Abort -eq 1) -and ($med1.Start -eq 1) -and ($med1.Abort -eq 0) -and ($med1.State -eq 9)
+Write-Host "fix_medallion_abort: Bombos empieza $($med0.Start) vez; sin la opción el giro lo aborta $($med0.Abort) vez (`$5D = $($med0.State) al final); con ella `$5D = $($med1.State) -> $medOk"
 Write-Host "more_bombs: bombas a la vez sin la opción $($m0.Active) (quedan $($m0.Left) de 10), con ella $($m1.Active) (quedan $($m1.Left)) -> $bombOk"
 
 $ok = $true
@@ -443,6 +461,7 @@ if (-not $pickOk) { Write-Error "con sword_pickup=1 el espadazo debe recoger un 
 if (-not $potOk) { Write-Error "con sword_pots=1 un espadazo en mazmorra debe romper la vasija que alcanza (y sin la opción no)" -ErrorAction Continue; $ok = $false }
 if (-not $portalOk) { Write-Error "con fix_portal_chime=1 la roca del portal (`$82) debe sonar aunque la pantalla ya esté vista (y sin la opción no); sin el bit debe sonar igual con las dos" -ErrorAction Continue; $ok = $false }
 if (-not $deathOk) { Write-Error "con fix_death_count=1 continuar sin guardar no debe contar la muerte (y sin la opción sí); guardar y continuar la cuenta siempre" -ErrorAction Continue; $ok = $false }
+if (-not $medOk) { Write-Error "con fix_medallion_abort=1 Bombos no debe abortarse con el espadazo giratorio del mismo fotograma (y sin la opción sí)" -ErrorAction Continue; $ok = $false }
 if (-not $bombOk) { Write-Error "con more_bombs=1 deben poder estar cuatro bombas a la vez, cada una gastando una (y sin la opción dos)" -ErrorAction Continue; $ok = $false }
 if (-not $ok) { exit 1 }
 Write-Host "OK"
