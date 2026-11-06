@@ -298,6 +298,12 @@ refund=$("$out/test_refund" "$ROM" 2>&1); refundRc=$?
 echo "$refund" | sed 's/^/    /'
 echo "fix_magic_refund: la función sola limita la magia a 128 con la opción y no cambia nada por debajo del tope = $(b2i test $refundRc = 0)"
 [ "$refundRc" = 0 ] || fail "fix_magic_refund: la función sola no limita la magia a 128"
+# fix_somaria_nomagic: con el bastón de Somaria ($F350, ranura 17 en $0202, objeto $12 en $0303) y sin magia, Y en el fotograma 5300 deja el bit 6
+# de $3A puesto (como si el objeto estuviera en uso); con la opción el bit se limpia al salir de 07:AEC0
+for opt in 0 1; do
+    launch "som$opt" 5500 --poke 0F350=01@5250 --poke 0F36E=00@5250 --poke 00202=11@5250 --poke 00303=12@5250 \
+        --watch 03A --trace-frames 5250-5500 --press Y@5300-5302 --game-opt "fix_somaria_nomagic=$opt"
+done
 # rupee_fast: el marcador ($F362) sigue a la cartera ($F360) de una en una; con la opción, 1/16 de la diferencia por fotograma. Se pone la cartera a 500
 # ($F360 = $01F4) en el fotograma 5300 (subida) o, con las dos a 500 desde el 5250, a 0 (bajada); a los 150 fotogramas el marcador va por 150 o 350 sin la
 # opción y ya ha llegado con ella; la cartera no cambia.

@@ -873,3 +873,15 @@ addr = "07:B0E9"
 kind = "replace"
 call = "alttp_magic_refund"
 ret = "rtl"
+
+# Bastón de Somaria sin magia (quality.c, opcion fix_somaria_nomagic): 07:AEC0 deja el bit 6 de $3A (boton de Y en uso) puesto al fallar el coste;
+# el gancho de salida lo limpia con la opcion si esa llamada lo puso y el baston no llego a empezar ($0350 = 0).
+[[hook]]
+addr = "07:AEC0"
+kind = "before"
+call = "alttp_somaria_enter"
+
+[[hook]]
+addr = "07:AEC0"
+kind = "after"
+call = "alttp_somaria_leave"

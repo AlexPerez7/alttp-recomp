@@ -192,6 +192,12 @@ def cmd_quality(out):
            f"fix_medallion_abort: Bombos empieza en {m0[0]}; sin la opción el giro lo aborta en {m0[1]} ($5D = {m0[2]} al final); con ella sigue ($5D = {m1[2]})",
            "con fix_medallion_abort=1 Bombos no debe abortarse con el espadazo giratorio del mismo fotograma (y sin la opción sí)")
 
+    # fix_somaria_nomagic
+    so0, so1 = R("som0"), R("som1")
+    report(so0.wram[0x3A] == 0x40 and so1.wram[0x3A] == 0 and so0.wram[0x350] == 0 and so1.wram[0x350] == 0,
+           f"fix_somaria_nomagic: con el bastón sin magia el bit 6 de $3A queda en {so0.wram[0x3A]:#04x} sin la opción y en {so1.wram[0x3A]:#04x} con ella",
+           "con fix_somaria_nomagic=1 el bastón de Somaria sin magia no debe dejar el bit 6 de $3A puesto (y sin la opción sí)")
+
     # rupee_fast
     def rupees(n):
         w = R(n).wram

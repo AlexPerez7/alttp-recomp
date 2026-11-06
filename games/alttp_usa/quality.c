@@ -469,3 +469,24 @@ void alttp_magic_refund(Cpu *c) {
     wram_write8(0xF36E, (uint8_t)m);
     c->a = (uint16_t)((c->a & 0xFF00) | (uint8_t)m);
 }
+
+/* Cane of Somaria with an empty meter: 07:AEC0 (the cane, once per frame while it is the item in use) marks the Y press in bit 6 of $3A
+ * (07:B073) and then asks for the magic (07:B0AB); when there is not enough it returns with the bit still set, as if the item was in
+ * use (it is only cleared at the end of the swing, 07:AF2C). If the player switches at once to the mushroom or the powder after the "no magic"
+ * message, that item sees the bit and sprinkles powder without any button. The two hooks (entry and exit of 07:AEC0) note $3A and $0350
+ * (set to 1 when the cane really starts) on entry and, with the option, clear the bit on exit when this call set it and the cane did not
+ * start. On with `--game-opt fix_somaria_nomagic=1`. */
+static uint8_t somaria_in_3a, somaria_in_350;
+
+void alttp_somaria_enter(Cpu *c) {
+    (void)c;
+    somaria_in_3a = wram_read8(0x3A);
+    somaria_in_350 = wram_read8(0x0350);
+}
+
+void alttp_somaria_leave(Cpu *c) {
+    (void)c;
+    if (!game_opt("fix_somaria_nomagic", 0)) return;
+    if (!(somaria_in_3a & 0x40) && !somaria_in_350 && (wram_read8(0x3A) & 0x40) && !wram_read8(0x0350))
+        wram_write8(0x3A, wram_read8(0x3A) & 0xBF);
+}

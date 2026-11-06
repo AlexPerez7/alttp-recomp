@@ -348,6 +348,13 @@ foreach ($opt in 0, 1) {
         "--press", "B@5300-5390", "--press", "Y@5391-5393", "--game-opt", "fix_medallion_abort=$opt")
 }
 
+# fix_somaria_nomagic: con el bastón de Somaria ($F350, ranura 17 en $0202, objeto $12 en $0303) y sin magia, Y en el fotograma 5300 deja el bit 6
+# de $3A puesto (como si el objeto estuviera en uso); con la opción el bit se limpia al salir de 07:AEC0
+foreach ($opt in 0, 1) {
+    Launch "som$opt" 5500 @("--poke", "0F350=01@5250", "--poke", "0F36E=00@5250", "--poke", "00202=11@5250", "--poke", "00303=12@5250",
+        "--press", "Y@5300-5302", "--game-opt", "fix_somaria_nomagic=$opt")
+}
+
 # rupee_fast: el marcador ($F362) sigue a la cartera ($F360) de una en una; con la opción, 1/16 de la diferencia por fotograma. Se pone la cartera a 500
 # ($F360 = $01F4) en el fotograma 5300 (subida) o, con las dos a 500 desde el 5250, a 0 (bajada); a los 150 fotogramas el marcador va por 150 o 350 sin la
 # opción y ya ha llegado con ella; la cartera no cambia.
@@ -439,6 +446,9 @@ function Medallion($name) {
 $med0 = Medallion "med0"; $med1 = Medallion "med1"
 $medOk = ($med0.Start -eq 1) -and ($med0.Abort -eq 1) -and ($med1.Start -eq 1) -and ($med1.Abort -eq 0) -and ($med1.State -eq 9)
 Write-Host "fix_medallion_abort: Bombos empieza $($med0.Start) vez; sin la opción el giro lo aborta $($med0.Abort) vez (`$5D = $($med0.State) al final); con ella `$5D = $($med1.State) -> $medOk"
+$som0 = (Play "som0").wram; $som1 = (Play "som1").wram
+$somOk = ($som0[0x3A] -eq 0x40) -and ($som1[0x3A] -eq 0) -and ($som0[0x350] -eq 0) -and ($som1[0x350] -eq 0)
+Write-Host "fix_somaria_nomagic: con el bastón sin magia el bit 6 de `$3A queda en $($som0[0x3A]) sin la opción y en $($som1[0x3A]) con ella -> $somOk"
 function Rupees($name) { $w = (Play $name).wram; return @(($w[0xF360] + 256 * $w[0xF361]), ($w[0xF362] + 256 * $w[0xF363])) }
 $rfu0 = Rupees "rfu0"; $rfu1 = Rupees "rfu1"; $rfd0 = Rupees "rfd0"; $rfd1 = Rupees "rfd1"
 $fastOk = ($rfu0[0] -eq 500) -and ($rfu0[1] -eq 150) -and ($rfu1[0] -eq 500) -and ($rfu1[1] -eq 500) -and ($rfd0[0] -eq 0) -and ($rfd0[1] -eq 350) -and ($rfd1[0] -eq 0) -and ($rfd1[1] -eq 0)
@@ -474,6 +484,7 @@ if (-not $potOk) { Write-Error "con sword_pots=1 un espadazo en mazmorra debe ro
 if (-not $portalOk) { Write-Error "con fix_portal_chime=1 la roca del portal (`$82) debe sonar aunque la pantalla ya esté vista (y sin la opción no); sin el bit debe sonar igual con las dos" -ErrorAction Continue; $ok = $false }
 if (-not $deathOk) { Write-Error "con fix_death_count=1 continuar sin guardar no debe contar la muerte (y sin la opción sí); guardar y continuar la cuenta siempre" -ErrorAction Continue; $ok = $false }
 if (-not $medOk) { Write-Error "con fix_medallion_abort=1 Bombos no debe abortarse con el espadazo giratorio del mismo fotograma (y sin la opción sí)" -ErrorAction Continue; $ok = $false }
+if (-not $somOk) { Write-Error "con fix_somaria_nomagic=1 el bastón de Somaria sin magia no debe dejar el bit 6 de `$3A puesto (y sin la opción sí)" -ErrorAction Continue; $ok = $false }
 if (-not $fastOk) { Write-Error "con rupee_fast=1 el marcador debe alcanzar la cartera mucho antes (subiendo y bajando) sin cambiarla, y sin la opción seguir de una en una" -ErrorAction Continue; $ok = $false }
 if (-not $bombOk) { Write-Error "con more_bombs=1 deben poder estar cuatro bombas a la vez, cada una gastando una (y sin la opción dos)" -ErrorAction Continue; $ok = $false }
 if (-not $ok) { exit 1 }
