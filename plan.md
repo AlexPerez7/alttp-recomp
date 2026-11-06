@@ -95,3 +95,5 @@ Reparto (ver `CLAUDE.md`): lo general va al motor (`snes-recomp`, con OpenSpec);
 
 - Todo lo derivado de la ROM (volcados, capturas con gráficos, C generado) sigue fuera del repositorio.
 - Cada punto del motor empieza con `/opsx:propose` en `snes-recomp`; aquí solo se registran los cambios del juego.
+
+- Arreglos pequeños de `zelda3` que no cambian la dificultad (revisión del 2026-11-06): HECHOS `fix_spell_lock` (`07:F1FA`), `fix_ledge_platform` (`07:F13C`) y `fix_shield_palette` (`06:D13C` + `1B:ED29`). POR HACER, todos necesitan un gancho en mitad de una función o que pueda saltarse su cuerpo (no existe en el motor): escaleras con etiqueta de sala (`01:C2FD`, tras `Dungeon_DetectStaircase`), `Module07_Dungeon` (`02:87A2`, el return tras el submódulo), puertas con el submódulo cambiado (`07:E901`), seta durante el warp del espejo (`05:EE78`), hada/corazón absorbidos dos veces (`06:CEC0`, `06:CF94`), gancho de un objeto escondido (`06:D22F`), superbomba (`09:A2B2`, `08:F18D`, `09:A959`), paleta de Kholdstare (`00:EC79`, la constante $40 pasa a $50) y animación del conejo temporal (`07:E704`).

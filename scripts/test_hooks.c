@@ -14,10 +14,12 @@ static void wram_write8(uint32_t a, uint8_t v) { wram[a] = v; }
 static int game_opt(const char *k, int d) { (void)d; return strcmp(k, opt_on) == 0; }
 static void f_0E_D6C0(Cpu *c) { (void)c; calls_d6c0++; }
 static void f_0E_D6DD(Cpu *c) { (void)c; calls_d6dd++; }
+static int calls_ed29;
+static void f_1B_ED29(Cpu *c) { (void)c; calls_ed29++; }
 #include BODY
 static int bad;
 #define CHECK(cond, msg) do { int ok_ = !!(cond); printf("  %-70s %s\n", msg, ok_ ? "ok" : "MAL"); if (!ok_) bad = 1; } while (0)
-static void reset(const char *opt) { memset(wram, 0, sizeof wram); opt_on = opt; calls_d6c0 = calls_d6dd = 0; }
+static void reset(const char *opt) { memset(wram, 0, sizeof wram); opt_on = opt; calls_d6c0 = calls_d6dd = calls_ed29 = 0; }
 int main(void) {
     Cpu c;
     memset(&c, 0, sizeof c);
@@ -49,5 +51,16 @@ int main(void) {
     CHECK(calls_d6dd == 0, "Conejo: nadando no la carga");
     reset("fix_bunny_palette"); wram[0x5D] = 0; alttp_revival_leave(&c);
     CHECK(calls_d6dd == 0, "Conejo: revivir sin ser conejo no la carga");
+    /* Bloqueo del menu tras un medallon, cornisa en una plataforma y paleta del escudo del Pikit */
+    reset("fix_spell_lock"); wram[0x0112] = 1; alttp_spell_lock(&c); CHECK(wram[0x0112] == 0, "Hechizo: con la opcion $0112 vuelve a 0");
+    reset(""); wram[0x0112] = 1; alttp_spell_lock(&c); CHECK(wram[0x0112] == 1, "Hechizo: sin la opcion no cambia nada");
+    reset("fix_ledge_platform"); wram[0x047A] = 1; alttp_ledge_platform(&c); CHECK(wram[0x047A] == 0, "Cornisa: con la opcion $047A vuelve a 0");
+    reset(""); wram[0x047A] = 1; alttp_ledge_platform(&c); CHECK(wram[0x047A] == 1, "Cornisa: sin la opcion no cambia nada");
+    reset("fix_shield_palette"); wram[0xF35A] = 1; alttp_absorb_enter(&c); wram[0xF35A] = 2; alttp_absorb_leave(&c);
+    CHECK(calls_ed29 == 1, "Escudo: con la opcion y otro escudo carga su paleta");
+    reset("fix_shield_palette"); wram[0xF35A] = 1; alttp_absorb_enter(&c); alttp_absorb_leave(&c);
+    CHECK(calls_ed29 == 0, "Escudo: sin cambio de escudo no la carga");
+    reset(""); wram[0xF35A] = 1; alttp_absorb_enter(&c); wram[0xF35A] = 2; alttp_absorb_leave(&c);
+    CHECK(calls_ed29 == 0, "Escudo: sin la opcion no la carga");
     return bad;
 }

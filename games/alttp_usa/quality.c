@@ -510,10 +510,10 @@ void alttp_somaria_leave(Cpu *c) {
 static uint8_t moldorm_in_46, swamola_db;
 static uint8_t kiki_in_cc;
 
-static void gear_palettes(Cpu *c, void (*fn)(Cpu *)) {
+static void gear_palettes(Cpu *c, void (*fn)(Cpu *), uint8_t bank) {
     Cpu k = *c;
     k.d = 0;
-    k.db = 0x0E;
+    k.db = bank;
     k.e = 0;
     k.m = 1;
     k.xf = 1;
@@ -555,10 +555,43 @@ void alttp_kiki_leave(Cpu *c) {
 
 void alttp_faint_leave(Cpu *c) {
     if (!game_opt("fix_bunny_palette", 0)) return;
-    gear_palettes(c, f_0E_D6C0);
+    gear_palettes(c, f_0E_D6C0, 0x0E);
 }
 
 void alttp_revival_leave(Cpu *c) {
     if (!game_opt("fix_bunny_palette", 0)) return;
-    if (wram_read8(0x5D) == 0x17 && wram_read8(0x56) && !wram_read8(0x0345)) gear_palettes(c, f_0E_D6DD);
+    if (wram_read8(0x5D) == 0x17 && wram_read8(0x56) && !wram_read8(0x0345)) gear_palettes(c, f_0E_D6DD, 0x0E);
+}
+
+/* More small fixes from the list of bug fixes of zelda3 (each with its option, off by default; these ones change neither the difficulty
+ * nor the rules, they only take away a state that was left behind):
+ *
+ * fix_spell_lock: after casting a medallion and dying, the save menu can stay locked: $0112 (a spell animation is running) is not
+ * cleared. Link_ResetProperties_C (07:F1FA, run when the properties of Link are reset) clears it on entry.
+ *
+ * fix_ledge_platform: quitting while jumping off a ledge and then being hit on a platform lets Link go under solid layers, because
+ * $047A (about to jump off a ledge) stays set. Link_Initialize (07:F13C) clears it on exit.
+ *
+ * fix_shield_palette: the shield that a Pikit leaves behind (06:D13C, case 14 of the absorbables) changes $F35A without loading its
+ * palette, so Link keeps the colours of the old one. The exit hook calls Palette_Load_Shield (1B:ED29) when $F35A changed. */
+static uint8_t absorb_in_shield;
+
+void alttp_spell_lock(Cpu *c) {
+    (void)c;
+    if (game_opt("fix_spell_lock", 0)) wram_write8(0x0112, 0);
+}
+
+void alttp_ledge_platform(Cpu *c) {
+    (void)c;
+    if (game_opt("fix_ledge_platform", 0)) wram_write8(0x047A, 0);
+}
+
+void alttp_absorb_enter(Cpu *c) {
+    (void)c;
+    absorb_in_shield = wram_read8(0xF35A);
+}
+
+void alttp_absorb_leave(Cpu *c) {
+    if (!game_opt("fix_shield_palette", 0) || wram_read8(0xF35A) == absorb_in_shield) return;
+    gear_palettes(c, f_1B_ED29, 0x1B);
 }

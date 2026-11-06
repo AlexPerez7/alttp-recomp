@@ -928,3 +928,25 @@ call = "alttp_faint_leave"
 addr = "08:F430"
 kind = "after"
 call = "alttp_revival_leave"
+
+# Mas arreglos pequeños de zelda3 que no cambian la dificultad (quality.c): fix_spell_lock (el menu de guardar se bloquea tras morir con un medallon: $0112 en
+# Link_ResetProperties_C), fix_ledge_platform ($047A al final de Link_Initialize) y fix_shield_palette (la paleta del escudo que suelta el Pikit).
+[[hook]]
+addr = "07:F1FA"
+kind = "before"
+call = "alttp_spell_lock"
+
+[[hook]]
+addr = "07:F13C"
+kind = "after"
+call = "alttp_ledge_platform"
+
+[[hook]]
+addr = "06:D13C"
+kind = "before"
+call = "alttp_absorb_enter"
+
+[[hook]]
+addr = "06:D13C"
+kind = "after"
+call = "alttp_absorb_leave"
