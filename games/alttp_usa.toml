@@ -885,3 +885,46 @@ call = "alttp_somaria_enter"
 addr = "07:AEC0"
 kind = "after"
 call = "alttp_somaria_leave"
+
+# Arreglos pequeños de zelda3 (quality.c, un gancho de entrada y otro de salida cada uno cuando hace falta; todos con su opción):
+# Moldorm gigante (fix_moldorm_sound), Swamola (fix_swamola_bank, banco de datos $1D), Kiki (fix_kiki_bomb) y la paleta de Link
+# al morir de conejo (fix_bunny_palette: Death_PrepFaint y la hada que revive).
+[[hook]]
+addr = "1D:D74E"
+kind = "before"
+call = "alttp_moldorm_enter"
+
+[[hook]]
+addr = "1D:D74E"
+kind = "after"
+call = "alttp_moldorm_leave"
+
+[[hook]]
+addr = "1D:9C80"
+kind = "before"
+call = "alttp_swamola_enter"
+
+[[hook]]
+addr = "1D:9C80"
+kind = "after"
+call = "alttp_swamola_leave"
+
+[[hook]]
+addr = "1E:E487"
+kind = "before"
+call = "alttp_kiki_enter"
+
+[[hook]]
+addr = "1E:E487"
+kind = "after"
+call = "alttp_kiki_leave"
+
+[[hook]]
+addr = "0F:FA6F"
+kind = "after"
+call = "alttp_faint_leave"
+
+[[hook]]
+addr = "08:F430"
+kind = "after"
+call = "alttp_revival_leave"

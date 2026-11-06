@@ -304,6 +304,14 @@ for opt in 0 1; do
     launch "som$opt" 5500 --poke 0F350=01@5250 --poke 0F36E=00@5250 --poke 00202=11@5250 --poke 00303=12@5250 \
         --watch 03A --trace-frames 5250-5500 --press Y@5300-5302 --game-opt "fix_somaria_nomagic=$opt"
 done
+# arreglos pequeños (fix_moldorm_sound, fix_swamola_bank, fix_kiki_bomb, fix_bunny_palette): la lógica de sus ganchos con scripts/test_hooks.c
+# (no se prueba que el juego llegue a esas rutinas, solo lo que el gancho hace cuando llegan)
+awk '/^static uint8_t moldorm_in_46/,0' games/alttp_usa/quality.c >"$out/hooks_body.c"
+$CC -O1 -DBODY='"'"$out"'/hooks_body.c"' -o "$out/test_hooks" scripts/test_hooks.c || die "no compila scripts/test_hooks.c"
+hooks=$("$out/test_hooks" 2>&1); hooksRc=$?
+echo "$hooks"
+echo "arreglos pequeños: lógica de los ganchos = $(b2i test $hooksRc = 0)"
+[ "$hooksRc" = 0 ] || fail "arreglos pequeños: la lógica de algún gancho no es la esperada"
 # rupee_fast: el marcador ($F362) sigue a la cartera ($F360) de una en una; con la opción, 1/16 de la diferencia por fotograma. Se pone la cartera a 500
 # ($F360 = $01F4) en el fotograma 5300 (subida) o, con las dos a 500 desde el 5250, a 0 (bajada); a los 150 fotogramas el marcador va por 150 o 350 sin la
 # opción y ya ha llegado con ella; la cartera no cambia.

@@ -490,3 +490,75 @@ void alttp_somaria_leave(Cpu *c) {
     if (!(somaria_in_3a & 0x40) && !somaria_in_350 && (wram_read8(0x3A) & 0x40) && !wram_read8(0x0350))
         wram_write8(0x3A, wram_read8(0x3A) & 0xBF);
 }
+
+/* Small fixes from the list of bug fixes of zelda3, each only with its option (all off by default):
+ *
+ * fix_moldorm_sound: Giant Moldorm (1D:D74E, called from 06:9469) throws Link back with `LDA #$32; JSL 0D:BBA1; STA $012F`, but 0D:BBA1
+ * returns the pan (0, $40 or $80) in A and drops the $32 that went in, so the hit makes no sound of its own. The exit hook puts the $32
+ * back when this call started the knock-back ($46, the time Link cannot act, went from 0 to $18) and $012F holds only the pan.
+ *
+ * fix_swamola_bank: 1D:9C80 (SpritePrep of Swamola, the Lanmolas of Misery Mire) reads its table of offsets with `LDA $9C7A,X` through
+ * the data bank of its caller, which is not $1D, so the segments start at the wrong place. The entry hook sets the data bank to $1D and
+ * the exit hook gives back the one it found.
+ *
+ * fix_kiki_bomb: Kiki (1E:E487), when it hits Link and starts to follow him ($F3CC = $0A), leaves $F3D3 (the follower was dropped) as it was,
+ * and a bomb that Kiki had been given is left primed; the exit hook clears it.
+ *
+ * fix_bunny_palette: dying as a bunny leaves Link with the pink palette during the animation. Death_PrepFaint (0F:FA6F) and the revival
+ * of the fairy (08:F430, state $17 permanent bunny) load the gear palettes of Link (0E:D6C0 with the sword, shield and armour he owns,
+ * 0E:D6DD with the bunny armour) as the original does outside of a death. On with `--game-opt fix_moldorm_sound=1` etc. */
+static uint8_t moldorm_in_46, swamola_db;
+static uint8_t kiki_in_cc;
+
+static void gear_palettes(Cpu *c, void (*fn)(Cpu *)) {
+    Cpu k = *c;
+    k.d = 0;
+    k.db = 0x0E;
+    k.e = 0;
+    k.m = 1;
+    k.xf = 1;
+    k.ret = RT_NO_RET;
+    fn(&k);
+}
+
+void alttp_moldorm_enter(Cpu *c) {
+    (void)c;
+    moldorm_in_46 = wram_read8(0x46);
+}
+
+void alttp_moldorm_leave(Cpu *c) {
+    (void)c;
+    if (!game_opt("fix_moldorm_sound", 0)) return;
+    if (!moldorm_in_46 && wram_read8(0x46) == 0x18 && !(wram_read8(0x012F) & 0x3F))
+        wram_write8(0x012F, (uint8_t)(wram_read8(0x012F) | 0x32));
+}
+
+void alttp_swamola_enter(Cpu *c) {
+    swamola_db = c->db;
+    if (game_opt("fix_swamola_bank", 0)) c->db = 0x1D;
+}
+
+void alttp_swamola_leave(Cpu *c) {
+    c->db = swamola_db;
+}
+
+void alttp_kiki_enter(Cpu *c) {
+    (void)c;
+    kiki_in_cc = wram_read8(0xF3CC);
+}
+
+void alttp_kiki_leave(Cpu *c) {
+    (void)c;
+    if (!game_opt("fix_kiki_bomb", 0)) return;
+    if (kiki_in_cc != 0x0A && wram_read8(0xF3CC) == 0x0A) wram_write8(0xF3D3, 0);
+}
+
+void alttp_faint_leave(Cpu *c) {
+    if (!game_opt("fix_bunny_palette", 0)) return;
+    gear_palettes(c, f_0E_D6C0);
+}
+
+void alttp_revival_leave(Cpu *c) {
+    if (!game_opt("fix_bunny_palette", 0)) return;
+    if (wram_read8(0x5D) == 0x17 && wram_read8(0x56) && !wram_read8(0x0345)) gear_palettes(c, f_0E_D6DD);
+}
