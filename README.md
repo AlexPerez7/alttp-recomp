@@ -45,7 +45,7 @@ La ROM se queda donde está: solo se recuerda su ruta, y en Android se copia a l
 - **Español completo.** Mensajes, selección de partida, registro de nombre y acciones del menú de pausa, con acentos, `ñ`, `¿` y `¡` dibujados al vuelo con la propia fuente del juego. [Cómo funciona →](docs/TRADUCCION.md)
 - **Estados guardados y rebobinado.** **F5** guarda, **F7** carga, **F3**/**F4** cambian de ranura (hasta 9) y mantener **Retroceso** rebobina unos 10 segundos.
 - **Mensajes más rápidos.** Mantén **R** (o `W` en el teclado) y el texto sale un carácter por fotograma.
-- **Mejoras de calidad de vida opcionales** (cambio de objeto con L/R, espada que recoge objetos y rompe vasijas, hasta 9999 rupias…): [lista completa](#mejoras-de-calidad-de-vida).
+- **Mejoras de calidad de vida opcionales** (saltar la intro con una tecla, cambio de objeto con L/R, espada que recoge objetos y rompe vasijas, hasta 9999 rupias…): [lista completa](#mejoras-de-calidad-de-vida).
 - **Android de verdad.** Controles táctiles con el arte del juego (cruceta con Trifuerza, botones A/B/X/Y de gema), disposición para vertical y horizontal.
 - **Actualizaciones en un clic** (Windows y Linux), **apagadas por defecto**: si las activas, el lanzador avisa de una versión nueva y la instala comprobando su SHA-256. [Detalles →](#actualizaciones)
 - **Privacidad.** Sin telemetría. La única conexión posible es la comprobación de versión, que tú activas.
@@ -79,7 +79,7 @@ Cosas que los emuladores dan y este proyecto aún no. No están prometidas ni ti
 - **Más ajustes de imagen y mando**, con la comodidad de un emulador maduro.
 - **Logros** (RetroAchievements) para el juego.
 - **Juego en red** (netplay) o partida compartida.
-- **Más mejoras de calidad de vida** en C, a medida que se prueben.
+- **Arreglos de bugs del juego original**, como opciones que se activan una a una (cada dirección se comprueba contra la ROM) y más mejoras de calidad de vida en C, a medida que se prueben.
 - **Pruebas en Windows** de la actualización automática y de la reconstrucción del `.exe` del motor.
 
 ## Mejoras de calidad de vida
@@ -99,9 +99,10 @@ Son opciones del juego: se activan en la pestaña **Game** del menú **F1** o co
 | | `more_bombs=1` | Cuatro bombas puestas a la vez en vez de dos (cada una sigue gastando una). |
 | | `rupees_9999=1` | La cartera guarda hasta 9999 rupias, con marcador de cuatro dígitos. |
 | | `max_yellow=1` | Rupias, bombas y flechas en su tope se dibujan en amarillo. |
+| | `skip_intro=1` | **Start** o **A** durante la intro (el logo, la historia y el Triforce) saltan a la selección de partida. |
 | | `low_hp_beep=0` | Quita el pitido de poca vida. |
 
-Las mejoras que tocan el juego (`item_switch_lr`, `dash_turn`, `bird_cancel`, `sword_pickup`, `sword_pots`, `more_bombs`, `rupees_9999`) se prueban automáticamente con partidas jugadas por un script (`scripts/check.ps1` / `check.sh`).
+Las mejoras que tocan el juego (`skip_intro`, `item_switch_lr`, `dash_turn`, `bird_cancel`, `sword_pickup`, `sword_pots`, `more_bombs`, `rupees_9999`) se prueban automáticamente con partidas jugadas por un script (`scripts/check.ps1` / `check.sh`).
 
 ## Estados guardados y partidas
 

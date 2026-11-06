@@ -172,6 +172,23 @@ hl "partida es" "$H" "$textRom" --frames 2040 --frame-blocks 20000 --dump "$out/
 menuGame=$(b2i cmp -s "$out/menu_game_en/wram.bin" "$out/menu_game_es/wram.bin")
 echo "la WRAM del juego no cambia con los menús traducidos = $menuGame"
 
+# skip_intro: Start en el fotograma 300 (en plena intro, módulo $10 = 0) lleva a la selección de partida (módulo 1) con la opción y no hace
+# nada sin ella; la pantalla a los 1300 fotogramas es idéntica a la de esperar a la intro (Start en el título, fotograma 900)
+introRun() {
+    local name=$1 frames=$2; shift 2
+    local d=$out/intro_$name
+    mkdir -p "$d"
+    hl "intro $name" "$H" "$textRom" --frames "$frames" --frame-blocks 20000 --dump "$d" --screenshot "$d/shot.png" "$@"
+}
+introRun off 400 --press START@300-308 --game-opt skip_intro=0
+introRun on 400 --press START@300-308 --game-opt skip_intro=1
+introRun onA 400 --press A@300-308 --game-opt skip_intro=1
+introRun wait 1300 --press START@900-908
+introRun skip 1300 --press START@300-308 --game-opt skip_intro=1
+introOk=$(b2i test "$("${EVAL[@]}" byte "$out/intro_off/wram.bin" 0x10)" = 0 -a "$("${EVAL[@]}" byte "$out/intro_on/wram.bin" 0x10)" = 1 \
+    -a "$("${EVAL[@]}" byte "$out/intro_onA/wram.bin" 0x10)" = 1 -a "$(sha "$out/intro_wait/shot.png")" = "$(sha "$out/intro_skip/shot.png")")
+echo "skip_intro: sin la opción la intro sigue, con Start o A va a la selección de partida y la pantalla es la misma = $introOk"
+
 # mejoras de calidad (games/alttp_usa/quality.c): partida nueva hasta que Link se maneja en su casa (fotograma 5200) y, con las
 # escrituras en la WRAM, comprobar cada opción (en check_eval.py). Con --trace-frames y --watch el motor lista cada cambio de una dirección.
 toControl=("${toMessage[@]}")
@@ -260,6 +277,7 @@ need "$menuRound" "con es_menu.txt igual al volcado, el texto de los menús debe
 need "$menuSame" "las pantallas de menú deben ser idénticas con language=en y language=es (es_menu.txt = volcado)"
 need "$menuEdit" "cambiar una cadena de menú debe cambiar solo su sitio en el mapa de BG3"
 need "$menuGame" "traducir los menús no debe cambiar el estado de la partida"
+need "$introOk" "con skip_intro=1 Start o A en plena intro deben llevar a la selección de partida, con la misma pantalla (y sin la opción no)"
 need "$wideOk" "con --wide 32 en un interior las columnas extra deben ser negras (320 de ancho)"
 [ "$plain" = 5 ] || fail "sin R deberian ser 5"
 [ "$fast" -ge $((2 * plain)) ] || fail "con R deberian ser al menos el doble"

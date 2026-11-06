@@ -363,3 +363,22 @@ void alttp_ancilla_slot(Cpu *c) {
         }
     }
 }
+
+/* Skip the intro: while the intro runs (main module $10 = 0, submodule $11 from 1 to 7: the logo, the story and the Triforce), a press of
+ * Start ($F4 & $10) or A ($F6 & $80) does what Start does on the title screen (submodule 8): asks the music to fade ($012C = $F1) and
+ * sets the screen registers the title leaves ($1C = $15, $99 = $02, $9A = $22: without them the game select is drawn black) and goes to the game select (module 1, submodule 0). Runs once per frame before the NMI work, called from alttp_menu_poll (menutext.c), the hook of 00:80B5. On with
+ * `--game-opt skip_intro=1`. */
+void alttp_intro_skip(Cpu *c) {
+    uint8_t sub;
+    (void)c;
+    if (!game_opt("skip_intro", 0) || wram_read8(0x10) != 0) return;
+    sub = wram_read8(0x11);
+    if (sub < 1 || sub > 7) return;
+    if (!(wram_read8(0xF4) & 0x10) && !(wram_read8(0xF6) & 0x80)) return;
+    wram_write8(0x012C, 0xF1);
+    wram_write8(0x1C, 0x15); /* BG1, BG3 and sprites on the main screen, as the title leaves them */
+    wram_write8(0x99, 0x02);
+    wram_write8(0x9A, 0x22);
+    wram_write8(0x10, 1);
+    wram_write8(0x11, 0);
+}

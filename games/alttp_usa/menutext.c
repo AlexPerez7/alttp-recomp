@@ -343,9 +343,11 @@ static void reload_if_changed(void) {
 void alttp_text_menus(void); /* text.c */
 
 /* Once per frame, before the NMI work (00:80B5): checks the ROM once, then follows the file. */
+void alttp_intro_skip(Cpu *c); /* quality.c */
+
 void alttp_menu_poll(Cpu *c) {
     static int started, frames;
-    (void)c;
+    alttp_intro_skip(c);
     alttp_text_menus();
     if (!started) {
         check_slots();

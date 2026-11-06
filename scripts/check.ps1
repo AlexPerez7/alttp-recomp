@@ -193,6 +193,25 @@ New-Item -ItemType Directory -Force $a, $b | Out-Null
 $menuGame = ((Get-FileHash "$a\wram.bin").Hash -eq (Get-FileHash "$b\wram.bin").Hash)
 Write-Host "la WRAM del juego no cambia con los menús traducidos = $menuGame"
 
+# skip_intro: Start en el fotograma 300 (en plena intro, módulo $10 = 0) lleva a la selección de partida (módulo 1) con la opción y no hace
+# nada sin ella; la pantalla a los 1300 fotogramas es idéntica a la de esperar a la intro (Start en el título, fotograma 900)
+function IntroRun($name, $frames, $extra) {
+    $d = Join-Path $out "intro_$name"
+    New-Item -ItemType Directory -Force $d | Out-Null
+    & "$out\headless.exe" $textRom --frames $frames --frame-blocks 20000 --dump $d --screenshot "$d\shot.png" @extra *>$null
+    if ($LASTEXITCODE -ne 0) { throw "headless.exe termino con codigo $LASTEXITCODE (intro $name)" }
+    return $d
+}
+function IntroModule($d) { return [System.IO.File]::ReadAllBytes("$d\wram.bin")[0x10] }
+$introOff = IntroRun "off" 400 @("--press", "START@300-308", "--game-opt", "skip_intro=0")
+$introOn = IntroRun "on" 400 @("--press", "START@300-308", "--game-opt", "skip_intro=1")
+$introOnA = IntroRun "onA" 400 @("--press", "A@300-308", "--game-opt", "skip_intro=1")
+$introWait = IntroRun "wait" 1300 @("--press", "START@900-908")
+$introSkip = IntroRun "skip" 1300 @("--press", "START@300-308", "--game-opt", "skip_intro=1")
+$introOk = ((IntroModule $introOff) -eq 0) -and ((IntroModule $introOn) -eq 1) -and ((IntroModule $introOnA) -eq 1) -and
+    ((Get-FileHash "$introWait\shot.png").Hash -eq (Get-FileHash "$introSkip\shot.png").Hash)
+Write-Host "skip_intro: sin la opción la intro sigue, con Start o A va a la selección de partida y la pantalla es la misma: $introOk"
+
 # mejoras de calidad (games/alttp_usa/quality.c): partida nueva hasta que Link se maneja en su casa (fotograma 5200) y, con las
 # escrituras en la WRAM, comprobar cada opción. Con --trace-frames y --watch el motor lista cada cambio de una dirección.
 $toControl = @($toMessage)
@@ -383,6 +402,7 @@ if (-not $beepOn) { Write-Error "con poca vida y low_hp_beep=1 el efecto `$2B de
 if (-not $beepOff) { Write-Error "con low_hp_beep=0 el efecto `$2B debe borrarse en el mismo fotograma en que se pide" -ErrorAction Continue; $ok = $false }
 if (-not $beepFull) { Write-Error "con la vida llena no debe haber ningún `$2B" -ErrorAction Continue; $ok = $false }
 if (-not $beepOthers) { Write-Error "low_hp_beep no debe tocar los demás efectos de sonido" -ErrorAction Continue; $ok = $false }
+if (-not $introOk) { Write-Error "con skip_intro=1 Start o A en plena intro deben llevar a la selección de partida, con la misma pantalla (y sin la opción no)" -ErrorAction Continue; $ok = $false }
 if (-not $dashOk) { Write-Error "con dash_turn=1 pulsar otra dirección en plena carrera debe girar a Link sin cortarla (y sin la opción la corta)" -ErrorAction Continue; $ok = $false }
 if (-not $switchOk) { Write-Error "con item_switch_lr=1 L y R deben cambiar el objeto elegido saltando las ranuras vacías (y sin la opción no deben hacer nada)" -ErrorAction Continue; $ok = $false }
 if (-not $birdOk) { Write-Error "con bird_cancel=1 B en la elección de destino de la flauta debe volver al mismo sitio (y sin la opción, elegir destino)" -ErrorAction Continue; $ok = $false }
