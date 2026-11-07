@@ -319,10 +319,33 @@ for opt in 0 1; do
     launch "rfu$opt" 5450 --poke 0F360=F401@5300 --game-opt "rupee_fast=$opt"
     launch "rfd$opt" 5450 --poke 0F360=F401F401@5250 --poke 0F360=0000@5300 --game-opt "rupee_fast=$opt"
 done
+# volumen separado de música y efectos: Link sale de su casa bajo la lluvia (efectos: lluvia, SFX) con la música sonando. 100/100 deja el sonido como
+# estaba, apagar la música o los efectos lo baja sin dejarlo mudo, y apagar los dos lo deja en silencio (el motor sabe qué voces son efectos por
+# [audio] sfx_voice_mask del perfil)
+volIn=(--press START@1100-1110 --press A@1300-1305 --press A@1500-1504 --press DOWN@1540-1542 --press DOWN@1560-1562 --press DOWN@1580-1582
+    --press RIGHT@1600-1602 --press RIGHT@1620-1622 --press A@1640-1643)
+for f in $(seq 2000 90 3900); do volIn+=(--press "A@$f-$((f+3))"); done
+volIn+=(--press RIGHT@4050-4093 --press DOWN@4100-5400)
+mkdir -p "$out/vol"
+volRun() { local n=$1; shift; "$HF" "$ROM" --frames 6200 --frame-blocks 20000 "${volIn[@]}" --wav "$out/vol/$n.wav" "$@" >/dev/null 2>&1 & }
+volRun base; volRun m0 --music-volume 0; volRun s0 --sfx-volume 0; volRun z --music-volume 0 --sfx-volume 0
 wait
 for rc in "$out"/q_*/rc; do
     [ "$(cat "$rc")" = 0 ] || die "headless_fast termino con codigo $(cat "$rc") ($(basename "$(dirname "$rc")"))"
 done
+
+volOut=$(python3 - "$out/vol" <<'PY'
+import sys, wave, struct, math
+def rms(n):
+    w = wave.open(sys.argv[1] + "/" + n + ".wav"); d = w.readframes(w.getnframes()); s = struct.unpack("<%dh" % (len(d) // 2), d)
+    return math.sqrt(sum(x * x for x in s) / max(1, len(s)))
+b, m, e, z = (rms(n) for n in ("base", "m0", "s0", "z"))
+print("base=%.1f sin_musica=%.1f sin_efectos=%.1f ambos_0=%.1f" % (b, m, e, z))
+sys.exit(0 if b > 100 and 0 < m < b * 0.95 and 0 < e < b * 0.95 and z == 0 else 1)
+PY
+); volRc=$?
+echo "volumen de música y efectos (RMS): $volOut = $(b2i test $volRc = 0)"
+[ "$volRc" = 0 ] || fail "volumen separado: apagar la música o los efectos debe bajar el sonido sin dejarlo mudo, y apagar los dos dejarlo en silencio"
 
 "${EVAL[@]}" quality "$out"
 qualityOk=$?

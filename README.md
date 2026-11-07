@@ -86,6 +86,8 @@ Cosas que los emuladores dan y este proyecto aún no. No están prometidas ni ti
 
 Son opciones del juego: se activan en la pestaña **Game** del menú **F1** o con `--game-opt nombre=valor`. Las marcadas con ✔ están activas por defecto; el resto, apagadas.
 
+El volumen de la música y el de los efectos se ajustan por separado en la pestaña **Audio** del menú (`music_volume` y `sfx_volume`); el perfil le dice al motor qué voces del sonido son efectos.
+
 | | Opción | Qué hace |
 |---|---|---|
 | ✔ | `dialog_skip` | Mantén **R** durante un mensaje y sale un carácter por fotograma. |

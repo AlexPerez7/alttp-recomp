@@ -862,6 +862,12 @@ label = "Language"
 names = ["en", "es"]
 default = "en"
 
+# Musica y efectos comparten las voces del DSP: el motor del sonido del juego guarda en la RAM del SPC700, en $1A, un bit por voz que ahora usan
+# los efectos (y en $4A el complementario para la musica). Medido en partida: las muestras de las voces marcadas como efecto y las de las no marcadas son
+# conjuntos distintos. El motor la lee al encender cada voz para el volumen de musica y de efectos del menu de Audio (music_volume, sfx_volume).
+[audio]
+sfx_voice_mask = 0x1A
+
 # Bucle principal: espera del NMI ($12) y, por cada fotograma, el módulo del juego. Es un bloque de la función de reset (00:8000)
 # con la pila del 65816 en su base ($01FF) y sin interrupción en curso; aquí se guardan y cargan los estados.
 [resume]

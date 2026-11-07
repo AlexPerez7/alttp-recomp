@@ -10,7 +10,7 @@ Reparto (ver `CLAUDE.md`): lo general va al motor (`snes-recomp`, con OpenSpec);
 |---|---|
 | Pantalla completa, VSync, aspecto, escalado entero/relleno, filtros `nearest`/`bilinear`/`sharp`, recorte, scanlines, rejilla, contador de fps | motor, pestaña **Image** |
 | Remapeo de teclas y botones por jugador en un menú, mandos SDL con hotplug, 2 jugadores | motor, pestaña **Controls** |
-| Volumen maestro y dispositivo de salida | motor, pestaña **Audio** |
+| Volumen maestro, volumen separado de música y efectos y dispositivo de salida | motor, pestaña **Audio** (el perfil de ALttP declara `[audio] sfx_voice_mask = 0x1A`: el controlador del juego guarda ahí un bit por voz de efecto) |
 | Avance rápido (2x a máx.) | motor, Tab / F2 |
 | Pantalla ancha hasta 96 px por lado y relleno específico de ALttP | motor + `widefill.c` |
 | Traducción al español de mensajes y menús, botones del jugador en los textos | `text.c`, `menutext.c`, `hud.c` |
